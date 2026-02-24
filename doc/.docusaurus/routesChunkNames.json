@@ -1,91 +1,91 @@
 {
-  "/findout-app/__docusaurus/debug-440": {
+  "/findout-app/__docusaurus/debug-b25": {
     "__comp": "__comp---theme-debug-config-23-a-2ff",
     "__context": {
-      "plugin": "plugin---docusaurus-debug-504-062"
+      "plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
     }
   },
-  "/findout-app/__docusaurus/debug/config-8de": {
+  "/findout-app/__docusaurus/debug/config-aa6": {
     "__comp": "__comp---theme-debug-config-23-a-2ff",
     "__context": {
-      "plugin": "plugin---docusaurus-debug-504-062"
+      "plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
     }
   },
-  "/findout-app/__docusaurus/debug/content-8d1": {
+  "/findout-app/__docusaurus/debug/content-6c4": {
     "__comp": "__comp---theme-debug-contentba-8-ce7",
     "__context": {
-      "plugin": "plugin---docusaurus-debug-504-062"
+      "plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
     },
-    "allContent": "allContent---docusaurus-debug-content-246-9aa"
+    "allContent": "allContent---findout-app-docusaurus-debug-content-246-681"
   },
-  "/findout-app/__docusaurus/debug/globalData-807": {
+  "/findout-app/__docusaurus/debug/globalData-cf3": {
     "__comp": "__comp---theme-debug-global-dataede-0fa",
     "__context": {
-      "plugin": "plugin---docusaurus-debug-504-062"
+      "plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
     }
   },
-  "/findout-app/__docusaurus/debug/metadata-fd4": {
+  "/findout-app/__docusaurus/debug/metadata-5de": {
     "__comp": "__comp---theme-debug-site-metadata-68-e-3d4",
     "__context": {
-      "plugin": "plugin---docusaurus-debug-504-062"
+      "plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
     }
   },
-  "/findout-app/__docusaurus/debug/registry-814": {
+  "/findout-app/__docusaurus/debug/registry-23b": {
     "__comp": "__comp---theme-debug-registry-679-501",
     "__context": {
-      "plugin": "plugin---docusaurus-debug-504-062"
+      "plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
     }
   },
-  "/findout-app/__docusaurus/debug/routes-fb7": {
+  "/findout-app/__docusaurus/debug/routes-9e0": {
     "__comp": "__comp---theme-debug-routes-946-699",
     "__context": {
-      "plugin": "plugin---docusaurus-debug-504-062"
+      "plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
     }
   },
-  "/findout-app/docs-c08": {
+  "/findout-app/docs-d22": {
     "__comp": "__comp---theme-doc-page-1-be-9be",
     "__context": {
-      "plugin": "plugin---docs-0-c-8-4f8"
+      "plugin": "plugin---findout-app-docsd-3-b-614"
     },
-    "versionMetadata": "versionMetadata---docs-935-398"
+    "versionMetadata": "versionMetadata---findout-app-docs-935-d79"
   },
-  "/findout-app/docs/building-release-3cf": {
+  "/findout-app/docs/building-release-d9a": {
     "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docs-building-release-6-d-7-b71"
+    "content": "content---findout-app-docs-building-release-6-d-7-836"
   },
-  "/findout-app/docs/ci-cd-11a": {
+  "/findout-app/docs/ci-cd-4b6": {
     "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docs-ci-cd-899-9a4"
+    "content": "content---findout-app-docs-ci-cd-899-43a"
   },
-  "/findout-app/docs/development-guide-02b": {
+  "/findout-app/docs/development-guide-a28": {
     "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docs-development-guide-832-d23"
+    "content": "content---findout-app-docs-development-guide-832-380"
   },
-  "/findout-app/docs/getting-started-095": {
+  "/findout-app/docs/getting-started-9cc": {
     "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docs-getting-startedd-58-f94"
+    "content": "content---findout-app-docs-getting-startedd-58-540"
   },
-  "/findout-app/docs/intro-285": {
+  "/findout-app/docs/intro-f23": {
     "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docs-intro-0-e-3-be1"
+    "content": "content---findout-app-docs-intro-0-e-3-751"
   },
-  "/findout-app/docs/project-architecture-38a": {
+  "/findout-app/docs/project-architecture-f94": {
     "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docs-project-architecturef-9-b-411"
+    "content": "content---findout-app-docs-project-architecturef-9-b-fe7"
   },
-  "/findout-app/docs/services-integration-ffd": {
+  "/findout-app/docs/services-integration-039": {
     "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docs-services-integrationcbf-faa"
+    "content": "content---findout-app-docs-services-integrationcbf-3c6"
   },
-  "/findout-app/docs/troubleshooting-63c": {
+  "/findout-app/docs/troubleshooting-ef6": {
     "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docs-troubleshooting-9-d-9-0bf"
+    "content": "content---findout-app-docs-troubleshooting-9-d-9-038"
   },
-  "/findout-app/-0b0": {
+  "/findout-app/-aa6": {
     "__comp": "__comp---site-src-pages-index-jsc-4-f-f99",
     "__context": {
-      "plugin": "plugin---05-f-6a6"
+      "plugin": "plugin---findout-app-9-dd-58e"
     },
-    "config": "config---5-e-9-4f3"
+    "config": "config---findout-app-5-e-9-f93"
   }
 }

@@ -13,9 +13,9 @@
           "tagsPath": "/findout-app/docs/tags",
           "isLast": true,
           "routePriority": -1,
-          "sidebarFilePath": "/Users/mac/Desktop/app.findoutMedia/findout-app/doc/sidebars.js",
-          "contentPath": "/Users/mac/Desktop/app.findoutMedia/findout-app/doc/docs",
-          "contentPathLocalized": "/Users/mac/Desktop/app.findoutMedia/findout-app/doc/i18n/en/docusaurus-plugin-content-docs/current",
+          "sidebarFilePath": "/Users/mac/Documents/Work/GitHub/findout-temp/doc/sidebars.js",
+          "contentPath": "/Users/mac/Documents/Work/GitHub/findout-temp/doc/docs",
+          "contentPathLocalized": "/Users/mac/Documents/Work/GitHub/findout-temp/doc/i18n/en/docusaurus-plugin-content-docs/current",
           "docs": [
             {
               "unversionedId": "building-release",

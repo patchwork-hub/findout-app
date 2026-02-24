@@ -19,10 +19,10 @@ export default {
       "classic",
       {
         "docs": {
-          "sidebarPath": "/Users/mac/Desktop/app.findoutMedia/findout-app/doc/sidebars.js"
+          "sidebarPath": "/Users/mac/Documents/Work/GitHub/findout-temp/doc/sidebars.js"
         },
         "theme": {
-          "customCss": "/Users/mac/Desktop/app.findoutMedia/findout-app/doc/src/css/custom.css"
+          "customCss": "/Users/mac/Documents/Work/GitHub/findout-temp/doc/src/css/custom.css"
         }
       }
     ]

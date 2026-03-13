@@ -56,8 +56,8 @@ const StatusReblogButton = ({ count, status, onBoost, ...props }: Props) => {
 					{...props}
 				>
 					<FontAwesomeIcon
-						icon={AppIcons.share}
-						size={16}
+						icon={AppIcons.repost}
+						size={18}
 						color={
 							(status?.reblogged || status.reblog?.reblogged) &&
 							colorScheme == 'dark'
@@ -97,8 +97,8 @@ const StatusReblogButton = ({ count, status, onBoost, ...props }: Props) => {
 					>
 						<View className="flex flex-row items-center gap-2 px-3 py-2">
 							<FontAwesomeIcon
-								icon={AppIcons.share}
-								size={16}
+								icon={AppIcons.repost}
+								size={18}
 								color={
 									status?.reblogged || status.reblog?.reblogged
 										? colorScheme === 'dark'

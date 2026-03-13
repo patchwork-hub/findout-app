@@ -33,7 +33,6 @@ import {
 import { useColorScheme } from 'nativewind';
 import colors from 'tailwindcss/colors';
 import { useTranslation } from 'react-i18next';
-import BookmarkMenuOption from './BookmarkMenuOption/BookmarkMenuOption';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { AppIcons } from '@/util/icons/icon.common';
 
@@ -241,7 +240,6 @@ const StatusMenu = ({ status }: { status: Patchwork.Status }) => {
 									name={t('timeline.delete')}
 								/>
 							</MenuOption>
-							<BookmarkMenuOption status={status} hideMenu={hideMenu} />
 						</>
 					) : (
 						<>

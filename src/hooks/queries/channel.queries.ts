@@ -498,6 +498,8 @@ export const useGetForYouChannelList = () => {
 	return useQuery({
 		queryKey,
 		queryFn: getForYouChannelList,
+		staleTime: Infinity,
+		gcTime: Infinity,
 	});
 };
 

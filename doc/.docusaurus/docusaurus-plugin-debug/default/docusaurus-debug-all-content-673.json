@@ -1,293 +1,293 @@
 {
-  "docusaurus-plugin-content-docs": {
-    "default": {
-      "loadedVersions": [
-        {
-          "versionName": "current",
-          "label": "Next",
-          "banner": null,
-          "badge": false,
-          "noIndex": false,
-          "className": "docs-version-current",
-          "path": "/findout-app/docs",
-          "tagsPath": "/findout-app/docs/tags",
-          "isLast": true,
-          "routePriority": -1,
-          "sidebarFilePath": "/Users/mac/Documents/Work/GitHub/findout-temp/doc/sidebars.js",
-          "contentPath": "/Users/mac/Documents/Work/GitHub/findout-temp/doc/docs",
-          "contentPathLocalized": "/Users/mac/Documents/Work/GitHub/findout-temp/doc/i18n/en/docusaurus-plugin-content-docs/current",
-          "docs": [
-            {
-              "unversionedId": "building-release",
-              "id": "building-release",
-              "title": "Building for Release",
-              "description": "Android",
-              "source": "@site/docs/building-release.md",
-              "sourceDirName": ".",
-              "slug": "/building-release",
-              "permalink": "/findout-app/docs/building-release",
-              "draft": false,
-              "tags": [],
-              "version": "current",
-              "sidebarPosition": 5,
-              "frontMatter": {
-                "sidebar_position": 5
-              },
-              "sidebar": "docs",
-              "previous": {
-                "title": "Development Guide",
-                "permalink": "/findout-app/docs/development-guide"
-              },
-              "next": {
-                "title": "Services Integration",
-                "permalink": "/findout-app/docs/services-integration"
-              }
-            },
-            {
-              "unversionedId": "ci-cd",
-              "id": "ci-cd",
-              "title": "CI/CD",
-              "description": "Overview",
-              "source": "@site/docs/ci-cd.md",
-              "sourceDirName": ".",
-              "slug": "/ci-cd",
-              "permalink": "/findout-app/docs/ci-cd",
-              "draft": false,
-              "tags": [],
-              "version": "current",
-              "sidebarPosition": 7,
-              "frontMatter": {
-                "sidebar_position": 7
-              },
-              "sidebar": "docs",
-              "previous": {
-                "title": "Services Integration",
-                "permalink": "/findout-app/docs/services-integration"
-              },
-              "next": {
-                "title": "Troubleshooting",
-                "permalink": "/findout-app/docs/troubleshooting"
-              }
-            },
-            {
-              "unversionedId": "development-guide",
-              "id": "development-guide",
-              "title": "Development Guide",
-              "description": "Useful Scripts",
-              "source": "@site/docs/development-guide.md",
-              "sourceDirName": ".",
-              "slug": "/development-guide",
-              "permalink": "/findout-app/docs/development-guide",
-              "draft": false,
-              "tags": [],
-              "version": "current",
-              "sidebarPosition": 4,
-              "frontMatter": {
-                "sidebar_position": 4
-              },
-              "sidebar": "docs",
-              "previous": {
-                "title": "Project Architecture",
-                "permalink": "/findout-app/docs/project-architecture"
-              },
-              "next": {
-                "title": "Building for Release",
-                "permalink": "/findout-app/docs/building-release"
-              }
-            },
-            {
-              "unversionedId": "getting-started",
-              "id": "getting-started",
-              "title": "Getting Started",
-              "description": "Setup",
-              "source": "@site/docs/getting-started.md",
-              "sourceDirName": ".",
-              "slug": "/getting-started",
-              "permalink": "/findout-app/docs/getting-started",
-              "draft": false,
-              "tags": [],
-              "version": "current",
-              "sidebarPosition": 2,
-              "frontMatter": {
-                "sidebar_position": 2
-              },
-              "sidebar": "docs",
-              "previous": {
-                "title": "Introduction",
-                "permalink": "/findout-app/docs/intro"
-              },
-              "next": {
-                "title": "Project Architecture",
-                "permalink": "/findout-app/docs/project-architecture"
-              }
-            },
-            {
-              "unversionedId": "intro",
-              "id": "intro",
-              "title": "Introduction",
-              "description": "FindOut Media is a React Native repo for the FindOut Media Mastodon instance, an ongoing project designed to rebuild the place for honest, real conversations.",
-              "source": "@site/docs/intro.md",
-              "sourceDirName": ".",
-              "slug": "/intro",
-              "permalink": "/findout-app/docs/intro",
-              "draft": false,
-              "tags": [],
-              "version": "current",
-              "sidebarPosition": 1,
-              "frontMatter": {
-                "sidebar_position": 1
-              },
-              "sidebar": "docs",
-              "next": {
-                "title": "Getting Started",
-                "permalink": "/findout-app/docs/getting-started"
-              }
-            },
-            {
-              "unversionedId": "project-architecture",
-              "id": "project-architecture",
-              "title": "Project Architecture",
-              "description": "High-Level Overview",
-              "source": "@site/docs/project-architecture.md",
-              "sourceDirName": ".",
-              "slug": "/project-architecture",
-              "permalink": "/findout-app/docs/project-architecture",
-              "draft": false,
-              "tags": [],
-              "version": "current",
-              "sidebarPosition": 3,
-              "frontMatter": {
-                "sidebar_position": 3
-              },
-              "sidebar": "docs",
-              "previous": {
-                "title": "Getting Started",
-                "permalink": "/findout-app/docs/getting-started"
-              },
-              "next": {
-                "title": "Development Guide",
-                "permalink": "/findout-app/docs/development-guide"
-              }
-            },
-            {
-              "unversionedId": "services-integration",
-              "id": "services-integration",
-              "title": "Services Integration",
-              "description": "Push Notification Setup (iOS & Android with Firebase)",
-              "source": "@site/docs/services-integration.md",
-              "sourceDirName": ".",
-              "slug": "/services-integration",
-              "permalink": "/findout-app/docs/services-integration",
-              "draft": false,
-              "tags": [],
-              "version": "current",
-              "sidebarPosition": 6,
-              "frontMatter": {
-                "sidebar_position": 6
-              },
-              "sidebar": "docs",
-              "previous": {
-                "title": "Building for Release",
-                "permalink": "/findout-app/docs/building-release"
-              },
-              "next": {
-                "title": "CI/CD",
-                "permalink": "/findout-app/docs/ci-cd"
-              }
-            },
-            {
-              "unversionedId": "troubleshooting",
-              "id": "troubleshooting",
-              "title": "Troubleshooting",
-              "description": "Common Issues",
-              "source": "@site/docs/troubleshooting.md",
-              "sourceDirName": ".",
-              "slug": "/troubleshooting",
-              "permalink": "/findout-app/docs/troubleshooting",
-              "draft": false,
-              "tags": [],
-              "version": "current",
-              "sidebarPosition": 8,
-              "frontMatter": {
-                "sidebar_position": 8
-              },
-              "sidebar": "docs",
-              "previous": {
-                "title": "CI/CD",
-                "permalink": "/findout-app/docs/ci-cd"
-              }
-            }
-          ],
-          "drafts": [],
-          "sidebars": {
-            "docs": [
-              {
-                "type": "doc",
-                "id": "intro"
-              },
-              {
-                "type": "category",
-                "label": "Guides",
-                "items": [
-                  {
-                    "type": "doc",
-                    "id": "getting-started"
-                  },
-                  {
-                    "type": "doc",
-                    "id": "project-architecture"
-                  },
-                  {
-                    "type": "doc",
-                    "id": "development-guide"
-                  },
-                  {
-                    "type": "doc",
-                    "id": "building-release"
-                  },
-                  {
-                    "type": "doc",
-                    "id": "services-integration"
-                  },
-                  {
-                    "type": "doc",
-                    "id": "ci-cd"
-                  },
-                  {
-                    "type": "doc",
-                    "id": "troubleshooting"
-                  }
-                ],
-                "collapsed": true,
-                "collapsible": true
-              }
-            ]
-          }
-        }
-      ]
-    }
-  },
-  "docusaurus-plugin-content-blog": {
-    "default": {
-      "blogSidebarTitle": "Recent posts",
-      "blogPosts": [],
-      "blogListPaginated": [],
-      "blogTags": {},
-      "blogTagsListPath": "/findout-app/blog/tags",
-      "blogTagsPaginated": []
-    }
-  },
-  "docusaurus-plugin-content-pages": {
-    "default": [
-      {
-        "type": "jsx",
-        "permalink": "/findout-app/",
-        "source": "@site/src/pages/index.js"
-      }
-    ]
-  },
-  "docusaurus-plugin-debug": {},
-  "docusaurus-theme-classic": {},
-  "docusaurus-bootstrap-plugin": {},
-  "docusaurus-mdx-fallback-plugin": {}
+	"docusaurus-plugin-content-docs": {
+		"default": {
+			"loadedVersions": [
+				{
+					"versionName": "current",
+					"label": "Next",
+					"banner": null,
+					"badge": false,
+					"noIndex": false,
+					"className": "docs-version-current",
+					"path": "/findout-app/docs",
+					"tagsPath": "/findout-app/docs/tags",
+					"isLast": true,
+					"routePriority": -1,
+					"sidebarFilePath": "/Users/mac/Documents/Work/GitHub/findout-temp/doc/sidebars.js",
+					"contentPath": "/Users/mac/Documents/Work/GitHub/findout-temp/doc/docs",
+					"contentPathLocalized": "/Users/mac/Documents/Work/GitHub/findout-temp/doc/i18n/en/docusaurus-plugin-content-docs/current",
+					"docs": [
+						{
+							"unversionedId": "building-release",
+							"id": "building-release",
+							"title": "Building for Release",
+							"description": "Android",
+							"source": "@site/docs/building-release.md",
+							"sourceDirName": ".",
+							"slug": "/building-release",
+							"permalink": "/findout-app/docs/building-release",
+							"draft": false,
+							"tags": [],
+							"version": "current",
+							"sidebarPosition": 5,
+							"frontMatter": {
+								"sidebar_position": 5
+							},
+							"sidebar": "docs",
+							"previous": {
+								"title": "Development Guide",
+								"permalink": "/findout-app/docs/development-guide"
+							},
+							"next": {
+								"title": "Services Integration",
+								"permalink": "/findout-app/docs/services-integration"
+							}
+						},
+						{
+							"unversionedId": "ci-cd",
+							"id": "ci-cd",
+							"title": "CI/CD",
+							"description": "Overview",
+							"source": "@site/docs/ci-cd.md",
+							"sourceDirName": ".",
+							"slug": "/ci-cd",
+							"permalink": "/findout-app/docs/ci-cd",
+							"draft": false,
+							"tags": [],
+							"version": "current",
+							"sidebarPosition": 7,
+							"frontMatter": {
+								"sidebar_position": 7
+							},
+							"sidebar": "docs",
+							"previous": {
+								"title": "Services Integration",
+								"permalink": "/findout-app/docs/services-integration"
+							},
+							"next": {
+								"title": "Troubleshooting",
+								"permalink": "/findout-app/docs/troubleshooting"
+							}
+						},
+						{
+							"unversionedId": "development-guide",
+							"id": "development-guide",
+							"title": "Development Guide",
+							"description": "Useful Scripts",
+							"source": "@site/docs/development-guide.md",
+							"sourceDirName": ".",
+							"slug": "/development-guide",
+							"permalink": "/findout-app/docs/development-guide",
+							"draft": false,
+							"tags": [],
+							"version": "current",
+							"sidebarPosition": 4,
+							"frontMatter": {
+								"sidebar_position": 4
+							},
+							"sidebar": "docs",
+							"previous": {
+								"title": "Project Architecture",
+								"permalink": "/findout-app/docs/project-architecture"
+							},
+							"next": {
+								"title": "Building for Release",
+								"permalink": "/findout-app/docs/building-release"
+							}
+						},
+						{
+							"unversionedId": "getting-started",
+							"id": "getting-started",
+							"title": "Getting Started",
+							"description": "Setup",
+							"source": "@site/docs/getting-started.md",
+							"sourceDirName": ".",
+							"slug": "/getting-started",
+							"permalink": "/findout-app/docs/getting-started",
+							"draft": false,
+							"tags": [],
+							"version": "current",
+							"sidebarPosition": 2,
+							"frontMatter": {
+								"sidebar_position": 2
+							},
+							"sidebar": "docs",
+							"previous": {
+								"title": "Introduction",
+								"permalink": "/findout-app/docs/intro"
+							},
+							"next": {
+								"title": "Project Architecture",
+								"permalink": "/findout-app/docs/project-architecture"
+							}
+						},
+						{
+							"unversionedId": "intro",
+							"id": "intro",
+							"title": "Introduction",
+							"description": "FindOut Media is a React Native repo for the FindOut Media Mastodon instance, an ongoing project designed to rebuild the place for honest, real conversations.",
+							"source": "@site/docs/intro.md",
+							"sourceDirName": ".",
+							"slug": "/intro",
+							"permalink": "/findout-app/docs/intro",
+							"draft": false,
+							"tags": [],
+							"version": "current",
+							"sidebarPosition": 1,
+							"frontMatter": {
+								"sidebar_position": 1
+							},
+							"sidebar": "docs",
+							"next": {
+								"title": "Getting Started",
+								"permalink": "/findout-app/docs/getting-started"
+							}
+						},
+						{
+							"unversionedId": "project-architecture",
+							"id": "project-architecture",
+							"title": "Project Architecture",
+							"description": "High-Level Overview",
+							"source": "@site/docs/project-architecture.md",
+							"sourceDirName": ".",
+							"slug": "/project-architecture",
+							"permalink": "/findout-app/docs/project-architecture",
+							"draft": false,
+							"tags": [],
+							"version": "current",
+							"sidebarPosition": 3,
+							"frontMatter": {
+								"sidebar_position": 3
+							},
+							"sidebar": "docs",
+							"previous": {
+								"title": "Getting Started",
+								"permalink": "/findout-app/docs/getting-started"
+							},
+							"next": {
+								"title": "Development Guide",
+								"permalink": "/findout-app/docs/development-guide"
+							}
+						},
+						{
+							"unversionedId": "services-integration",
+							"id": "services-integration",
+							"title": "Services Integration",
+							"description": "Push Notification Setup (iOS & Android with Firebase)",
+							"source": "@site/docs/services-integration.md",
+							"sourceDirName": ".",
+							"slug": "/services-integration",
+							"permalink": "/findout-app/docs/services-integration",
+							"draft": false,
+							"tags": [],
+							"version": "current",
+							"sidebarPosition": 6,
+							"frontMatter": {
+								"sidebar_position": 6
+							},
+							"sidebar": "docs",
+							"previous": {
+								"title": "Building for Release",
+								"permalink": "/findout-app/docs/building-release"
+							},
+							"next": {
+								"title": "CI/CD",
+								"permalink": "/findout-app/docs/ci-cd"
+							}
+						},
+						{
+							"unversionedId": "troubleshooting",
+							"id": "troubleshooting",
+							"title": "Troubleshooting",
+							"description": "Common Issues",
+							"source": "@site/docs/troubleshooting.md",
+							"sourceDirName": ".",
+							"slug": "/troubleshooting",
+							"permalink": "/findout-app/docs/troubleshooting",
+							"draft": false,
+							"tags": [],
+							"version": "current",
+							"sidebarPosition": 8,
+							"frontMatter": {
+								"sidebar_position": 8
+							},
+							"sidebar": "docs",
+							"previous": {
+								"title": "CI/CD",
+								"permalink": "/findout-app/docs/ci-cd"
+							}
+						}
+					],
+					"drafts": [],
+					"sidebars": {
+						"docs": [
+							{
+								"type": "doc",
+								"id": "intro"
+							},
+							{
+								"type": "category",
+								"label": "Guides",
+								"items": [
+									{
+										"type": "doc",
+										"id": "getting-started"
+									},
+									{
+										"type": "doc",
+										"id": "project-architecture"
+									},
+									{
+										"type": "doc",
+										"id": "development-guide"
+									},
+									{
+										"type": "doc",
+										"id": "building-release"
+									},
+									{
+										"type": "doc",
+										"id": "services-integration"
+									},
+									{
+										"type": "doc",
+										"id": "ci-cd"
+									},
+									{
+										"type": "doc",
+										"id": "troubleshooting"
+									}
+								],
+								"collapsed": true,
+								"collapsible": true
+							}
+						]
+					}
+				}
+			]
+		}
+	},
+	"docusaurus-plugin-content-blog": {
+		"default": {
+			"blogSidebarTitle": "Recent posts",
+			"blogPosts": [],
+			"blogListPaginated": [],
+			"blogTags": {},
+			"blogTagsListPath": "/findout-app/blog/tags",
+			"blogTagsPaginated": []
+		}
+	},
+	"docusaurus-plugin-content-pages": {
+		"default": [
+			{
+				"type": "jsx",
+				"permalink": "/findout-app/",
+				"source": "@site/src/pages/index.js"
+			}
+		]
+	},
+	"docusaurus-plugin-debug": {},
+	"docusaurus-theme-classic": {},
+	"docusaurus-bootstrap-plugin": {},
+	"docusaurus-mdx-fallback-plugin": {}
 }

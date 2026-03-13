@@ -1,26 +1,26 @@
 {
-  "unversionedId": "services-integration",
-  "id": "services-integration",
-  "title": "Services Integration",
-  "description": "Push Notification Setup (iOS & Android with Firebase)",
-  "source": "@site/docs/services-integration.md",
-  "sourceDirName": ".",
-  "slug": "/services-integration",
-  "permalink": "/findout-app/docs/services-integration",
-  "draft": false,
-  "tags": [],
-  "version": "current",
-  "sidebarPosition": 6,
-  "frontMatter": {
-    "sidebar_position": 6
-  },
-  "sidebar": "docs",
-  "previous": {
-    "title": "Building for Release",
-    "permalink": "/findout-app/docs/building-release"
-  },
-  "next": {
-    "title": "CI/CD",
-    "permalink": "/findout-app/docs/ci-cd"
-  }
+	"unversionedId": "services-integration",
+	"id": "services-integration",
+	"title": "Services Integration",
+	"description": "Push Notification Setup (iOS & Android with Firebase)",
+	"source": "@site/docs/services-integration.md",
+	"sourceDirName": ".",
+	"slug": "/services-integration",
+	"permalink": "/findout-app/docs/services-integration",
+	"draft": false,
+	"tags": [],
+	"version": "current",
+	"sidebarPosition": 6,
+	"frontMatter": {
+		"sidebar_position": 6
+	},
+	"sidebar": "docs",
+	"previous": {
+		"title": "Building for Release",
+		"permalink": "/findout-app/docs/building-release"
+	},
+	"next": {
+		"title": "CI/CD",
+		"permalink": "/findout-app/docs/ci-cd"
+	}
 }

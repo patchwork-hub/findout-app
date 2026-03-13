@@ -14,6 +14,8 @@ import { Dimensions, FlatList, Pressable, View } from 'react-native';
 import { Flow } from 'react-native-animated-spinkit';
 import { useComposeStatus } from '@/context/composeStatusContext/composeStatus.context';
 import { useColorScheme } from 'nativewind';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { AppIcons } from '@/util/icons/icon.common';
 
 const screenHeight = Dimensions.get('window').height;
 const modalHeight = screenHeight * 0.6;
@@ -24,11 +26,10 @@ type Props = {
 };
 
 export const AudienceListModal = ({ composeType, onClose }: Props) => {
-	const { composeState } = useComposeStatus();
+	const { composeState, composeDispatch } = useComposeStatus();
 	const { colorScheme } = useColorScheme();
-	const { selectedAudience, setSelectedAudience, toggleAudience } =
-		useCreateAudienceStore();
-	const { editSelectedAudience, setEditSelectedAudience, toggleEditAudience } =
+	const { selectedAudience, setSelectedAudience } = useCreateAudienceStore();
+	const { editSelectedAudience, setEditSelectedAudience } =
 		useEditAudienceStore();
 	const { selectedDraftId } = useDraftPostsStore();
 
@@ -48,20 +49,29 @@ export const AudienceListModal = ({ composeType, onClose }: Props) => {
 	const { data: newsmastChannels, isLoading } = useGetForYouChannelList();
 
 	const onPressCheckbox = (item: Patchwork.ChannelList) => {
-		if (isDraft || isSchedule || composeType === 'edit') {
-			toggleEditAudience(item.attributes);
+		const isCurrentlySelected = audienceSource.some(
+			sel => sel.id === item.attributes?.id,
+		);
+
+		if (isCurrentlySelected) {
+			setAudience([]);
 		} else {
-			toggleAudience(item.attributes);
+			setAudience([item.attributes]);
+			composeDispatch({ type: 'visibility_change', payload: 'local' });
 		}
+		onClose();
 	};
 
-	const handleSelectAll = () => {
-		const newAudience = newsmastChannels?.map(item => item.attributes) ?? [];
-		setAudience(newAudience);
-	};
-
-	const handleUnselectAll = () => {
+	const handleSelectLocal = () => {
 		setAudience([]);
+		composeDispatch({ type: 'visibility_change', payload: 'local' });
+		onClose();
+	};
+
+	const handleSelectPublic = () => {
+		setAudience([]);
+		composeDispatch({ type: 'visibility_change', payload: 'public' });
+		onClose();
 	};
 
 	return (
@@ -72,27 +82,51 @@ export const AudienceListModal = ({ composeType, onClose }: Props) => {
 			visible={true}
 			onClose={onClose}
 		>
-			<View style={{ height: modalHeight }}>
-				<Pressable
-					className="self-start px-3 py-1 border border-patchwork-grey-400 rounded-full my-2 mr-3 active:opacity-75"
-					onPress={() => {
-						if (audienceSource.length === newsmastChannels?.length) {
-							handleUnselectAll();
-						} else {
-							handleSelectAll();
-						}
-					}}
-				>
-					<ThemeText>
-						{audienceSource.length === newsmastChannels?.length
-							? 'Unselect all'
-							: 'Select all'}
-					</ThemeText>
-				</Pressable>
+			<View style={{ height: modalHeight, paddingTop: 12 }}>
 				{newsmastChannels && (
 					<FlatList
 						data={newsmastChannels}
 						showsVerticalScrollIndicator={false}
+						ListHeaderComponent={() => (
+							<Checkbox
+								isChecked={
+									audienceSource.length === 0 &&
+									composeState.visibility === 'local'
+								}
+								handleOnCheck={handleSelectLocal}
+							>
+								<View className="flex-row items-center px-3 py-3 space-x-3">
+									<View className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 items-center justify-center">
+										<FontAwesomeIcon
+											icon={AppIcons.location}
+											size={14}
+											color={colorScheme === 'dark' ? '#9CA3AF' : '#6B7280'}
+										/>
+									</View>
+									<ThemeText>Local</ThemeText>
+								</View>
+							</Checkbox>
+						)}
+						ListFooterComponent={() => (
+							<Checkbox
+								isChecked={
+									audienceSource.length === 0 &&
+									composeState.visibility === 'public'
+								}
+								handleOnCheck={handleSelectPublic}
+							>
+								<View className="flex-row items-center px-3 py-3 space-x-3">
+									<View className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 items-center justify-center">
+										<FontAwesomeIcon
+											icon={AppIcons.globe}
+											size={14}
+											color={colorScheme === 'dark' ? '#9CA3AF' : '#6B7280'}
+										/>
+									</View>
+									<ThemeText>Public</ThemeText>
+								</View>
+							</Checkbox>
+						)}
 						ListEmptyComponent={() => {
 							return (
 								<ThemeText variant="textPrimary" className="text-center">

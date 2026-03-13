@@ -9,7 +9,6 @@ import BlockMenuOption from '../BlockMenuOption/BlockMenuOption';
 import RevokeQuoteMenuOption from '../RevokeQuoteMenuOption/RevokeQuoteMenuOption';
 import { useMemo } from 'react';
 import { useAuthStore } from '@/store/auth/authStore';
-import BookmarkMenuOption from '../BookmarkMenuOption/BookmarkMenuOption';
 
 const MenuOptionsForOtherUser = ({
 	status,
@@ -61,7 +60,6 @@ const MenuOptionsForOtherUser = ({
 				goBackToPreviousPage={goBackToPreviousPage}
 				handleGoBack={handleGoBack}
 			/>
-			<BookmarkMenuOption status={status} hideMenu={hideMenu} />
 			{isAuthor && (
 				<RevokeQuoteMenuOption
 					quotedStatusId={status.quote?.quoted_status?.id}

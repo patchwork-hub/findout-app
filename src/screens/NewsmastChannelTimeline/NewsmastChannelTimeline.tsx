@@ -20,7 +20,10 @@ import {
 } from 'react-native-collapsible-tab-view';
 import CollapsibleFeedHeader from '@/components/atoms/feed/CollapsibleFeedHeader/CollapsibleFeedHeader';
 import FeedTitleHeader from '@/components/atoms/feed/FeedTitleHeader/FeedTitleHeader';
-import { ScrollProvider } from '@/context/sharedScrollContext/sharedScroll.context';
+import {
+	ScrollProvider,
+	useSharedScrollY,
+} from '@/context/sharedScrollContext/sharedScroll.context';
 import customColor from '@/util/constant/color';
 import { NEWSMAST_INSTANCE_V1 } from '@/util/constant';
 import { isTablet } from '@/util/helper/isTablet';
@@ -28,6 +31,8 @@ import VerticalSwipeHelper from '@/components/atoms/feed/VerticalSwipeHelper/Ver
 import { useTranslation } from 'react-i18next';
 import ChannelPostsTab from '@/components/molecules/channel/ChannelPostsTab/ChannelPostsTab';
 import ChannelAboutTab from '@/components/molecules/channel/ChannelAboutTab/ChannelAboutTab';
+import { FloatingAddButton } from '@/components/molecules/conversations/FloatingAddButton/FloatingAddButton';
+import { AnimatedFabWrapper } from '@/components/molecules/feed/AnimatedFabWrapper/AnimatedFabWrapper';
 
 const NewsmastChannelTimeline: React.FC<
 	HomeStackScreenProps<'NewsmastChannelTimeline'>
@@ -198,6 +203,20 @@ const NewsmastChannelTimeline: React.FC<
 						</View>
 					</View>
 				)}
+
+				<AnimatedFabWrapper isVisible={!isTimelineLoading}>
+					<FloatingAddButton
+						onPress={() => {
+							navigation.navigate('Compose' as any, {
+								type: 'create',
+								prefilledHashtags:
+									newsmastCommunityDetailBio?.attributes
+										?.patchwork_community_hashtags,
+								prefilledAudience: newsmastCommunityDetailBio?.attributes,
+							});
+						}}
+					/>
+				</AnimatedFabWrapper>
 			</View>
 		</ScrollProvider>
 	);

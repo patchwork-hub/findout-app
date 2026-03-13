@@ -1,68 +1,68 @@
 {
-  "docusaurus-plugin-content-docs": {
-    "default": {
-      "path": "/findout-app/docs",
-      "versions": [
-        {
-          "name": "current",
-          "label": "Next",
-          "isLast": true,
-          "path": "/findout-app/docs",
-          "mainDocId": "intro",
-          "docs": [
-            {
-              "id": "building-release",
-              "path": "/findout-app/docs/building-release",
-              "sidebar": "docs"
-            },
-            {
-              "id": "ci-cd",
-              "path": "/findout-app/docs/ci-cd",
-              "sidebar": "docs"
-            },
-            {
-              "id": "development-guide",
-              "path": "/findout-app/docs/development-guide",
-              "sidebar": "docs"
-            },
-            {
-              "id": "getting-started",
-              "path": "/findout-app/docs/getting-started",
-              "sidebar": "docs"
-            },
-            {
-              "id": "intro",
-              "path": "/findout-app/docs/intro",
-              "sidebar": "docs"
-            },
-            {
-              "id": "project-architecture",
-              "path": "/findout-app/docs/project-architecture",
-              "sidebar": "docs"
-            },
-            {
-              "id": "services-integration",
-              "path": "/findout-app/docs/services-integration",
-              "sidebar": "docs"
-            },
-            {
-              "id": "troubleshooting",
-              "path": "/findout-app/docs/troubleshooting",
-              "sidebar": "docs"
-            }
-          ],
-          "draftIds": [],
-          "sidebars": {
-            "docs": {
-              "link": {
-                "path": "/findout-app/docs/intro",
-                "label": "intro"
-              }
-            }
-          }
-        }
-      ],
-      "breadcrumbs": true
-    }
-  }
+	"docusaurus-plugin-content-docs": {
+		"default": {
+			"path": "/findout-app/docs",
+			"versions": [
+				{
+					"name": "current",
+					"label": "Next",
+					"isLast": true,
+					"path": "/findout-app/docs",
+					"mainDocId": "intro",
+					"docs": [
+						{
+							"id": "building-release",
+							"path": "/findout-app/docs/building-release",
+							"sidebar": "docs"
+						},
+						{
+							"id": "ci-cd",
+							"path": "/findout-app/docs/ci-cd",
+							"sidebar": "docs"
+						},
+						{
+							"id": "development-guide",
+							"path": "/findout-app/docs/development-guide",
+							"sidebar": "docs"
+						},
+						{
+							"id": "getting-started",
+							"path": "/findout-app/docs/getting-started",
+							"sidebar": "docs"
+						},
+						{
+							"id": "intro",
+							"path": "/findout-app/docs/intro",
+							"sidebar": "docs"
+						},
+						{
+							"id": "project-architecture",
+							"path": "/findout-app/docs/project-architecture",
+							"sidebar": "docs"
+						},
+						{
+							"id": "services-integration",
+							"path": "/findout-app/docs/services-integration",
+							"sidebar": "docs"
+						},
+						{
+							"id": "troubleshooting",
+							"path": "/findout-app/docs/troubleshooting",
+							"sidebar": "docs"
+						}
+					],
+					"draftIds": [],
+					"sidebars": {
+						"docs": {
+							"link": {
+								"path": "/findout-app/docs/intro",
+								"label": "intro"
+							}
+						}
+					}
+				}
+			],
+			"breadcrumbs": true
+		}
+	}
 }

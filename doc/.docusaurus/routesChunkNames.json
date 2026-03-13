@@ -1,91 +1,91 @@
 {
-  "/findout-app/__docusaurus/debug-b25": {
-    "__comp": "__comp---theme-debug-config-23-a-2ff",
-    "__context": {
-      "plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
-    }
-  },
-  "/findout-app/__docusaurus/debug/config-aa6": {
-    "__comp": "__comp---theme-debug-config-23-a-2ff",
-    "__context": {
-      "plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
-    }
-  },
-  "/findout-app/__docusaurus/debug/content-6c4": {
-    "__comp": "__comp---theme-debug-contentba-8-ce7",
-    "__context": {
-      "plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
-    },
-    "allContent": "allContent---findout-app-docusaurus-debug-content-246-681"
-  },
-  "/findout-app/__docusaurus/debug/globalData-cf3": {
-    "__comp": "__comp---theme-debug-global-dataede-0fa",
-    "__context": {
-      "plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
-    }
-  },
-  "/findout-app/__docusaurus/debug/metadata-5de": {
-    "__comp": "__comp---theme-debug-site-metadata-68-e-3d4",
-    "__context": {
-      "plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
-    }
-  },
-  "/findout-app/__docusaurus/debug/registry-23b": {
-    "__comp": "__comp---theme-debug-registry-679-501",
-    "__context": {
-      "plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
-    }
-  },
-  "/findout-app/__docusaurus/debug/routes-9e0": {
-    "__comp": "__comp---theme-debug-routes-946-699",
-    "__context": {
-      "plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
-    }
-  },
-  "/findout-app/docs-d22": {
-    "__comp": "__comp---theme-doc-page-1-be-9be",
-    "__context": {
-      "plugin": "plugin---findout-app-docsd-3-b-614"
-    },
-    "versionMetadata": "versionMetadata---findout-app-docs-935-d79"
-  },
-  "/findout-app/docs/building-release-d9a": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---findout-app-docs-building-release-6-d-7-836"
-  },
-  "/findout-app/docs/ci-cd-4b6": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---findout-app-docs-ci-cd-899-43a"
-  },
-  "/findout-app/docs/development-guide-a28": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---findout-app-docs-development-guide-832-380"
-  },
-  "/findout-app/docs/getting-started-9cc": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---findout-app-docs-getting-startedd-58-540"
-  },
-  "/findout-app/docs/intro-f23": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---findout-app-docs-intro-0-e-3-751"
-  },
-  "/findout-app/docs/project-architecture-f94": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---findout-app-docs-project-architecturef-9-b-fe7"
-  },
-  "/findout-app/docs/services-integration-039": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---findout-app-docs-services-integrationcbf-3c6"
-  },
-  "/findout-app/docs/troubleshooting-ef6": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---findout-app-docs-troubleshooting-9-d-9-038"
-  },
-  "/findout-app/-aa6": {
-    "__comp": "__comp---site-src-pages-index-jsc-4-f-f99",
-    "__context": {
-      "plugin": "plugin---findout-app-9-dd-58e"
-    },
-    "config": "config---findout-app-5-e-9-f93"
-  }
+	"/findout-app/__docusaurus/debug-b25": {
+		"__comp": "__comp---theme-debug-config-23-a-2ff",
+		"__context": {
+			"plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
+		}
+	},
+	"/findout-app/__docusaurus/debug/config-aa6": {
+		"__comp": "__comp---theme-debug-config-23-a-2ff",
+		"__context": {
+			"plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
+		}
+	},
+	"/findout-app/__docusaurus/debug/content-6c4": {
+		"__comp": "__comp---theme-debug-contentba-8-ce7",
+		"__context": {
+			"plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
+		},
+		"allContent": "allContent---findout-app-docusaurus-debug-content-246-681"
+	},
+	"/findout-app/__docusaurus/debug/globalData-cf3": {
+		"__comp": "__comp---theme-debug-global-dataede-0fa",
+		"__context": {
+			"plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
+		}
+	},
+	"/findout-app/__docusaurus/debug/metadata-5de": {
+		"__comp": "__comp---theme-debug-site-metadata-68-e-3d4",
+		"__context": {
+			"plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
+		}
+	},
+	"/findout-app/__docusaurus/debug/registry-23b": {
+		"__comp": "__comp---theme-debug-registry-679-501",
+		"__context": {
+			"plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
+		}
+	},
+	"/findout-app/__docusaurus/debug/routes-9e0": {
+		"__comp": "__comp---theme-debug-routes-946-699",
+		"__context": {
+			"plugin": "plugin---findout-app-docusaurus-debugbcb-e2f"
+		}
+	},
+	"/findout-app/docs-d22": {
+		"__comp": "__comp---theme-doc-page-1-be-9be",
+		"__context": {
+			"plugin": "plugin---findout-app-docsd-3-b-614"
+		},
+		"versionMetadata": "versionMetadata---findout-app-docs-935-d79"
+	},
+	"/findout-app/docs/building-release-d9a": {
+		"__comp": "__comp---theme-doc-item-178-a40",
+		"content": "content---findout-app-docs-building-release-6-d-7-836"
+	},
+	"/findout-app/docs/ci-cd-4b6": {
+		"__comp": "__comp---theme-doc-item-178-a40",
+		"content": "content---findout-app-docs-ci-cd-899-43a"
+	},
+	"/findout-app/docs/development-guide-a28": {
+		"__comp": "__comp---theme-doc-item-178-a40",
+		"content": "content---findout-app-docs-development-guide-832-380"
+	},
+	"/findout-app/docs/getting-started-9cc": {
+		"__comp": "__comp---theme-doc-item-178-a40",
+		"content": "content---findout-app-docs-getting-startedd-58-540"
+	},
+	"/findout-app/docs/intro-f23": {
+		"__comp": "__comp---theme-doc-item-178-a40",
+		"content": "content---findout-app-docs-intro-0-e-3-751"
+	},
+	"/findout-app/docs/project-architecture-f94": {
+		"__comp": "__comp---theme-doc-item-178-a40",
+		"content": "content---findout-app-docs-project-architecturef-9-b-fe7"
+	},
+	"/findout-app/docs/services-integration-039": {
+		"__comp": "__comp---theme-doc-item-178-a40",
+		"content": "content---findout-app-docs-services-integrationcbf-3c6"
+	},
+	"/findout-app/docs/troubleshooting-ef6": {
+		"__comp": "__comp---theme-doc-item-178-a40",
+		"content": "content---findout-app-docs-troubleshooting-9-d-9-038"
+	},
+	"/findout-app/-aa6": {
+		"__comp": "__comp---site-src-pages-index-jsc-4-f-f99",
+		"__context": {
+			"plugin": "plugin---findout-app-9-dd-58e"
+		},
+		"config": "config---findout-app-5-e-9-f93"
+	}
 }

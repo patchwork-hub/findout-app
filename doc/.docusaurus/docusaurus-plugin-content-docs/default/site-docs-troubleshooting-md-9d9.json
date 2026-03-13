@@ -1,22 +1,22 @@
 {
-  "unversionedId": "troubleshooting",
-  "id": "troubleshooting",
-  "title": "Troubleshooting",
-  "description": "Common Issues",
-  "source": "@site/docs/troubleshooting.md",
-  "sourceDirName": ".",
-  "slug": "/troubleshooting",
-  "permalink": "/findout-app/docs/troubleshooting",
-  "draft": false,
-  "tags": [],
-  "version": "current",
-  "sidebarPosition": 8,
-  "frontMatter": {
-    "sidebar_position": 8
-  },
-  "sidebar": "docs",
-  "previous": {
-    "title": "CI/CD",
-    "permalink": "/findout-app/docs/ci-cd"
-  }
+	"unversionedId": "troubleshooting",
+	"id": "troubleshooting",
+	"title": "Troubleshooting",
+	"description": "Common Issues",
+	"source": "@site/docs/troubleshooting.md",
+	"sourceDirName": ".",
+	"slug": "/troubleshooting",
+	"permalink": "/findout-app/docs/troubleshooting",
+	"draft": false,
+	"tags": [],
+	"version": "current",
+	"sidebarPosition": 8,
+	"frontMatter": {
+		"sidebar_position": 8
+	},
+	"sidebar": "docs",
+	"previous": {
+		"title": "CI/CD",
+		"permalink": "/findout-app/docs/ci-cd"
+	}
 }

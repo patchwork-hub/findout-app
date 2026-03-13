@@ -55,6 +55,8 @@ export type BottomStackParamList = {
 	Compose:
 		| {
 				type: 'create';
+				prefilledHashtags?: Patchwork.PatchworkCommunityHashtag[];
+				prefilledAudience?: Patchwork.ChannelAttributes;
 		  }
 		| {
 				type: 'repost' | 'edit';

@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Find Out Media</string>
-    <string name="StallionProjectId">YOUR_STALLION_PROJECT_ID</string>
-  <string name="StallionAppToken">YOUR_STALLION_APP_TOKEN</string>
+    <string name="StallionProjectId">6912ae22470155478e99ca3e</string>
+  <string name="StallionAppToken">spb_Kj74TpPaInIO2tmTsuzyvxZ3jGn5YC5itF4CqJWqFj</string>
 </resources>

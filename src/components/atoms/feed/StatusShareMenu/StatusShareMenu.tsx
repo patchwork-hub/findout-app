@@ -68,7 +68,7 @@ const StatusShareMenu: React.FC<Props> = ({ status }: Props) => {
 			onPress={onSocialShare}
 		>
 			<FontAwesomeIcon
-				icon={AppIcons.externalShare}
+				icon={AppIcons.share}
 				size={16}
 				color={
 					colorScheme == 'dark'

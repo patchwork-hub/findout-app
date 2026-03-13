@@ -10,6 +10,7 @@ import { useStatusContext } from '@/context/statusItemContext/statusItemContext'
 import CustomAlert from '@/components/atoms/common/CustomAlert/CustomAlert';
 import StatusShareMenu from '@/components/atoms/feed/StatusShareMenu/StatusShareMenu';
 import StatusTranslate from '@/components/atoms/feed/StatusTranslate/StatusTranslate';
+import StatusBookmarkButton from '@/components/atoms/feed/StatusBookmark/StatusBookmarkButton';
 import { useRepostUnRepostMutation } from '@/hooks/mutations/feed.mutation';
 import { updateStatusRepostCache } from '@/util/cache/feed/feedCache';
 import Toast from 'react-native-toast-message';
@@ -122,7 +123,8 @@ const StatusActionBar = ({ status, isFromNoti }: Props) => {
 			</View>
 			<View className="flex flex-row items-center">
 				{status.translated_text && <StatusTranslate {...{ status }} />}
-				<View>
+				<View className="flex flex-row items-center -mr-[6]">
+					<StatusBookmarkButton className="mr-3" {...{ status, isFromNoti }} />
 					<StatusShareMenu {...{ status, isFromNoti }} />
 				</View>
 				<StatusMenu status={status} />

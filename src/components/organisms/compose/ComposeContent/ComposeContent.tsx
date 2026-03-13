@@ -35,6 +35,7 @@ import SaveDraftButton from '@/components/atoms/compose/SaveDraftButton/SaveDraf
 import WordCountIndicator from '@/components/atoms/compose/WordCountIndicator/WordCountIndicator';
 import { useDraftPostsActions } from '@/store/compose/draftPosts/draftPostsStore';
 import { useEditAudienceStore } from '@/store/compose/audienceStore/editAudienceStore';
+import { useCreateAudienceStore } from '@/store/compose/audienceStore/createAudienceStore';
 import { getComposeUpdatePayload } from '@/util/helper/compose';
 import { useManageAttachmentActions } from '@/store/compose/manageAttachments/manageAttachmentStore';
 import { useTranslation } from 'react-i18next';
@@ -48,6 +49,8 @@ type Props = {
 	composeParams:
 		| {
 				type: 'create';
+				prefilledHashtags?: Patchwork.PatchworkCommunityHashtag[]; // allow this
+				prefilledAudience?: Patchwork.ChannelAttributes;
 		  }
 		| {
 				type: 'repost' | 'edit';
@@ -83,7 +86,20 @@ const ComposeContent = ({ composeParams }: Props) => {
 	const { t } = useTranslation();
 	const { clearQuotedStatus } = useQuoteStore();
 
+	const { setSelectedAudience } = useCreateAudienceStore();
+
 	useEffect(() => {
+		if (composeParams.type === 'create') {
+			if (composeParams.prefilledAudience) {
+				console.log(
+					'composeParams.prefilledAudience::',
+					composeParams.prefilledAudience,
+				);
+				setSelectedAudience([composeParams.prefilledAudience]);
+				composeDispatch({ type: 'visibility_change', payload: 'local' });
+			}
+		}
+
 		if (composeParams.type === 'schedule' && composeParams.scheduledStatus) {
 			const updateComposePayload = getComposeUpdatePayload({
 				type: 'schedule',
@@ -103,7 +119,12 @@ const ComposeContent = ({ composeParams }: Props) => {
 				);
 			}, 0);
 		}
-	}, [composeParams?.type]);
+	}, [
+		composeParams?.type,
+		composeParams.type === 'create'
+			? composeParams.prefilledAudience
+			: undefined,
+	]);
 
 	const toolbarAnimatedViewStyle = useAnimatedStyle(() => {
 		return {

@@ -1,4 +1,5 @@
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
+import { useGetForYouChannelList } from '@/hooks/queries/channel.queries';
 import { useComposeStatus } from '@/context/composeStatusContext/composeStatus.context';
 import { useAuthStore } from '@/store/auth/authStore';
 import { useCreateAudienceStore } from '@/store/compose/audienceStore/createAudienceStore';
@@ -29,9 +30,33 @@ export const SelectAudienceBtn = ({ composeType, onPress }: Props) => {
 			? editSelectedAudience
 			: selectedAudience;
 
+	const { data: newsmastChannels } = useGetForYouChannelList();
+
 	const isMastodonScheduleActive =
 		!!composeState.schedule?.schedule_detail_id &&
 		userOriginInstance !== DEFAULT_INSTANCE;
+
+	const getAudienceName = () => {
+		if (audienceSource && audienceSource.length > 0) {
+			const isValidAudience = newsmastChannels?.some(
+				channel => channel.attributes?.id === audienceSource[0].id,
+			);
+			if (isValidAudience) {
+				return `${audienceSource[0].name}${
+					audienceSource.length > 1 ? ` +${audienceSource.length - 1} more` : ''
+				}`;
+			}
+		}
+		if (composeState.visibility === 'local') return 'Local';
+		if (composeState.visibility === 'public') return 'Public';
+		if (composeState.visibility) {
+			return (
+				composeState.visibility.charAt(0).toUpperCase() +
+				composeState.visibility.slice(1)
+			);
+		}
+		return 'Show name';
+	};
 
 	return (
 		<Pressable
@@ -43,15 +68,7 @@ export const SelectAudienceBtn = ({ composeType, onPress }: Props) => {
 			onPress={onPress}
 			disabled={isMastodonScheduleActive}
 		>
-			<ThemeText className="w-auto">
-				{audienceSource && audienceSource.length > 0
-					? `${audienceSource[0].name}${
-							audienceSource.length > 1
-								? ` +${audienceSource.length - 1} more`
-								: ''
-					  }`
-					: 'Show name'}
-			</ThemeText>
+			<ThemeText className="w-auto">{getAudienceName()}</ThemeText>
 			<PollDropperIcon className="mt-0.5 ml-1" {...{ colorScheme }} />
 		</Pressable>
 	);

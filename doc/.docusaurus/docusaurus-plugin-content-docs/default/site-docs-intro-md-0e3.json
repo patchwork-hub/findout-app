@@ -1,22 +1,22 @@
 {
-  "unversionedId": "intro",
-  "id": "intro",
-  "title": "Introduction",
-  "description": "FindOut Media is a React Native repo for the FindOut Media Mastodon instance, an ongoing project designed to rebuild the place for honest, real conversations.",
-  "source": "@site/docs/intro.md",
-  "sourceDirName": ".",
-  "slug": "/intro",
-  "permalink": "/findout-app/docs/intro",
-  "draft": false,
-  "tags": [],
-  "version": "current",
-  "sidebarPosition": 1,
-  "frontMatter": {
-    "sidebar_position": 1
-  },
-  "sidebar": "docs",
-  "next": {
-    "title": "Getting Started",
-    "permalink": "/findout-app/docs/getting-started"
-  }
+	"unversionedId": "intro",
+	"id": "intro",
+	"title": "Introduction",
+	"description": "FindOut Media is a React Native repo for the FindOut Media Mastodon instance, an ongoing project designed to rebuild the place for honest, real conversations.",
+	"source": "@site/docs/intro.md",
+	"sourceDirName": ".",
+	"slug": "/intro",
+	"permalink": "/findout-app/docs/intro",
+	"draft": false,
+	"tags": [],
+	"version": "current",
+	"sidebarPosition": 1,
+	"frontMatter": {
+		"sidebar_position": 1
+	},
+	"sidebar": "docs",
+	"next": {
+		"title": "Getting Started",
+		"permalink": "/findout-app/docs/getting-started"
+	}
 }

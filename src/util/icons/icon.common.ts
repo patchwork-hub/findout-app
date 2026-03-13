@@ -19,6 +19,7 @@ import {
 	faBookmark as faBookmarkSolid,
 	faGear,
 	faEllipsisV,
+	faEllipsisH,
 	faListDots,
 	faThumbTack,
 	faUserPlus,
@@ -61,6 +62,8 @@ import {
 	faReply,
 	faGears,
 	faCheck,
+	faRetweet,
+	faLocationDot,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const AppIcons = {
@@ -72,6 +75,7 @@ export const AppIcons = {
 	bookmarkSolid: faBookmarkSolid as IconProp,
 	setting: faGear,
 	menu: faEllipsisV,
+	ellipsis: faEllipsisH,
 	list: faListDots,
 	pin: faThumbTack,
 	follow: faUserPlus,
@@ -125,4 +129,6 @@ export const AppIcons = {
 	developing: faGears,
 	copy: faCopy as IconProp,
 	check: faCheck as IconProp,
+	repost: faRetweet as IconProp,
+	location: faLocationDot as IconProp,
 };

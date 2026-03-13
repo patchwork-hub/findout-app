@@ -59,9 +59,9 @@
 	<key>RCTNewArchEnabled</key>
 	<true/>
 	<key>StallionAppToken</key>
-	<string>YOUR_STALLION_APP_TOKEN</string>
+	<string>spb_Kj74TpPaInIO2tmTsuzyvxZ3jGn5YC5itF4CqJWqFj</string>
 	<key>StallionProjectId</key>
-	<string>YOUR_STALLION_PROJECT_ID</string>
+	<string>6912ae22470155478e99ca3e</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>BBHSansBogle-Regular.ttf</string>

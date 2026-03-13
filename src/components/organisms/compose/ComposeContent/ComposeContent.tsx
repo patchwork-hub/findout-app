@@ -86,15 +86,11 @@ const ComposeContent = ({ composeParams }: Props) => {
 	const { t } = useTranslation();
 	const { clearQuotedStatus } = useQuoteStore();
 
-	const { setSelectedAudience } = useCreateAudienceStore();
+	const { setSelectedAudience, clearAudience } = useCreateAudienceStore();
 
 	useEffect(() => {
 		if (composeParams.type === 'create') {
 			if (composeParams.prefilledAudience) {
-				console.log(
-					'composeParams.prefilledAudience::',
-					composeParams.prefilledAudience,
-				);
 				setSelectedAudience([composeParams.prefilledAudience]);
 				composeDispatch({ type: 'visibility_change', payload: 'local' });
 			}
@@ -152,6 +148,7 @@ const ComposeContent = ({ composeParams }: Props) => {
 		if (composeParams.type === 'schedule') {
 			setShowDraftAlert(false);
 			composeDispatch({ type: 'clear' });
+			clearAudience();
 			navigation.goBack();
 			return true;
 		}
@@ -169,6 +166,7 @@ const ComposeContent = ({ composeParams }: Props) => {
 		} else {
 			setSelectedDraftId(null);
 			clearEditSelectedAudience();
+			clearAudience();
 			navigation.goBack();
 		}
 		return true;

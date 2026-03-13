@@ -51,7 +51,7 @@ const DraftAlert = ({
 	const { resetAttachmentStore } = useManageAttachmentActions();
 	const [_, setTotalText] = useState(totalText);
 	const { userOriginInstance } = useAuthStore();
-	const { selectedAudience } = useCreateAudienceStore();
+	const { selectedAudience, clearAudience } = useCreateAudienceStore();
 	const { editSelectedAudience, clearEditSelectedAudience } =
 		useEditAudienceStore();
 	const { colorScheme } = useColorScheme();
@@ -89,6 +89,8 @@ const DraftAlert = ({
 	const { mutate: saveDraft, isPending: isSavingDraft } = useSaveDraftMutation({
 		onSettled(data, error) {
 			setDraftType('create');
+			clearEditSelectedAudience();
+			clearAudience();
 			Toast.show({
 				type: !data && error ? 'errorToast' : 'successToast',
 				text1: !data && error ? error.message : t('compose.draft.saveSuccess'),
@@ -109,6 +111,8 @@ const DraftAlert = ({
 			onSettled(data, error) {
 				setDraftType('create');
 				setSelectedDraftId(null);
+				clearEditSelectedAudience();
+				clearAudience();
 				Toast.show({
 					type: !data && error ? 'errorToast' : 'successToast',
 					text1:
@@ -144,6 +148,7 @@ const DraftAlert = ({
 		setDraftType('create');
 		setShowDraftAlert(false);
 		clearEditSelectedAudience();
+		clearAudience();
 		setSelectedDraftId(null);
 		navigation.goBack();
 	};
@@ -172,6 +177,7 @@ const DraftAlert = ({
 		} else {
 			setSelectedDraftId(null);
 			clearEditSelectedAudience();
+			clearAudience();
 			navigation.goBack();
 			return false;
 		}

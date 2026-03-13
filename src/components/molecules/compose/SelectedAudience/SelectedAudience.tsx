@@ -63,14 +63,14 @@ export const SelectedAudience = ({ composeType }: Props) => {
 						<ThemeText className="text-xs">
 							#{communityHashtag.hashtag}
 						</ThemeText>
-						<Pressable
+						{/* <Pressable
 							onPress={() =>
 								handlePressClose(selAud.id?.toString(), communityHashtag)
 							}
 							hitSlop={5}
 						>
 							<CloseIcon className="p-3" {...{ colorScheme }} />
-						</Pressable>
+						</Pressable> */}
 					</View>
 				)),
 			)}

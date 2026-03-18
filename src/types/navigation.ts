@@ -321,6 +321,12 @@ export type GuestStackParamList = {
 
 export type SettingStackParamList = {
 	Settings: undefined;
+	AccountSettings: undefined;
+	NotificationSettings: undefined;
+	FeedSettings: undefined;
+	PrivacySettings: undefined;
+	PersonalizationSettings: undefined;
+	AccountManagement: undefined;
 	UpdatePassword: undefined;
 	MuteAndBlockList: undefined;
 	MyInformation: undefined;

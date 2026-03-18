@@ -41,6 +41,8 @@ import { usePushNotiRevokeTokenMutation } from '@/hooks/mutations/pushNoti.mutat
 import { DEFAULT_INSTANCE } from '@/util/constant';
 import { useAccountsStore } from '@/store/auth/accountsStore';
 import { useAccounts } from '@/hooks/custom/useAccounts';
+import { ChevronRightIcon } from '@/util/svg/icon.common';
+import customColor from '@/util/constant/color';
 
 type Props = {
 	isWelcome?: boolean;
@@ -316,15 +318,31 @@ const AccountSwitchingModal = ({ isWelcome = false }: Props) => {
 				/>
 			) : (
 				<Pressable
-					className="ml-12 mr-2 flex-row items-center justify-between active:opacity-80"
+					className="py-2.5 pt-3 px-2 pl-3 my-1 flex-row items-center justify-between active:opacity-80"
 					onPress={handlePresentModalPress}
 				>
-					<ThemeText>{t('setting.switch_account.title')}</ThemeText>
+					<View className="flex-row items-center">
+						<View className="w-8 items-center mr-1.5">
+							<FontAwesomeIcon
+								icon={AppIcons.users}
+								size={20}
+								color={
+									colorScheme === 'dark'
+										? customColor['patchwork-light-50']
+										: customColor['patchwork-dark-50']
+								}
+							/>
+						</View>
+						<ThemeText size={'sm_14'}>
+							{t('setting.switch_account.title')}
+						</ThemeText>
+					</View>
+
 					<Image
 						uri={currentUserInfo?.avatar}
 						resizeMode={'cover'}
-						className="w-[32] h-[32] bg-patchwork-dark-50 rounded-full"
-						iconSize={32}
+						className="w-[30] h-[30] bg-patchwork-dark-50 rounded-full mr-1"
+						iconSize={30}
 					/>
 				</Pressable>
 			)}

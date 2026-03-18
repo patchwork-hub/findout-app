@@ -44,12 +44,12 @@ const AccountSwitchingListItem = ({
 				{avatar ? (
 					<Image
 						source={{ uri: avatar }}
-						className="w-12 h-12 rounded-full"
+						className="w-10 h-10 rounded-full"
 						resizeMode="cover"
-						iconSize={48}
+						iconSize={40}
 					/>
 				) : (
-					<View className="w-12 h-12 rounded-full bg-gray-400 flex items-center justify-center">
+					<View className="w-10 h-10 rounded-full bg-gray-400 flex items-center justify-center">
 						<ThemeText size="sm_14">?</ThemeText>
 					</View>
 				)}

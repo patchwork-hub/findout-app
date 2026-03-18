@@ -12,6 +12,7 @@ import {
 	faHeart,
 	faPaperPlane,
 	faUser,
+	faEnvelope,
 } from '@fortawesome/free-regular-svg-icons';
 import {
 	faHeart as faHeartSolid,
@@ -131,4 +132,5 @@ export const AppIcons = {
 	check: faCheck as IconProp,
 	repost: faRetweet as IconProp,
 	location: faLocationDot as IconProp,
+	email: faEnvelope as IconProp,
 };

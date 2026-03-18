@@ -26,7 +26,7 @@ const AccountManagementScreen: React.FC<
 	};
 
 	const handleDeleteAccount = () => {
-		setAlertOpen(true);
+		navigation.navigate('DeleteAccount');
 	};
 
 	return (

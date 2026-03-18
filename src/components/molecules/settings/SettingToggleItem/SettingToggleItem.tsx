@@ -49,7 +49,7 @@ export const SettingToggleItem: React.FC<SettingToggleItemProps> = ({
 				className="flex-1 flex-row items-center"
 			>
 				{icon && (
-					<View className="w-8 items-center mr-3">
+					<View className="w-8 items-center mr-1.5">
 						<FontAwesomeIcon icon={icon} size={20} color={iconColor} />
 					</View>
 				)}

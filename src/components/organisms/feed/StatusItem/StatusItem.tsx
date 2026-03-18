@@ -11,7 +11,10 @@ import customColor from '@/util/constant/color';
 import { getQuoteInlineInfo } from '@/util/helper/helper';
 import { cn } from '@/util/helper/twutil';
 import { AppIcons } from '@/util/icons/icon.common';
-import { QuotePlaceholderIcon } from '@/util/svg/icon.status_actions';
+import {
+	QuotePlaceholderIcon,
+	StatusRepostIcon,
+} from '@/util/svg/icon.status_actions';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -82,10 +85,12 @@ const StatusItem = ({ status, isFromNoti, ...props }: Props) => {
 						onPress={() => handleOnPress(status)}
 						className="flex-row items-center mb-3 bg-patchwork-primary/10 dark:bg-patchwork-dark-100 self-start px-3 py-1 rounded-full ml-9 active:opacity-75"
 					>
-						<FontAwesomeIcon
-							icon={AppIcons.reply}
-							size={18}
-							color={customColor['patchwork-primary']}
+						<StatusRepostIcon
+							fill={
+								colorScheme === 'dark'
+									? customColor['patchwork-soft-primary']
+									: customColor['patchwork-primary']
+							}
 						/>
 						<ThemeText
 							variant={'textGrey'}
@@ -136,6 +141,7 @@ const StatusItem = ({ status, isFromNoti, ...props }: Props) => {
 										<StatusHeader
 											status={status?.quote?.quoted_status}
 											showAvatarIcon
+											isQuoteView
 										/>
 										<StatusContent
 											status={status?.quote?.quoted_status}
@@ -173,7 +179,7 @@ const StatusItem = ({ status, isFromNoti, ...props }: Props) => {
 					<StatusActionBar status={status} isFromNoti={isFromNoti} />
 				</View>
 			</View>
-			<Underline />
+			<View className="w-full h-[0.5px] bg-slate-200 dark:bg-patchwork-grey-100" />
 		</>
 	);
 };

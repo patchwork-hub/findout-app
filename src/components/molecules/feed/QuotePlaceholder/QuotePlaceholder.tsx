@@ -170,7 +170,11 @@ const QuotePlaceholder = ({
 					<View className="ml-2 flex-1">
 						{status && (
 							<>
-								<StatusHeader status={status} isFromNoti={isFromNoti} />
+								<StatusHeader
+									status={status}
+									isFromNoti={isFromNoti}
+									isFromQuoteCompose={isFromCompose}
+								/>
 								<View className={`${isFeedDetail ? '-ml-8' : ''}`}>
 									<StatusContent status={status} />
 								</View>
@@ -186,7 +190,9 @@ const QuotePlaceholder = ({
 								<StatusHeader
 									status={status.quote.quoted_status}
 									isFromNoti={isFromNoti}
+									isFromQuoteCompose={isFromCompose}
 									showAvatarIcon
+									isQuoteView
 								/>
 								<StatusContent status={status.quote.quoted_status} />
 

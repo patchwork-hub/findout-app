@@ -31,6 +31,8 @@ const RssContentCard = ({
 		navigation.navigate('WebViewer', { url });
 	};
 
+	const isFallbackImage = meta?.image?.includes('fom-fallback.png');
+
 	return (
 		<View
 			className={cn(
@@ -43,20 +45,38 @@ const RssContentCard = ({
 				onPress={() => navigateToWebView(meta?.url ?? '')}
 				className="rounded-xl"
 			>
-				<ThemeImage
-					url={meta?.image}
-					imageStyle={{
-						height: isTablet ? 330 : 180,
-						width: '100%',
-						borderTopLeftRadius: 8,
-						borderTopRightRadius: 8,
-					}}
-					blurHash={meta?.blurhash}
-				/>
-
-				<View className="p-3">
-					<ThemeText size="fs_13">{metaCardTitle || meta?.title}</ThemeText>
-					<ThemeText numberOfLines={1} className="mt-1 underline">
+				{meta?.image && !isFallbackImage && (
+					<ThemeImage
+						url={meta?.image}
+						imageStyle={{
+							height: isTablet ? 330 : 180,
+							width: '100%',
+							borderTopLeftRadius: 8,
+							borderTopRightRadius: 8,
+						}}
+						blurHash={meta?.blurhash}
+					/>
+				)}
+				<View
+					className={cn(
+						'p-3 rounded-lg',
+						isFallbackImage || !meta?.image
+							? 'bg-patchwork-primary/5 dark:bg-patchwork-soft-primary/5 shadow-md'
+							: '',
+					)}
+				>
+					<ThemeText size="fs_13" className="font-NewsCycle_Bold">
+						{metaCardTitle || meta?.title}
+					</ThemeText>
+					<ThemeText
+						numberOfLines={1}
+						className={cn(
+							isFallbackImage || !meta?.image
+								? 'text-patchwork-primary dark:text-patchwork-soft-primary'
+								: '',
+							'mt-1 underline',
+						)}
+					>
 						{meta?.url?.split('/')?.slice(0, 3)?.join('/')}
 					</ThemeText>
 				</View>

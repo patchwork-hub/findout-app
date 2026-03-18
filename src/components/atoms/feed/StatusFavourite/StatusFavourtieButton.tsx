@@ -4,6 +4,7 @@ import { updateStatusFaouriteCache } from '@/util/cache/feed/feedCache';
 import customColor from '@/util/constant/color';
 import { formatNumber } from '@/util/helper/helper';
 import { AppIcons } from '@/util/icons/icon.common';
+import { StatusFavouriteIcon } from '@/util/svg/icon.status_actions';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { uniqueId } from 'lodash';
 import { useColorScheme } from 'nativewind';
@@ -43,10 +44,8 @@ const StatusFavourtieButton = ({ status, isFromNoti, ...props }: Props) => {
 			{...props}
 			onPress={handleFavourite}
 		>
-			<FontAwesomeIcon
-				icon={isFavourited ? AppIcons.heartSolid : AppIcons.heartRegular}
-				size={18}
-				color={
+			<StatusFavouriteIcon
+				fill={
 					isFavourited && colorScheme == 'dark'
 						? customColor['patchwork-soft-primary']
 						: isFavourited && colorScheme == 'light'

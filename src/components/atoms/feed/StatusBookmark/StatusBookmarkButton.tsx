@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { AppIcons } from '@/util/icons/icon.common';
 import customColor from '@/util/constant/color';
 import { cn } from '@/util/helper/twutil';
+import { StatusBookmarkIcon } from '@/util/svg/icon.status_actions';
 
 type Props = {
 	status: Patchwork.Status;
@@ -47,16 +48,11 @@ const StatusBookmarkButton: React.FC<Props> = ({
 			)}
 			onPress={onBookmarkStatus}
 			disabled={toggleBookmarkStatus.isPending}
+			hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
 			{...props}
 		>
-			<FontAwesomeIcon
-				icon={
-					status?.bookmarked || isBookmarked
-						? AppIcons.bookmarkSolid
-						: AppIcons.bookmarkRegular
-				}
-				size={16}
-				color={
+			<StatusBookmarkIcon
+				fill={
 					status?.bookmarked || isBookmarked
 						? colorScheme === 'dark'
 							? customColor['patchwork-soft-primary']

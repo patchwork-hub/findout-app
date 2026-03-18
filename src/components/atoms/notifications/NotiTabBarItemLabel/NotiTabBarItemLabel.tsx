@@ -11,7 +11,7 @@ const NotiTabBarItemLabel = ({ route, focused }: NotiTabBarItemLabelProps) => {
 		<ThemeText
 			className={`text-sm font-NewsCycle_Bold ${
 				focused
-					? 'text-patchwork- dark:text-patchwork-soft-primary'
+					? 'text-patchwork-primary dark:text-patchwork-soft-primary'
 					: 'text-slate-400 dark:text-patchwork-grey-100'
 			}`}
 		>

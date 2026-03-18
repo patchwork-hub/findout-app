@@ -7,7 +7,11 @@ import {
 	MenuTrigger,
 } from 'react-native-popup-menu';
 import MenuOptionIcon from './MenuOptionIcon/MenuOptionIcon';
-import { StatusTranslateIcon } from '@/util/svg/icon.status_actions';
+import {
+	StatusDeleteOutlineIcon,
+	StatusEditOutlineIcon,
+	StatusTranslateIcon,
+} from '@/util/svg/icon.status_actions';
 import customColor from '@/util/constant/color';
 import { useAuthStore } from '@/store/auth/authStore';
 import { useStatusDeleteMutation } from '@/hooks/mutations/statusActions.mutation';
@@ -180,7 +184,7 @@ const StatusMenu = ({ status }: { status: Patchwork.Status }) => {
 						className="p-2 rounded-full aspect-square items-center ml-1.5"
 					>
 						<FontAwesomeIcon
-							icon={AppIcons.menu}
+							icon={AppIcons.ellipsis}
 							size={18}
 							color={
 								colorScheme == 'dark'
@@ -208,10 +212,8 @@ const StatusMenu = ({ status }: { status: Patchwork.Status }) => {
 									<MenuOption onSelect={onPressEditStatus}>
 										<MenuOptionIcon
 											icon={
-												<FontAwesomeIcon
-													icon={AppIcons.edit}
-													size={15}
-													color={
+												<StatusEditOutlineIcon
+													stroke={
 														colorScheme == 'dark'
 															? '#fff'
 															: customColor['patchwork-grey-100']
@@ -227,14 +229,13 @@ const StatusMenu = ({ status }: { status: Patchwork.Status }) => {
 							<MenuOption onSelect={onPressShowDeleteModal}>
 								<MenuOptionIcon
 									icon={
-										<FontAwesomeIcon
-											icon={AppIcons.delete}
-											size={16}
-											color={
+										<StatusDeleteOutlineIcon
+											fill={
 												colorScheme == 'dark'
 													? '#fff'
 													: customColor['patchwork-grey-100']
 											}
+											colorScheme={colorScheme}
 										/>
 									}
 									name={t('timeline.delete')}

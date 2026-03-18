@@ -12,6 +12,7 @@ import { getComeFromByPage } from '@/util/helper/feed';
 import { formatNumber } from '@/util/helper/helper';
 import { cn } from '@/util/helper/twutil';
 import { AppIcons } from '@/util/icons/icon.common';
+import { StatusReplyIcon } from '@/util/svg/icon.status_actions';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -81,10 +82,8 @@ const StatusReplyButton = ({ count, status, ...props }: Props) => {
 			onPress={handlePress}
 			{...props}
 		>
-			<FontAwesomeIcon
-				icon={AppIcons.comment}
-				size={18}
-				color={
+			<StatusReplyIcon
+				fill={
 					currentFocusStatus &&
 					currentPage == 'FeedDetail' &&
 					currentFocusStatus.id == status.id &&

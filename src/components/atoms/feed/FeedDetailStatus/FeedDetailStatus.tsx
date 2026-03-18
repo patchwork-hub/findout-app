@@ -66,6 +66,7 @@ const FeedDetailStatus = ({ feedDetail }: { feedDetail: Patchwork.Status }) => {
 							<StatusHeader
 								status={feedDetail.quote.quoted_status}
 								showAvatarIcon
+								isQuoteView
 							/>
 							<StatusContent
 								status={feedDetail.quote.quoted_status}

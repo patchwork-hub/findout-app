@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useWindowDimensions } from 'react-native';
-import { TabBarItem, TabView } from 'react-native-tab-view';
+import { TabView } from 'react-native-tab-view';
 import { useColorScheme } from 'nativewind';
 import { useTranslation } from 'react-i18next';
 import BackButton from '@/components/atoms/common/BackButton/BackButton';
@@ -85,19 +85,11 @@ const Notification = ({ route }: { route: NotificationScreenRouteProp }) => {
 						}}
 						tabStyle={{
 							width: (layout.width - 32) / 3,
+							marginTop: -5,
 						}}
-						renderTabBarItem={tabBarItemProps => {
-							const { key, ...rest } = tabBarItemProps;
-							return (
-								<TabBarItem
-									key={key}
-									{...rest}
-									label={({ route, focused }) => (
-										<NotiTabBarItemLabel {...{ route, focused }} />
-									)}
-								/>
-							);
-						}}
+						renderLabel={({ route, focused }) => (
+							<NotiTabBarItemLabel {...{ route, focused }} />
+						)}
 					/>
 				)}
 			/>

@@ -4,6 +4,7 @@ import {
 	Defs,
 	G,
 	Path,
+	Rect,
 	Svg,
 	SvgProps,
 } from 'react-native-svg';
@@ -283,7 +284,7 @@ export const StatusTranslateIcon = ({
 	<Svg width={24} height={24} viewBox="0 0 24 24" fill="none" {...props}>
 		<Path
 			d="M9.91666 18.3334L13.7083 8.33335H15.4583L19.25 18.3334H17.5L16.625 15.7917H12.5833L11.6667 18.3334H9.91666ZM13.0833 14.3334H16.0833L14.625 10.2084H14.5417L13.0833 14.3334ZM3.33333 15.8334L2.16666 14.6667L6.37499 10.4584C5.84722 9.87502 5.38555 9.27085 4.98999 8.64585C4.59388 8.02085 4.24999 7.36113 3.95833 6.66669H5.70833C5.95833 7.16669 6.22583 7.61808 6.51083 8.02085C6.79527 8.42363 7.13888 8.84724 7.54166 9.29169C8.15277 8.62502 8.65972 7.94113 9.06249 7.24002C9.46527 6.53835 9.80555 5.79169 10.0833 5.00002H0.833328V3.33335H6.66666V1.66669H8.33333V3.33335H14.1667V5.00002H11.75C11.4583 5.98613 11.0625 6.94446 10.5625 7.87502C10.0625 8.80558 9.44444 9.68058 8.70833 10.5L10.7083 12.5417L10.0833 14.25L7.49999 11.6667L3.33333 15.8334Z"
-			fill={props?.fill || colorScheme == 'dark' ? '#fff' : '#000'}
+			fill={props?.fill || (colorScheme == 'dark' ? '#fff' : '#000')}
 		/>
 	</Svg>
 );
@@ -336,7 +337,7 @@ export const QuotePlaceholderIcon = ({
 	colorScheme,
 	...props
 }: SvgProps & ColorSchemeType) => (
-	<Svg viewBox="0 0 24 24" fill="none" width={26} height={26} {...props}>
+	<Svg viewBox="0 0 24 24" width={26} height={26} {...props} fill="none">
 		<G strokWidth="0"></G>
 		<G strokeLinecap="round" strokeLinejoin="round"></G>
 		<G>
@@ -345,6 +346,145 @@ export const QuotePlaceholderIcon = ({
 				fill={
 					props?.fill || (colorScheme == 'dark' ? '#fff' : colors.gray[500])
 				}
+			></Path>
+		</G>
+	</Svg>
+);
+
+export const StatusRepostIcon = ({
+	colorScheme,
+	...props
+}: SvgProps & ColorSchemeType) => (
+	<Svg
+		viewBox="0 0 24 24"
+		width={17}
+		height={17}
+		{...props}
+		// fill="none"
+	>
+		<Path
+			d="M4.51617 6.9986C6.13179 4.58593 8.88099 2.99979 11.9995 2.99979C15.7267 2.99979 18.9259 5.26459 20.2927 8.49676C20.5079 9.00543 21.0946 9.24341 21.6033 9.0283C22.1119 8.81318 22.3499 8.22644 22.1348 7.71777C20.466 3.7716 16.5582 0.999786 11.9995 0.999786C8.27776 0.999786 4.9897 2.84823 2.99988 5.67416V2.9986C2.99988 2.44631 2.55216 1.9986 1.99988 1.9986C1.44759 1.9986 0.999878 2.44631 0.999878 2.9986V7.9986C0.999878 8.55088 1.44759 8.9986 1.99988 8.9986H6.99988C7.55216 8.9986 7.99988 8.55088 7.99988 7.9986C7.99988 7.44631 7.55216 6.9986 6.99988 6.9986H4.51617Z"
+			fill={props?.fill || (colorScheme == 'dark' ? '#fff' : colors.gray[500])}
+		></Path>
+		<Path
+			d="M2.39572 14.9713C2.90439 14.7562 3.49113 14.9942 3.70625 15.5029C5.07309 18.735 8.27228 20.9998 11.9995 20.9998C15.118 20.9998 17.8672 19.4137 19.4828 17.001H16.9991C16.4468 17.001 15.9991 16.5533 15.9991 16.001C15.9991 15.4487 16.4468 15.001 16.9991 15.001H21.9991C22.5514 15.001 22.9991 15.4487 22.9991 16.001V21.001C22.9991 21.5533 22.5514 22.001 21.9991 22.001C21.4468 22.001 20.9991 21.5533 20.9991 21.001V18.3255C19.0093 21.1514 15.7212 22.9998 11.9995 22.9998C7.44077 22.9998 3.53298 20.228 1.86419 16.2818C1.64908 15.7732 1.88705 15.1864 2.39572 14.9713Z"
+			fill={props?.fill || (colorScheme == 'dark' ? '#fff' : colors.gray[500])}
+		></Path>
+	</Svg>
+);
+
+export const StatusFavouriteIcon = ({
+	colorScheme,
+	...props
+}: SvgProps & ColorSchemeType) => (
+	<Svg viewBox="-0.5 0 25 24" width={19} height={19} {...props}>
+		<Path
+			d="M16.5 2C14.8335 2 13.2217 2.70703 12 3.93652C10.7783 2.70704 9.1665 2 7.5 2C3.3785 2 0.5 5.08423 0.5 9.5C0.5 14.1284 4.84516 19.4619 11.311 22.7719C11.5267 22.8827 11.7633 22.9379 12 22.9379C12.2367 22.9379 12.4733 22.8827 12.689 22.7719C19.1548 19.4619 23.5 14.1284 23.5 9.5C23.5 5.08423 20.6217 2 16.5 2ZM12 20.8764C6.30767 17.8962 2.5 13.3467 2.5 9.5C2.5 6.15893 4.4625 4 7.5 4C9.5 4 11.25 5.75 12 7.5C12.75 5.75 14.5 4 16.5 4C19.5377 4 21.5 6.15893 21.5 9.5C21.5 13.3467 17.6923 17.8962 12 20.8764Z"
+			fill={props?.fill || (colorScheme == 'dark' ? '#fff' : colors.gray[500])}
+		></Path>
+	</Svg>
+);
+
+export const StatusReplyIcon = ({
+	colorScheme,
+	...props
+}: SvgProps & ColorSchemeType) => (
+	<Svg viewBox="0 0 24 24" width={19} height={19} {...props}>
+		<Path
+			clipRule="evenodd"
+			d="M12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C13.414 21 14.7492 20.6747 15.9373 20.0956C16.1277 20.0028 16.3428 19.9728 16.5514 20.0101L20.7565 20.7619L19.9927 16.5927C19.954 16.3815 19.9843 16.1633 20.0792 15.9707C20.6685 14.7742 21 13.4273 21 12C21 7.02944 16.9706 3 12 3ZM1 12C1 5.92486 5.92488 1 12 1C18.0752 1 23 5.92488 23 12C23 13.6205 22.649 15.1615 22.018 16.549L22.9836 21.8198C23.0427 22.1423 22.94 22.4733 22.7086 22.7056C22.4773 22.938 22.1468 23.0421 21.824 22.9844L16.512 22.0348C15.1341 22.6553 13.6061 23 12 23C5.92488 23 1 18.0752 1 12Z"
+			fill={props?.fill || (colorScheme == 'dark' ? '#fff' : colors.gray[500])}
+			fillRule="evenodd"
+		></Path>
+	</Svg>
+);
+
+export const StatusBookmarkIcon = ({
+	colorScheme,
+	...props
+}: SvgProps & ColorSchemeType) => (
+	<Svg
+		viewBox="0 0 24 24"
+		width={18}
+		height={18}
+		className="x1lliihq x2lah0s x1n2onr6 x19zyb68 x16ye13r x5lhr3w x86x9uj"
+		{...props}
+	>
+		<Path d="M11.5391 17.1123C11.8756 16.9374 12.2885 16.967 12.5996 17.2002L17.4004 20.7998C18.0596 21.294 19 20.824 19 20V5C19 3.89543 18.1046 3 17 3H7C5.89543 3 5 3.89543 5 5V20C5 20.824 5.94038 21.294 6.59961 20.7998L11.4004 17.2002L11.5391 17.1123ZM21 20C21 22.472 18.1779 23.8833 16.2002 22.4004L12 19.249L7.7998 22.4004C5.82211 23.8833 3 22.472 3 20V5C3 2.79086 4.79086 1 7 1H17C19.2091 1 21 2.79086 21 5V20Z"></Path>
+	</Svg>
+);
+
+export const StatusCopyIcon = ({
+	colorScheme,
+	...props
+}: SvgProps & ColorSchemeType) => (
+	<Svg viewBox="0 0 512 512" width={22} height={22} {...props}>
+		<Path
+			d="M448 256L272 88v96C103.57 184 64 304.77 64 424c48.61-62.24 91.6-96 208-96v96z"
+			fill="none"
+			stroke={
+				props?.stroke || (colorScheme == 'dark' ? '#fff' : colors.gray[500])
+			}
+			strokeLinejoin="round"
+			strokeWidth="32"
+		/>
+	</Svg>
+);
+
+export const StatusDeleteOutlineIcon = ({
+	colorScheme,
+	...props
+}: SvgProps & ColorSchemeType) => (
+	<Svg viewBox="0 0 24 24" fill="none" width={21} height={21} {...props}>
+		<G id="SVGRepo_bgCarrier" strokeWidth="0"></G>
+		<G strokeLinecap="round" strokeLinejoin="round"></G>
+		<G>
+			<Path
+				d="M5 7.5H19L18 21H6L5 7.5Z"
+				stroke={colorScheme == 'dark' ? '#000' : '#fff'}
+				strokeLinejoin="round"
+			></Path>
+			<Path
+				d="M15.5 9.5L15 19"
+				stroke={colorScheme == 'dark' ? '#000' : '#fff'}
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			></Path>
+			<Path
+				d="M12 9.5V19"
+				stroke={colorScheme == 'dark' ? '#000' : '#fff'}
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			></Path>
+			<Path
+				d="M8.5 9.5L9 19"
+				stroke={colorScheme == 'dark' ? '#000' : '#fff'}
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			></Path>
+			<Path
+				d="M16 5H19C20.1046 5 21 5.89543 21 7V7.5H3V7C3 5.89543 3.89543 5 5 5H8M16 5L15 3H9L8 5M16 5H8"
+				stroke={colorScheme == 'dark' ? '#000' : '#fff'}
+				strokeLinejoin="round"
+			></Path>
+		</G>
+	</Svg>
+);
+
+export const StatusEditOutlineIcon = ({
+	colorScheme,
+	...props
+}: SvgProps & ColorSchemeType) => (
+	<Svg viewBox="0 0 24 24" fill="none" width={23} height={23} {...props}>
+		<G strokeWidth="0"></G>
+		<G strokeLinecap="round" strokeLinejoin="round"></G>
+		<G>
+			<Path
+				d="M15.6287 5.12132L4.31497 16.435M15.6287 5.12132L19.1642 8.65685M15.6287 5.12132L17.0429 3.70711C17.4334 3.31658 18.0666 3.31658 18.4571 3.70711L20.5784 5.82843C20.969 6.21895 20.969 6.85212 20.5784 7.24264L19.1642 8.65685M7.85051 19.9706L4.31497 16.435M7.85051 19.9706L19.1642 8.65685M7.85051 19.9706L3.25431 21.0312L4.31497 16.435"
+				stroke={props.stroke}
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth={1.4}
 			></Path>
 		</G>
 	</Svg>

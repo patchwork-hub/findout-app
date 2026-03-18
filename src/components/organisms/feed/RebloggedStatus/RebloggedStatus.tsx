@@ -7,7 +7,6 @@ import { useActiveFeedAction } from '@/store/feed/activeFeed';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { HomeStackParamList } from '@/types/navigation';
 import { useNavigation } from '@react-navigation/native';
-import { useAuthStore } from '@/store/auth/authStore';
 import { useStatusContext } from '@/context/statusItemContext/statusItemContext';
 import Image from '@/components/atoms/common/Image/Image';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
@@ -28,7 +27,6 @@ const RebloggedStatus = ({
 	const { t, i18n } = useTranslation();
 	const isBurmese = i18n.language === 'my';
 	const burmeseLineHeight = 32;
-	const { userInfo } = useAuthStore();
 
 	const { setActiveFeed, setFeedDetailExtraPayload } = useActiveFeedAction();
 	const { extraPayload } = useStatusContext();
@@ -95,21 +93,21 @@ const RebloggedStatus = ({
 							</ThemeText>
 						</View>
 
-						<View className="flex-row mb-2">
-							<Pressable className="mr-3">
-								<View>
-									<Image
-										source={{ uri: reblogStatus.account.avatar }}
-										className="w-[40] h-[40] rounded-full opacity-90"
-									/>
-									<Image
-										source={{ uri: status.account.avatar }}
-										className="w-[22] h-[22] rounded-full absolute top-5 left-6  border-patchwork-grey-50 border"
-										iconSize={20}
-									/>
-								</View>
+						<View className="flex-row mb-1 justify-between items-center">
+							<Pressable className="mr-1">
+								<Image
+									source={{ uri: reblogStatus.account.avatar }}
+									className="w-[36] h-[36] rounded-full opacity-90"
+								/>
+								<Image
+									source={{ uri: status.account.avatar }}
+									className="w-[22] h-[22] rounded-full absolute top-4 left-5  border-patchwork-grey-50 border"
+									iconSize={20}
+								/>
 							</Pressable>
-							<StatusHeader status={status.reblog} isFromNoti={isFromNoti} />
+							<View className="flex-1 ml-2">
+								<StatusHeader status={reblogStatus} isFromNoti={isFromNoti} />
+							</View>
 						</View>
 
 						<View className="ml-12">

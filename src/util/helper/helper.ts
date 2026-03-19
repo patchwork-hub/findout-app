@@ -785,3 +785,7 @@ export const getQuotePolicy = (status: Patchwork.Status): QuotePolicy => {
 
 	return 'nobody';
 };
+
+export function extractPlainText(html: string): string {
+	return html ? html.replace(/<[^>]+>/g, '') : '';
+}

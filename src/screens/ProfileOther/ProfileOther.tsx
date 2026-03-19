@@ -218,15 +218,6 @@ const ProfileOther: React.FC<HomeStackScreenProps<'ProfileOther'>> = ({
 										relationships={relationships}
 										isFromNoti={isFromNoti}
 										isOwnChannelFeed={isOwnChannelFeed}
-										onPressLinkByOtherInstanceUser={(linkInfo: {
-											label: string;
-											content: string;
-										}) =>
-											setLinkInfoForOtherInstanceUser({
-												isVisible: true,
-												linkInfo,
-											})
-										}
 									/>
 								);
 							}}

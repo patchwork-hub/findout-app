@@ -12,18 +12,25 @@ import { useTranslation } from 'react-i18next';
 interface Profile {
 	display_name?: string;
 	bio?: string;
+	metadata?: { name: string; value: string }[];
 }
 
 interface ProfileFormProps {
 	profile?: Profile;
 	onChangeName: (text: string) => void;
 	onChangeBio: (text: string) => void;
+	onChangeMetaLink: (
+		index: number,
+		field: 'name' | 'value',
+		value: string,
+	) => void;
 }
 
 const ProfileForm: React.FC<ProfileFormProps> = ({
 	profile,
 	onChangeBio,
 	onChangeName,
+	onChangeMetaLink,
 }) => {
 	const { t } = useTranslation();
 	const { userInfo } = useAuthStore();
@@ -43,6 +50,24 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
 				value={profile?.bio?.replace(DefaultBioTextForChannel, '') || ''}
 				onChangeText={onChangeBio}
 			/>
+			{[0, 1, 2, 3].map(index => (
+				<View
+					key={index}
+					className="mt-2 p-3 border border-slate-200 dark:border-slate-700 rounded-lg  dark:bg-slate-900"
+				>
+					<TextInput
+						placeholder={t('edit_profile.label')}
+						value={profile?.metadata?.[index]?.name || ''}
+						onChangeText={text => onChangeMetaLink(index, 'name', text)}
+					/>
+					<View className="h-3" />
+					<TextInput
+						placeholder={t('edit_profile.content')}
+						value={profile?.metadata?.[index]?.value || ''}
+						onChangeText={text => onChangeMetaLink(index, 'value', text)}
+					/>
+				</View>
+			))}
 			{userInfo?.note?.includes(DefaultBioTextForChannel) &&
 				userOriginInstance == CHANNEL_INSTANCE && (
 					<View className="bg-slate-100 dark:bg-patchwork-dark-50 opacity-80 dark:opacity-100 py-3 px-5 -mt-2 rounded-bl-lg rounded-br-lg">

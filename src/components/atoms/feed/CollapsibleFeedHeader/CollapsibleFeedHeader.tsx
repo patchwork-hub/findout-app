@@ -62,6 +62,7 @@ import { useTranslation } from 'react-i18next';
 import { EnableNotiBellIcon } from '@/util/svg/icon.status_actions';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { AppIcons } from '@/util/icons/icon.common';
+import SocialSection from '@/components/molecules/profile/SocialSection/SocialSection';
 
 type ChannelProps = {
 	type: 'Channel';
@@ -81,8 +82,6 @@ type ChannelProps = {
 type ProfileProps = {
 	type: 'Profile';
 	profile: Patchwork.Account;
-	onPressPlusIcon?: () => void;
-	onPressEditIcon?: () => void;
 	is_my_account?: boolean;
 	relationships?: Patchwork.RelationShip[];
 	myAcctId?: string;
@@ -90,10 +89,6 @@ type ProfileProps = {
 	otherUserId?: string;
 	isFromNoti?: boolean;
 	isOwnChannelFeed?: boolean;
-	onPressLinkByOtherInstanceUser?: (linkInfo: {
-		label: string;
-		content: string;
-	}) => void;
 };
 
 const CollapsibleFeedHeader = (props: ChannelProps | ProfileProps) => {
@@ -561,13 +556,10 @@ const CollapsibleFeedHeader = (props: ChannelProps | ProfileProps) => {
 		}
 	};
 
-	const isAccVerified = useMemo(() => {
-		if (props?.type == 'Profile' && props.profile) {
-			return checkIsAccountVerified(props.profile.fields);
-		}
-		return false;
-		//@ts-expect-error
-	}, [props?.type, props?.profile?.fields]);
+	const isAccVerified =
+		props?.type === 'Profile' && props.profile
+			? checkIsAccountVerified(props.profile.fields)
+			: false;
 
 	return (
 		<View
@@ -647,15 +639,10 @@ const CollapsibleFeedHeader = (props: ChannelProps | ProfileProps) => {
 						userBio={props.profile?.note}
 						emojis={props.profile.emojis}
 					/>
-					{/* <SocialSection
+					<SocialSection
 						isMyAccount={props.is_my_account}
 						accountInfo={props?.profile}
-						onPressEditIcon={props.onPressEditIcon}
-						onPressPlusIcon={props.onPressPlusIcon}
-						onPressLinkByOtherInstanceUser={
-							props.onPressLinkByOtherInstanceUser
-						}
-					/> */}
+					/>
 					<UserStats
 						posts={props.profile.statuses_count}
 						following={props.profile?.following_count}

@@ -198,6 +198,12 @@
 	"display_name": "Display name",
 	"edit": "Edit",
 	"edit_account": "Edit account",
+	"edit_profile": {
+		"profile_metadata": "Metadata",
+		"metadata_desc": "Your homepage, pronouns, age, anything you want.",
+		"label": "Label",
+		"content": "Content"
+	},
 	"filter_setting": "Filter setting",
 	"for_you": "For you",
 	"hashtag": "Hashtag",
@@ -674,5 +680,11 @@
 		"create_a_new_one": "Create a new one",
 		"user_blocked": "{{user}} has been blocked",
 		"user_muted": "{{user}} has been muted"
+	},
+	"website_verification": "Website verification",
+	"verification": {
+		"verification": "Verification",
+		"website_verification": "Website verification",
+		"add_website_to_profile": "Add website to profile"
 	}
 }

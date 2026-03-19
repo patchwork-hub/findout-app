@@ -45,3 +45,4 @@ export { default as QuotePost } from './QuotePost/QuotePost';
 export { default as QuotedBy } from './QuotedBy/QuotedBy';
 export { default as SplashScreen } from './SplashScreen/SplashScreen';
 export { default as LoginAnotherAccount } from './LoginAnotherAccount/LoginAnotherAccount';
+export { default as Verification } from './Verification/Verification';

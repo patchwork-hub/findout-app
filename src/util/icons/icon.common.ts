@@ -13,6 +13,7 @@ import {
 	faPaperPlane,
 	faUser,
 	faEnvelope,
+	faCircleCheck,
 } from '@fortawesome/free-regular-svg-icons';
 import {
 	faHeart as faHeartSolid,
@@ -65,6 +66,7 @@ import {
 	faCheck,
 	faRetweet,
 	faLocationDot,
+	faCheckDouble,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const AppIcons = {
@@ -133,4 +135,5 @@ export const AppIcons = {
 	repost: faRetweet as IconProp,
 	location: faLocationDot as IconProp,
 	email: faEnvelope as IconProp,
+	circleCheck: faCircleCheck as IconProp,
 };

@@ -33,7 +33,7 @@ export type RootStackParamList = {
 		id: Patchwork.Attachment['id'];
 	};
 	QuotePost: { statusId: string };
-	EditProfile: undefined;
+	EditProfile: { fromVerification?: boolean } | undefined;
 	LocalImageViewer: {
 		imageUrl: {
 			url: string;
@@ -405,6 +405,7 @@ export type SettingStackParamList = {
 		  };
 	Timeline: undefined;
 	LoginAnotherAccount: undefined;
+	Verification: undefined;
 };
 
 export type ListsStackParamList = {

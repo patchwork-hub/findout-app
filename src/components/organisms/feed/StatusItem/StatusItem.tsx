@@ -85,12 +85,10 @@ const StatusItem = ({ status, isFromNoti, ...props }: Props) => {
 						onPress={() => handleOnPress(status)}
 						className="flex-row items-center mb-3 bg-patchwork-primary/10 dark:bg-patchwork-dark-100 self-start px-3 py-1 rounded-full ml-9 active:opacity-75"
 					>
-						<StatusRepostIcon
-							fill={
-								colorScheme === 'dark'
-									? customColor['patchwork-soft-primary']
-									: customColor['patchwork-primary']
-							}
+						<FontAwesomeIcon
+							icon={AppIcons.reply}
+							size={18}
+							color={customColor['patchwork-primary']}
 						/>
 						<ThemeText
 							variant={'textGrey'}

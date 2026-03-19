@@ -19,12 +19,6 @@ const AccountManagementScreen: React.FC<
 	const [alertOpen, setAlertOpen] = useState(false);
 	const { colorScheme } = useColorScheme();
 
-	const handleOpenAdvancedSettings = () => {
-		Linking.openURL(`${DEFAULT_INSTANCE}/settings/profile`).catch(err =>
-			console.error('Failed to open URL:', err),
-		);
-	};
-
 	const handleDeleteAccount = () => {
 		navigation.navigate('DeleteAccount');
 	};
@@ -38,11 +32,11 @@ const AccountManagementScreen: React.FC<
 			<View className="flex-1 mx-4">
 				<AccountSwitchingModal />
 				<SettingSection
-					sectionKey="advanced_settings"
+					sectionKey="verification"
 					colorScheme={colorScheme!}
-					icon={AppIcons.setting}
-					title={t('setting.advanced_settings')}
-					onPress={handleOpenAdvancedSettings}
+					icon={AppIcons.circleCheck}
+					title={t('setting.verification', 'Verification')}
+					onPress={() => navigation.navigate('Verification')}
 				/>
 				<SettingSection
 					sectionKey="delete_account"

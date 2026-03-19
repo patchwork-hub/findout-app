@@ -15,6 +15,7 @@ import {
 	FollowerAccounts,
 	Compose,
 	LoginAnotherAccount,
+	Verification,
 } from '@/screens';
 import ProfileOther from '@/screens/ProfileOther/ProfileOther';
 import { SettingStackParamList } from '@/types/navigation';
@@ -108,6 +109,7 @@ const SettingStack = () => {
 				component={LoginAnotherAccount}
 				options={{ presentation: 'modal', headerShown: false }}
 			/>
+			<Stack.Screen name="Verification" component={Verification} />
 		</Stack.Navigator>
 	);
 };

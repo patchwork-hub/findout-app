@@ -1,8 +1,8 @@
 import React from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
 import { Button } from '@/components/atoms/common/Button/Button';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import ThemeModal from '@/components/atoms/common/ThemeModal/ThemeModal';
 import ManageAttachmentModal from '@/components/organisms/profile/ManageAttachment/MakeAttachmentModal';
 import LoadingModal from '@/components/atoms/common/LoadingModal/LoadingModal';
@@ -16,10 +16,17 @@ import HeaderMedia from '@/components/molecules/editProfile/HeaderMedia';
 import { cn } from '@/util/helper/twutil';
 import { isTablet } from '@/util/helper/isTablet';
 import { useTranslation } from 'react-i18next';
+import { RootStackParamList } from '@/types/navigation';
+import SafeScreen from '@/components/template/SafeScreen/SafeScreen';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
+type EditProfileRouteProp = RouteProp<RootStackParamList, 'EditProfile'>;
 
 const EditProfile = () => {
 	const { t } = useTranslation();
 	const navigation = useNavigation();
+	const route = useRoute<EditProfileRouteProp>();
+	const fromVerification = route?.params?.fromVerification;
 	const {
 		profile,
 		setProfile,
@@ -35,62 +42,91 @@ const EditProfile = () => {
 		isUpdatingProfile,
 		isDeletingMedia,
 		virtualKeyboardContainerStyle,
-	} = useEditProfile();
+	} = useEditProfile(fromVerification);
 
 	if (!userInfo) return null;
 	return (
-		<View className="flex-1 bg-white dark:bg-patchwork-dark-100">
-			<View
-				className={'flex-row items-center absolute px-5 z-40 py-2 '}
-				style={[{ paddingTop: top + 10 }]}
-			>
-				<TouchableOpacity
-					onPress={() => {
-						actions.onSelectMedia('header', []);
-						actions.onSelectMedia('avatar', []);
-						navigation.goBack();
-					}}
-					className="w-9 h-9 items-center justify-center rounded-full bg-patchwork-dark-100 opacity-50 mr-1"
-				>
-					<ProfileBackIcon forceLight />
-				</TouchableOpacity>
-			</View>
+		<SafeScreen isBottomSafe={true} isTopSafe={false}>
 			<View className="flex-1 bg-white dark:bg-patchwork-dark-100">
-				<ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+				<View
+					className={'flex-row items-center absolute px-5 z-40 py-2 top-10'}
+				>
+					<Pressable
+						onPress={() => {
+							actions.onSelectMedia('header', []);
+							actions.onSelectMedia('avatar', []);
+							navigation.goBack();
+						}}
+						className="w-9 h-9 items-center justify-center rounded-full bg-patchwork-dark-100 opacity-50 active:opacity-35 mr-1"
+					>
+						<ProfileBackIcon forceLight />
+					</Pressable>
+				</View>
+				<KeyboardAwareScrollView
+					style={{ flex: 1 }}
+					contentContainerStyle={{ flexGrow: 1, paddingBottom: 50 }}
+					showsVerticalScrollIndicator={false}
+					keyboardShouldPersistTaps="handled"
+					enableOnAndroid={true}
+					enableResetScrollToCoords={false}
+					extraScrollHeight={100}
+				>
 					<View className="flex-1 -mt-2">
 						<HeaderMedia header={header} actions={actions} />
 						<AvatarMedia avatar={avatar} actions={actions} />
-						<ThemeText emojis={userInfo.emojis} className="mx-auto">
+						<ThemeText
+							emojis={userInfo.emojis}
+							className="mx-auto font-NewsCycle_Bold mb-3 mt-1"
+						>
 							{userInfo.display_name || userInfo.username}
 						</ThemeText>
 						<ProfileForm
 							profile={profile}
 							onChangeName={name =>
-								setProfile(prev => ({
-									...prev,
-									display_name: name,
-								}))
+								setProfile(prev => {
+									if (!prev) return prev;
+									return {
+										...prev,
+										display_name: name,
+									};
+								})
 							}
 							onChangeBio={bio =>
-								setProfile(prev => ({
-									...prev,
-									bio: bio,
-								}))
+								setProfile(prev => {
+									if (!prev) return prev;
+									return {
+										...prev,
+										bio: bio,
+									};
+								})
+							}
+							onChangeMetaLink={(index, field, value) =>
+								setProfile(prev => {
+									if (!prev) return prev;
+									const newMetadata = [...prev.metadata];
+									if (newMetadata[index]) {
+										newMetadata[index] = {
+											...newMetadata[index],
+											[field]: value,
+										};
+									}
+									return {
+										...prev,
+										metadata: newMetadata,
+									};
+								})
 							}
 						/>
 					</View>
-				</ScrollView>
-				<Animated.View style={virtualKeyboardContainerStyle} />
+				</KeyboardAwareScrollView>
 				<Button
 					className={cn(
-						'mx-6 bottom-0 left-0 right-0 mb-5 ',
+						'mx-6 bottom-0 left-0 right-0 mb-5 mt-3',
 						isTablet ? 'w-[50%] self-center' : '',
 					)}
 					onPress={handleUpdateProfile}
 				>
-					<ThemeText className="text-white dark:text-white">
-						{t('common.save')}
-					</ThemeText>
+					<ThemeText className="text-white">{t('common.save')}</ThemeText>
 				</Button>
 			</View>
 			{/* Header Media Modal */}
@@ -159,7 +195,7 @@ const EditProfile = () => {
 				/>
 			)}
 			<LoadingModal isVisible={isDeletingMedia || isUpdatingProfile} />
-		</View>
+		</SafeScreen>
 	);
 };
 

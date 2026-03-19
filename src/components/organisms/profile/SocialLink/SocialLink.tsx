@@ -33,7 +33,7 @@ type Props = {
 };
 
 export type SocialMediaLink = {
-	icon: React.ReactNode;
+	icon: React.ReactElement;
 	title: string;
 };
 
@@ -58,17 +58,25 @@ const SocialLink: React.FC<Props> = ({
 		if (formType === 'edit') {
 			return data
 				.filter(item => platformTitles.has(item.name))
-				.map(item => ({
-					icon: Icons[capatilizeStr(item.name)] || (
-						<GlobeIcon colorScheme={'light'} />
-					),
-					title: item.name,
-				}));
+				.map(item => {
+					const iconFunction = Icons[capatilizeStr(item.name)];
+					return {
+						icon: iconFunction ? (
+							iconFunction(colorScheme)
+						) : (
+							<GlobeIcon colorScheme={colorScheme} />
+						),
+						title: item.name,
+					};
+				});
 		}
 
 		return SOCIAL_MEDIA_LINKS.filter(
 			link => !data.some(item => item.name === link.title),
-		);
+		).map(link => ({
+			icon: link.icon(colorScheme),
+			title: link.title,
+		}));
 	};
 
 	useEffect(() => {

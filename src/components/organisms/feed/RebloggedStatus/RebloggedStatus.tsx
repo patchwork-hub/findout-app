@@ -14,6 +14,10 @@ import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { AppIcons } from '@/util/icons/icon.common';
 import customColor from '@/util/constant/color';
+import { useMemo } from 'react';
+import { checkIsAccountVerified } from '@/util/helper/helper';
+import { useColorScheme } from 'nativewind';
+import { ProfileNameRedMark } from '@/util/svg/icon.profile';
 
 const RebloggedStatus = ({
 	status,
@@ -27,10 +31,16 @@ const RebloggedStatus = ({
 	const { t, i18n } = useTranslation();
 	const isBurmese = i18n.language === 'my';
 	const burmeseLineHeight = 32;
+	const { colorScheme } = useColorScheme();
 
 	const { setActiveFeed, setFeedDetailExtraPayload } = useActiveFeedAction();
 	const { extraPayload } = useStatusContext();
 	const navigation = useNavigation<StackNavigationProp<HomeStackParamList>>();
+
+	const isRebloggerVerified = useMemo(
+		() => checkIsAccountVerified(status.account.fields),
+		[status.account.fields],
+	);
 
 	const handleOnPressStatus = (status: Patchwork.Status) => {
 		setActiveFeed(status.reblog ? status.reblog : status);
@@ -71,7 +81,7 @@ const RebloggedStatus = ({
 				</View> */}
 				{status.reblog && (
 					<Pressable
-						className=" dark:border-patchwork-grey-70 rounded-xl"
+						className="dark:border-patchwork-grey-70 rounded-xl"
 						onPress={() => {
 							handleOnPressStatus(status.reblog!);
 						}}
@@ -93,17 +103,30 @@ const RebloggedStatus = ({
 							</ThemeText>
 						</View>
 
-						<View className="flex-row mb-1 justify-between items-center">
-							<Pressable className="mr-1">
-								<Image
-									source={{ uri: reblogStatus.account.avatar }}
-									className="w-[36] h-[36] rounded-full opacity-90"
-								/>
-								<Image
-									source={{ uri: status.account.avatar }}
-									className="w-[22] h-[22] rounded-full absolute top-4 left-5  border-patchwork-grey-50 border"
-									iconSize={20}
-								/>
+						<View className="flex-row mb-2">
+							<Pressable className="mr-3">
+								<View>
+									<Image
+										source={{ uri: reblogStatus.account.avatar }}
+										className="w-[36] h-[36] rounded-full opacity-90"
+									/>
+									<View className="absolute top-4 left-5">
+										<Image
+											source={{ uri: status.account.avatar }}
+											className="w-[22] h-[22] rounded-full border-patchwork-grey-50 border"
+											iconSize={20}
+										/>
+										{isRebloggerVerified && (
+											<View className="absolute -bottom-1 -right-1">
+												<ProfileNameRedMark
+													width={12}
+													height={12}
+													colorScheme={colorScheme}
+												/>
+											</View>
+										)}
+									</View>
+								</View>
 							</Pressable>
 							<View className="flex-1 ml-2">
 								<StatusHeader status={reblogStatus} isFromNoti={isFromNoti} />

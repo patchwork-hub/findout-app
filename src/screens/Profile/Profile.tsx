@@ -22,9 +22,7 @@ import {
 	Tabs,
 } from 'react-native-collapsible-tab-view';
 import CollapsibleFeedHeader from '@/components/atoms/feed/CollapsibleFeedHeader/CollapsibleFeedHeader';
-import useAppropiateColorHash from '@/hooks/custom/useAppropiateColorHash';
 import customColor from '@/util/constant/color';
-
 import { useAuthStore } from '@/store/auth/authStore';
 import {
 	CHANNEL_INSTANCE,
@@ -33,32 +31,19 @@ import {
 	NEWSMAST_INSTANCE_V1,
 } from '@/util/constant';
 import { CircleFade } from 'react-native-animated-spinkit';
-import SocialLink from '@/components/organisms/profile/SocialLink/SocialLink';
-import { useProfileMutation } from '@/hooks/mutations/profile.mutation';
-import {
-	AccountInfoQueryKey,
-	UpdateProfilePayload,
-} from '@/types/queries/profile.type';
-import { handleError } from '@/util/helper/helper';
+import { AccountInfoQueryKey } from '@/types/queries/profile.type';
 import StatusWrapper from '@/components/organisms/feed/StatusWrapper/StatusWrapper';
 import { verifyAuthToken } from '@/services/auth.service';
 import { useFocusEffect } from '@react-navigation/native';
 import { useAccountInfo } from '@/hooks/queries/profile.queries';
 import { useManageAttachmentActions } from '@/store/compose/manageAttachments/manageAttachmentStore';
-import { cleanText } from '@/util/helper/cleanText';
-import { delay } from 'lodash';
 import ListEmptyComponent from '@/components/atoms/common/ListEmptyComponent/ListEmptyComponent';
-import {
-	removeSocialLink,
-	addSocialLink,
-} from '@/util/cache/profile/profileCache';
 import LinkInfoForOtherInstanceUser from '@/components/organisms/profile/LinkInfoForOtherInstanceUser/LinkInfoForOtherInstanceUser';
-import { generateFieldsAttributes } from '@/util/helper/socialLink';
 import { isTablet } from '@/util/helper/isTablet';
 import VerticalSwipeHelper from '@/components/atoms/feed/VerticalSwipeHelper/VerticalSwipeHelper';
 import { useTranslation } from 'react-i18next';
-import OwnProfileHeader from '@/components/molecules/account/OwnProfileHeader/OwnProfileHeader';
 import { useTabBarTheme } from '@/hooks/custom/useTabBarTheme';
+import { delay } from 'lodash';
 
 const Profile: React.FC<HomeStackScreenProps<'Profile'>> = ({
 	route,
@@ -167,38 +152,6 @@ const Profile: React.FC<HomeStackScreenProps<'Profile'>> = ({
 		}
 	};
 
-	const handleSocialLinkChange = async (
-		link: string,
-		username: string,
-		type: 'edit' | 'delete',
-	) => {
-		if (accountInfoData) {
-			const updatedProfile: UpdateProfilePayload = {
-				display_name: accountInfoData?.display_name,
-				note: cleanText(accountInfoData?.note),
-				fields_attributes: generateFieldsAttributes(
-					accountInfoData,
-					link,
-					username,
-					type,
-				),
-			};
-			if (type == 'edit') {
-				setSocialLinkAction(prev => ({ ...prev, visible: false }));
-				addSocialLink(acctInfoQueryKey, link, username);
-			} else {
-				removeSocialLink(acctInfoQueryKey, link);
-			}
-			await mutateAsync(updatedProfile);
-		}
-	};
-
-	const { mutateAsync, isPending } = useProfileMutation({
-		onError: error => {
-			handleError(error);
-		},
-	});
-
 	const handleRefresh = async () => {
 		setIsRefresh(true);
 		refetchProfileFeed();
@@ -221,6 +174,23 @@ const Profile: React.FC<HomeStackScreenProps<'Profile'>> = ({
 		return windowWidth > 768 ? 80 : 100;
 	};
 
+	useFocusEffect(
+		useCallback(() => {
+			refetchAccountInfo();
+			refetchProfileFeed();
+			refetchReplies();
+			if (isDefaultUser) {
+				refetchReposts();
+			}
+		}, [
+			refetchAccountInfo,
+			refetchProfileFeed,
+			refetchReplies,
+			refetchReposts,
+			isDefaultUser,
+		]),
+	);
+
 	return (
 		<ScrollProvider>
 			<View className="flex-1 bg-patchwork-light-900 dark:bg-patchwork-dark-100">
@@ -241,27 +211,6 @@ const Profile: React.FC<HomeStackScreenProps<'Profile'>> = ({
 										is_my_account={true}
 										// myAcctId={accountInfoData.id}
 										profile={accountInfoData}
-										onPressPlusIcon={() =>
-											setSocialLinkAction({
-												visible: true,
-												formType: 'add',
-											})
-										}
-										onPressEditIcon={() =>
-											setSocialLinkAction({
-												visible: true,
-												formType: 'edit',
-											})
-										}
-										onPressLinkByOtherInstanceUser={(linkInfo: {
-											label: string;
-											content: string;
-										}) =>
-											setLinkInfoForOtherInstanceUser({
-												isVisible: true,
-												linkInfo,
-											})
-										}
 									/>
 								);
 							}}
@@ -521,28 +470,6 @@ const Profile: React.FC<HomeStackScreenProps<'Profile'>> = ({
 								</Tabs.Tab>
 							) : null}
 						</Tabs.Container>
-						<SocialLink
-							openThemeModal={socialLinkAction.visible}
-							onClose={() => {
-								setSocialLinkAction(prev => ({ ...prev, visible: false }));
-							}}
-							onPressAdd={(link, username, customCallback) => {
-								handleSocialLinkChange(link, username, 'edit');
-								customCallback && customCallback();
-							}}
-							onPressDelete={link => {
-								handleSocialLinkChange(link, ' ', 'delete');
-							}}
-							formType={socialLinkAction.formType}
-							data={accountInfoData.fields?.filter(v => v.value)}
-						/>
-						<LinkInfoForOtherInstanceUser
-							openThemeModal={linkInfoForOtherInstanceUser.isVisible}
-							onClose={() =>
-								setLinkInfoForOtherInstanceUser({ isVisible: false })
-							}
-							data={linkInfoForOtherInstanceUser.linkInfo}
-						/>
 					</>
 				) : (
 					<View className="flex-1">

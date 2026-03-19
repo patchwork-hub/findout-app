@@ -40,29 +40,30 @@ const SearchResults = ({
 	const isFocused = useSharedValue(0);
 
 	const headerAnimatedStyle = useAnimatedStyle(() => {
+		const shouldHide = isFocused.value || finalKeyword.length > 0;
 		return {
-			height: withTiming(isFocused.value ? 0 : 56),
-			opacity: withTiming(isFocused.value ? 0 : 1),
-			marginBottom: withTiming(isFocused.value ? 0 : 20),
+			height: withTiming(shouldHide ? 0 : 56),
+			opacity: withTiming(shouldHide ? 0 : 1),
 			transform: [
 				{
-					translateY: withTiming(isFocused.value ? -20 : 0),
+					translateY: withTiming(shouldHide ? -20 : 0),
 				},
 			],
 		};
-	});
+	}, [finalKeyword]);
 
 	const cancelContainerAnimatedStyle = useAnimatedStyle(() => {
+		const shouldHide = isFocused.value || finalKeyword.length > 0;
 		return {
-			width: withTiming(isFocused.value ? 80 : 0),
-			opacity: withTiming(isFocused.value ? 1 : 0),
+			width: withTiming(shouldHide ? 80 : 0),
+			opacity: withTiming(shouldHide ? 1 : 0),
 			transform: [
 				{
-					translateX: withTiming(isFocused.value ? 0 : 20),
+					translateX: withTiming(shouldHide ? 0 : 25),
 				},
 			],
 		};
-	});
+	}, [finalKeyword]);
 
 	const queryKey: SearchAllQueryKey = [
 		'search-all',
@@ -109,71 +110,76 @@ const SearchResults = ({
 
 	return (
 		<SafeScreen>
-			<Pressable className="flex-1" onPress={() => Keyboard.dismiss()}>
-				<Animated.View style={[headerAnimatedStyle, { overflow: 'hidden' }]}>
-					<Header title={t('screen.search')} />
-				</Animated.View>
-
-				<View className="flex-row items-center mx-4 mb-4">
-					<View className="flex-1">
-						<TextInput
-							onFocus={() => (isFocused.value = 1)}
-							onBlur={() => (isFocused.value = 0)}
-							placeholder={t('search.search')}
-							spellCheck={false}
-							autoCorrect={false}
-							value={searchKeyword}
-							onChangeText={setSearchKeyword}
-							onSubmitEditing={() => {
-								forceSearchRef.current = true;
-								setFinalKeyword(searchKeyword);
-							}}
-							startIcon={<SearchIcon className="mt-[2]" />}
-							autoCapitalize="none"
-							cursorColor={customColor['patchwork-primary']}
-							endIcon={
-								finalKeyword.length > 0 ? (
-									<Pressable
-										className="-mt-1"
-										onPress={() => {
-											setSearchKeyword('');
-											setFinalKeyword('');
-										}}
-									>
-										<CloseIcon colorScheme={colorScheme} />
-									</Pressable>
-								) : (
-									<></>
-								)
-							}
-							returnKeyType="search"
-							returnKeyLabel="Search"
-							enablesReturnKeyAutomatically={true}
-						/>
-					</View>
-					<Animated.View
-						style={[
-							cancelContainerAnimatedStyle,
-							{ overflow: 'hidden', justifyContent: 'center' },
-						]}
-					>
-						<Pressable
-							onPress={() => {
-								Keyboard.dismiss();
-								setSearchKeyword('');
-								setFinalKeyword('');
-							}}
-							className="flex-1 justify-center items-center"
-						>
-							<ThemeText className="text-patchwork-primary dark:text-white ml-2">
-								{t('common.cancel')}
-							</ThemeText>
-						</Pressable>
+			<View className="flex-1">
+				<Pressable onPress={() => Keyboard.dismiss()}>
+					<Animated.View style={[headerAnimatedStyle, { overflow: 'hidden' }]}>
+						<Header title={t('screen.search')} />
 					</Animated.View>
-				</View>
+
+					<View className="flex-row items-center mx-4 mb-4">
+						<View className="flex-1">
+							<TextInput
+								onFocus={() => (isFocused.value = 1)}
+								onBlur={() => (isFocused.value = 0)}
+								placeholder={t('search.search')}
+								spellCheck={false}
+								autoCorrect={false}
+								value={searchKeyword}
+								onChangeText={setSearchKeyword}
+								onSubmitEditing={() => {
+									forceSearchRef.current = true;
+									setFinalKeyword(searchKeyword);
+								}}
+								startIcon={<SearchIcon className="mt-[2]" />}
+								autoCapitalize="none"
+								cursorColor={customColor['patchwork-primary']}
+								endIcon={
+									finalKeyword.length > 0 ? (
+										<Pressable
+											className="-mt-1"
+											onPress={() => {
+												setSearchKeyword('');
+												setFinalKeyword('');
+											}}
+										>
+											<CloseIcon colorScheme={colorScheme} />
+										</Pressable>
+									) : (
+										<></>
+									)
+								}
+								returnKeyType="search"
+								returnKeyLabel="Search"
+								enablesReturnKeyAutomatically={true}
+							/>
+						</View>
+						<Animated.View
+							style={[
+								cancelContainerAnimatedStyle,
+								{ overflow: 'hidden', justifyContent: 'center' },
+							]}
+						>
+							<Pressable
+								onPress={() => {
+									Keyboard.dismiss();
+									setSearchKeyword('');
+									setFinalKeyword('');
+								}}
+								className="flex-1 justify-center items-center"
+							>
+								<ThemeText className="text-patchwork-primary dark:text-white ml-2">
+									{t('common.cancel')}
+								</ThemeText>
+							</Pressable>
+						</Animated.View>
+					</View>
+				</Pressable>
 
 				{!isSearched ? (
-					<View className="flex-1 items-center justify-center -mt-10">
+					<Pressable
+						className="flex-1 items-center mt-28"
+						onPress={() => Keyboard.dismiss()}
+					>
 						<Image
 							source={
 								colorScheme == 'dark'
@@ -182,10 +188,10 @@ const SearchResults = ({
 							}
 							style={{ width: 100, height: 100 }}
 						/>
-						<ThemeText className="font-NewsCycle_Bold mt-2">
+						<ThemeText className="font-NewsCycle_Bold mt-2 tracking-wider">
 							{t('search.search_text_guide')}
 						</ThemeText>
-					</View>
+					</Pressable>
 				) : isLoadingSearchAll ? (
 					<View className="flex-1 mx-6 my-2 justify-center items-center mt-5">
 						<Flow
@@ -198,19 +204,22 @@ const SearchResults = ({
 						/>
 					</View>
 				) : isEmptySearch ? (
-					<View className="flex-1 justify-center items-center">
+					<Pressable
+						className="flex-1 justify-center items-center"
+						onPress={() => Keyboard.dismiss()}
+					>
 						<ListEmptyComponent
 							title={t('common.no_results')}
 							className="-mt-7"
 						/>
-					</View>
+					</Pressable>
 				) : (
 					<SearchPeoplePostsResult
 						searchAllRes={searchAllRes}
 						q={finalKeyword}
 					/>
 				)}
-			</Pressable>
+			</View>
 		</SafeScreen>
 	);
 };

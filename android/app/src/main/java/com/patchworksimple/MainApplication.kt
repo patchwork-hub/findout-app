@@ -10,6 +10,7 @@ import com.facebook.react.ReactPackage
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.stallion.Stallion
+import com.facebook.react.soloader.OpenSourceMergedSoMapping
 
 class MainApplication : Application(), ReactApplication {
 
@@ -40,6 +41,9 @@ class MainApplication : Application(), ReactApplication {
 
   override fun onCreate() {
     super.onCreate()
+    // CRITICAL: Fixes SoLoaderDSONotFoundError. 
+    // Maps the new "Merged" C++ libraries for the RN 0.80.2 engine.
+    com.facebook.soloader.SoLoader.init(this, OpenSourceMergedSoMapping)
     loadReactNative(this)
   }
 }

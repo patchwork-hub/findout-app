@@ -13,6 +13,7 @@ import colors from 'tailwindcss/colors';
 import { layoutAnimation } from '@/util/helper/timeline';
 import customColor from '@/util/constant/color';
 import Clipboard from '@react-native-clipboard/clipboard';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type HandleInfoBottomSheetProps = {
 	username: string;
@@ -30,6 +31,7 @@ const HandleInfoBottomSheet = React.forwardRef<
 	HandleInfoBottomSheetProps
 >(({ username, domain, joinedDate }, ref) => {
 	const { colorScheme } = useColorScheme();
+	const { bottom } = useSafeAreaInsets();
 	const [showActivityPub, setShowActivityPub] = useState(false);
 	const [copied, setCopied] = useState(false);
 	const copiedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -82,6 +84,11 @@ const HandleInfoBottomSheet = React.forwardRef<
 		>
 			<BottomSheetScrollView
 				style={{ paddingHorizontal: 24, paddingTop: 8, paddingBottom: 32 }}
+				contentContainerStyle={{
+					paddingHorizontal: 24,
+					paddingTop: 8,
+					paddingBottom: (bottom || 20) + 32,
+				}}
 			>
 				{/* Header */}
 				<View className="flex-row items-start mb-6">

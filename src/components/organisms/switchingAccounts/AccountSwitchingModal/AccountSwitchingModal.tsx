@@ -41,6 +41,7 @@ import { DEFAULT_INSTANCE } from '@/util/constant';
 import { useAccountsStore } from '@/store/auth/accountsStore';
 import { useAccounts } from '@/hooks/custom/useAccounts';
 import customColor from '@/util/constant/color';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Props = {
 	isWelcome?: boolean;
@@ -49,6 +50,7 @@ type Props = {
 const AccountSwitchingModal = ({ isWelcome = false }: Props) => {
 	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 	const snapPoints = useMemo(() => ['75%'], []);
+	const { bottom } = useSafeAreaInsets();
 	const { i18n, t } = useTranslation();
 	const { colorScheme, setColorScheme } = useColorScheme();
 	const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -393,7 +395,7 @@ const AccountSwitchingModal = ({ isWelcome = false }: Props) => {
 					)}
 					contentContainerStyle={{
 						paddingHorizontal: 16,
-						paddingBottom: 30,
+						paddingBottom: (bottom || 20) + 80,
 					}}
 					ListHeaderComponent={
 						<View className="flex-row justify-between items-center my-2 pb-3 mx-3">

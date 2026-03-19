@@ -44,6 +44,7 @@ import { delay } from 'lodash';
 import VerticalSwipeHelper from '@/components/atoms/feed/VerticalSwipeHelper/VerticalSwipeHelper';
 import { useTranslation } from 'react-i18next';
 import { useTabBarTheme } from '@/hooks/custom/useTabBarTheme';
+import SafeScreen from '@/components/template/SafeScreen/SafeScreen';
 
 const ProfileOther: React.FC<HomeStackScreenProps<'ProfileOther'>> = ({
 	route,
@@ -184,7 +185,7 @@ const ProfileOther: React.FC<HomeStackScreenProps<'ProfileOther'>> = ({
 
 	return (
 		<ScrollProvider>
-			<View className="flex-1 bg-patchwork-light-900 dark:bg-patchwork-dark-100">
+			<SafeScreen isTopSafe={false}>
 				{timeline && accountInfoData ? (
 					<>
 						<View
@@ -514,7 +515,7 @@ const ProfileOther: React.FC<HomeStackScreenProps<'ProfileOther'>> = ({
 						</View>
 					</View>
 				)}
-			</View>
+			</SafeScreen>
 		</ScrollProvider>
 	);
 };

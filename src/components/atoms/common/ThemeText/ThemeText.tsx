@@ -119,7 +119,7 @@ const ThemeText = React.forwardRef<React.ElementRef<typeof Text>, TextProps>(
 						<FastImage
 							key={index}
 							source={{ uri: emoji.url }}
-							style={{ width: 20, height: 20 }}
+							style={{ width: 16, height: 16 }}
 						/>
 					);
 

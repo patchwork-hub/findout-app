@@ -278,7 +278,7 @@ const QuotePlaceholder = ({
 					</View>
 				) : status?.quote && shouldHidePost.includes(status.quote.state) ? (
 					<View className={`${isFeedDetail ? 'mx-1 mt-2' : 'ml-8 mt-3'}`}>
-						<View className="flex-row items-center bg-patchwork-primary/10 px-3 py-2 rounded-lg">
+						<View className="flex-row items-center bg-patchwork-primary/10 px-3 py-2 ml-3 rounded-lg">
 							{state === 'deleted' ? (
 								<RemoveCrossIcon
 									width={22}

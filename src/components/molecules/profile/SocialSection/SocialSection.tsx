@@ -93,7 +93,7 @@ const SocialSection = ({ accountInfo }: SocialSectionProps) => {
 			>
 				<BottomSheetFlatList
 					data={links}
-					contentContainerStyle={{ paddingBottom: bottom || 20 }}
+					contentContainerStyle={{ paddingBottom: bottom + 30 || 50 }}
 					keyExtractor={(item: any, index: any) => `${item.value}-${index}`}
 					renderItem={({ item }: { item: any }) => {
 						const currentScheme = colorScheme ?? 'light';

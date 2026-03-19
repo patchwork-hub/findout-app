@@ -2,6 +2,7 @@ import { CloseIcon } from '@/util/svg/icon.common';
 import { Modal, Pressable, ScrollView, View } from 'react-native';
 import { ThemeText } from '../../common/ThemeText/ThemeText';
 import { useColorScheme } from 'nativewind';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Props = {
 	altText: string;
@@ -9,6 +10,7 @@ type Props = {
 };
 
 export const AltTextModal = ({ altText, onClose }: Props) => {
+	const { bottom } = useSafeAreaInsets();
 	const { colorScheme } = useColorScheme();
 	return (
 		<Modal
@@ -22,6 +24,7 @@ export const AltTextModal = ({ altText, onClose }: Props) => {
 			<Pressable
 				className="absolute top-0 left-0 right-0 bottom-0 bg-black/70 flex items-center justify-center"
 				onPress={onClose}
+				style={{ paddingBottom: bottom }}
 			>
 				<View
 					className="bg-white/90 p-4 rounded-2xl w-5/6 max-h-[50%] min-h-[12vh]"

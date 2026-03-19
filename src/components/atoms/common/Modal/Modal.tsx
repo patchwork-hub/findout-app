@@ -87,6 +87,7 @@ const ThemeModal = ({
 							...(isFlex && { flex: 1 }),
 							backgroundColor: color,
 							paddingHorizontal: parentPaddingEnabled ? 16 : 0,
+							paddingBottom: insets.bottom,
 						},
 						containerStyle,
 					]}

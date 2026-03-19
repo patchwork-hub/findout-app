@@ -20,15 +20,8 @@ import { updateReplyFeedCache } from '@/util/cache/reply/replyCache';
 import { POLL_INITIAL } from '@/util/constant/pollOption';
 import { prepareComposePayload } from '@/util/helper/compose';
 import { generateAppopirateColor } from '@/util/helper/helper';
-import {
-	ComposeGalleryIcon,
-	ComposeGifIcon,
-	ComposePollIcon,
-	EmojiIcon,
-} from '@/util/svg/icon.compose';
-import { uniqueId } from 'lodash';
 import { useColorScheme } from 'nativewind';
-import { RefObject, useEffect, useMemo, useState } from 'react';
+import { RefObject, useEffect, useState } from 'react';
 import { Keyboard, Platform, Pressable, TextInput, View } from 'react-native';
 import { Flow } from 'react-native-animated-spinkit';
 import Toast from 'react-native-toast-message';

@@ -49,7 +49,7 @@ const EditProfile = () => {
 		<SafeScreen isBottomSafe={true} isTopSafe={false}>
 			<View className="flex-1 bg-white dark:bg-patchwork-dark-100">
 				<View
-					className={'flex-row items-center absolute px-5 z-40 py-2 top-10'}
+					className={'flex-row items-center absolute px-5 z-40 py-2 top-11'}
 				>
 					<Pressable
 						onPress={() => {

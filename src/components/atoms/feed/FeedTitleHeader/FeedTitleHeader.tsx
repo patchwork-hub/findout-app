@@ -83,7 +83,7 @@ const FeedTitleHeader = ({ title, emojis, isOwnProfile = false }: Props) => {
 			{/* First Back Button */}
 			<Animated.View
 				className="absolute left-5 z-10"
-				style={[{ top: top + 10 }, firstBackButtonStyle]}
+				style={[{ top: top }, firstBackButtonStyle]}
 			>
 				<TouchableOpacity
 					onPress={() => navigation.goBack()}
@@ -96,7 +96,7 @@ const FeedTitleHeader = ({ title, emojis, isOwnProfile = false }: Props) => {
 			{isOwnProfile && (
 				<Animated.View
 					className="absolute right-3 z-10"
-					style={[{ top: top + 10 }, firstBackButtonStyle]}
+					style={[{ top: top }, firstBackButtonStyle]}
 				>
 					<TouchableOpacity
 						className="w-9 h-9 items-center justify-center rounded-full bg-patchwork-dark-100/50 mr-1"
@@ -124,7 +124,7 @@ const FeedTitleHeader = ({ title, emojis, isOwnProfile = false }: Props) => {
 				{/* Second Back Button */}
 				<Animated.View
 					className={'absolute'}
-					style={[{ top: top + 8, left: 8 }, secondBackButtonStyle]}
+					style={[{ top: top, left: 8 }, secondBackButtonStyle]}
 				>
 					<TouchableOpacity
 						onPress={() => navigation.goBack()}
@@ -137,7 +137,7 @@ const FeedTitleHeader = ({ title, emojis, isOwnProfile = false }: Props) => {
 				{isOwnProfile && (
 					<Animated.View
 						className="absolute right-3 z-10"
-						style={[{ top: top + 8 }, secondBackButtonStyle]}
+						style={[{ top: top }, secondBackButtonStyle]}
 					>
 						<TouchableOpacity
 							className="w-9 h-9 items-center justify-center rounded-full ml-3 mr-1 border-[1px] border-patchwork-grey-100"

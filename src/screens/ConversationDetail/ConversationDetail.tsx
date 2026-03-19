@@ -53,7 +53,7 @@ const ConversationDetail = ({
 
 	if (isLoading && !totalMsgList.length) {
 		return (
-			<SafeScreen>
+			<SafeScreen isBottomSafe={false}>
 				{isGroupChat ? (
 					<GroupConversationsHeader
 						onPressBackButton={handleBackPress}

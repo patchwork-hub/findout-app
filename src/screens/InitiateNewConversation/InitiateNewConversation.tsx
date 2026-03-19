@@ -11,20 +11,18 @@ import ProfileInfo from '@/components/molecules/conversations/ProfileInfo/Profil
 import ChatParticipants from '@/components/organisms/conversations/ChatParticipants/ChatParticipants';
 import SafeScreen from '@/components/template/SafeScreen/SafeScreen';
 import { ComposeStatusProvider } from '@/context/composeStatusContext/composeStatus.context';
-import {
-	BottomBarHeight,
-	useGradualAnimation,
-} from '@/hooks/custom/useGradualAnimation';
+import { useGradualAnimation } from '@/hooks/custom/useGradualAnimation';
 import { ConversationsStackScreenProps } from '@/types/navigation';
 import customColor from '@/util/constant/color';
 import { checkIsAccountVerified } from '@/util/helper/helper';
 import { PlusIcon } from '@/util/svg/icon.conversations';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { BottomTabBarHeightContext } from '@react-navigation/bottom-tabs';
 import { FlashList } from '@shopify/flash-list';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Dimensions, Pressable, View } from 'react-native';
+import { Platform, Pressable, View } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const InitiateNewConversation = ({
 	navigation,
 	route,
@@ -39,19 +37,9 @@ const InitiateNewConversation = ({
 	]);
 	const isGroupChat = receipantList && receipantList.length > 1;
 	const [openRecipantModal, setRecipantModal] = useState(false);
-	const tabBarHeight = useRef(BottomBarHeight);
 	const [showChatParticipantList, setShowChatParticipantList] = useState(false);
-
-	try {
-		const actualBarHeight = useBottomTabBarHeight();
-		if (actualBarHeight !== tabBarHeight.current) {
-			tabBarHeight.current = actualBarHeight;
-		}
-	} catch (error) {
-		if (tabBarHeight.current !== 0) {
-			tabBarHeight.current = 0;
-		}
-	}
+	const insets = useSafeAreaInsets();
+	const tabBarHeight = useContext(BottomTabBarHeightContext) ?? 0;
 
 	useEffect(() => {
 		return () => {
@@ -68,11 +56,22 @@ const InitiateNewConversation = ({
 	}));
 
 	const virtualKeyboardContainerStyle = useAnimatedStyle(() => {
+		const keyboardHeight = Math.abs(height.value);
+		const hasBottomTabBar = tabBarHeight > 0;
+
+		let targetHeight = 0;
+		if (keyboardHeight > 0) {
+			targetHeight = hasBottomTabBar
+				? Math.max(0, keyboardHeight - tabBarHeight)
+				: Platform.OS === 'ios'
+				? keyboardHeight
+				: Math.max(0, keyboardHeight - insets.bottom);
+		} else {
+			targetHeight = 0;
+		}
+
 		return {
-			height:
-				height.value > tabBarHeight.current
-					? height.value - tabBarHeight.current
-					: 0,
+			height: targetHeight,
 		};
 	});
 

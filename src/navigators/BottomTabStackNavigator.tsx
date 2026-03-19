@@ -91,7 +91,8 @@ export default function BottomTabs() {
 					backgroundColor:
 						colorScheme === 'dark' ? customColor['patchwork-dark-100'] : '#fff',
 					paddingTop: 10,
-					height: Platform.OS === 'ios' ? 60 + insets.bottom : 90,
+					height: (Platform.OS === 'ios' ? 60 : 75) + insets.bottom,
+					paddingBottom: insets.bottom,
 					width: '100%',
 					paddingHorizontal: isTablet ? 200 : 0,
 				},

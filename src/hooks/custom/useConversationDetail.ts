@@ -1,5 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { BackHandler } from 'react-native';
+import React, {
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from 'react';
+import { BackHandler, Platform } from 'react-native';
 import { FlatList } from 'react-native';
 import {
 	useMessageListQuery,
@@ -12,13 +18,17 @@ import {
 import { useActiveConversationActions } from '@/store/conversation/activeConversationStore';
 import { useMarkAsReadMutation } from '@/hooks/mutations/conversations.mutation';
 import { checkIsAccountVerified } from '@/util/helper/helper';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import {
+	BottomTabBarHeightContext,
+	useBottomTabBarHeight,
+} from '@react-navigation/bottom-tabs';
 import { useColorScheme } from 'nativewind';
 import { useTranslation } from 'react-i18next';
 import { ConversationsStackScreenProps } from '@/types/navigation';
 import useGetCurrentConversation from './useGetCurrentConversation';
 import { BottomBarHeight, useGradualAnimation } from './useGradualAnimation';
 import { useAnimatedStyle } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const useConversationDetail = ({
 	navigation,
@@ -26,6 +36,7 @@ export const useConversationDetail = ({
 }: ConversationsStackScreenProps<'ConversationDetail'>) => {
 	const { t } = useTranslation();
 	const { colorScheme } = useColorScheme();
+	const insets = useSafeAreaInsets();
 	const {
 		id: initialLastMsgId,
 		isFromExternalNotiAlert,
@@ -43,7 +54,7 @@ export const useConversationDetail = ({
 
 	// Refs
 	const listRef = useRef<FlatList<any>>(null);
-	const tabBarHeight = useRef(BottomBarHeight);
+	const tabBarHeight = React.useContext(BottomTabBarHeightContext) ?? 0;
 
 	// Fetch Data
 	const { currentConversation, isLoading: isConversationLoading } =
@@ -172,23 +183,21 @@ export const useConversationDetail = ({
 		[receiver?.fields],
 	);
 
-	try {
-		const actualBarHeight = useBottomTabBarHeight();
-		if (actualBarHeight !== tabBarHeight.current) {
-			tabBarHeight.current = actualBarHeight;
-		}
-	} catch (error) {
-		if (tabBarHeight.current !== 0) {
-			tabBarHeight.current = 0;
-		}
-	}
-
 	const virtualKeyboardContainerStyle = useAnimatedStyle(() => {
+		const keyboardHeight = Math.abs(height.value);
+		const hasBottomTabBar = tabBarHeight > 0;
+
+		let targetHeight = 0;
+		if (keyboardHeight > 0) {
+			targetHeight = hasBottomTabBar
+				? Math.max(0, keyboardHeight - tabBarHeight)
+				: Math.max(0, keyboardHeight - insets.bottom);
+		} else {
+			targetHeight = 0;
+		}
+
 		return {
-			height:
-				height.value > tabBarHeight.current
-					? height.value - tabBarHeight.current
-					: 0,
+			height: targetHeight,
 		};
 	});
 

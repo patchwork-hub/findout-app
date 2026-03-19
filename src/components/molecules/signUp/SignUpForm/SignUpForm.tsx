@@ -1,5 +1,6 @@
-import { View, Pressable } from 'react-native';
 import { useEffect, useState } from 'react';
+import { View, Linking, Pressable } from 'react-native';
+import DatePicker from 'react-native-date-picker';
 import TextInput from '@/components/atoms/common/TextInput/TextInput';
 import { useColorScheme } from 'nativewind';
 import { PasswordEyeCloseIcon, PasswordEyeIcon } from '@/util/svg/icon.common';
@@ -21,18 +22,26 @@ import Checkbox from '@/components/atoms/common/Checkbox/Checkbox';
 import { cn } from '@/util/helper/twutil';
 import { isTablet } from '@/util/helper/isTablet';
 import { Trans, useTranslation } from 'react-i18next';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
+import moment from 'moment';
+import { DEFAULT_INSTANCE } from '@/util/constant';
+import { removeHttps } from '@/util/helper/helper';
+import { useInstanceRegisterationInfo } from '@/hooks/custom/useInstanceRegistrationInfo';
+import { DatePickerIcon } from '@/util/svg/icon.compose';
 
 const SignUpForm = () => {
 	const { t, i18n } = useTranslation();
+	const registrationInfo = useInstanceRegisterationInfo();
 	const {
 		control,
 		handleSubmit,
 		formState: { errors },
 		getValues,
 	} = useForm<SignUpFormType>({
-		resolver: yupResolver(getSignUpSchema(t)),
+		resolver: yupResolver(getSignUpSchema(t, registrationInfo?.min_age)),
 	});
 	const [signUpAccessToken, setSignUpAccessToken] = useState('');
+	const [datePickerOpen, setDatePickerOpen] = useState(false);
 	const [alertState, setAlert] = useState({
 		message: '',
 		isOpen: false,
@@ -42,6 +51,9 @@ const SignUpForm = () => {
 	const [shouldShake, setShouldShake] = useState(false);
 	const navigation = useNavigation<StackNavigationProp<GuestStackParamList>>();
 	const lineHeightStyle = i18n.language === 'my' ? { lineHeight: 32 } : {};
+	const hasMinAgeRequirement =
+		typeof registrationInfo?.min_age === 'number' &&
+		registrationInfo.min_age > 0;
 
 	const { mutateAsync, isPending } = useSignUpMutation({
 		onSuccess: async response => {
@@ -54,7 +66,7 @@ const SignUpForm = () => {
 		},
 		onError: error => {
 			return setAlert({
-				message: error?.message || 'Something went wrong.',
+				message: error?.message || t('common.error'),
 				isErrorAlert: true,
 				isOpen: true,
 			});
@@ -94,14 +106,43 @@ const SignUpForm = () => {
 			return;
 		}
 		if (!isPending && signUpAccessToken) {
-			mutateAsync({
+			const payload: {
+				email: string;
+				username: string;
+				password: string;
+				agreement: boolean;
+				locale: string;
+				access_token: string;
+				date_of_birth?: string;
+			} = {
 				email: data.email,
 				username: data.username,
 				password: data.repeatPassword,
 				agreement: isAgreeToTerms,
 				locale: 'en',
 				access_token: signUpAccessToken,
-			});
+			};
+			if (hasMinAgeRequirement && data.dateOfBirth) {
+				payload.date_of_birth = data.dateOfBirth;
+			}
+			mutateAsync(payload);
+		}
+	};
+
+	const handlePressLink = async (url: string) => {
+		try {
+			if (await InAppBrowser.isAvailable()) {
+				await InAppBrowser.open(url, {
+					dismissButtonStyle: 'cancel',
+					readerMode: false,
+					animated: true,
+				});
+			} else {
+				Linking.openURL(url);
+			}
+		} catch (error) {
+			console.error('Failed to open link:', error);
+			Linking.openURL(url);
 		}
 	};
 
@@ -256,6 +297,60 @@ const SignUpForm = () => {
 				)}
 			/>
 
+			{hasMinAgeRequirement && (
+				<Controller
+					name="dateOfBirth"
+					control={control}
+					render={({ field: { onChange, value } }) => (
+						<View className="mb-5">
+							<Pressable onPress={() => setDatePickerOpen(true)}>
+								<TextInput
+									placeholder={t('login.date_of_birth')}
+									value={
+										value ? moment(value).format('MMM D, YYYY') : undefined
+									}
+									editable={false}
+									pointerEvents="none"
+									extraContainerStyle="mb-2"
+									endIcon={
+										<DatePickerIcon
+											width={20}
+											height={20}
+											colorScheme={colorScheme}
+											className="-mt-0.5"
+										/>
+									}
+								/>
+							</Pressable>
+							{errors.dateOfBirth && (
+								<ThemeText size="xs_12" variant={'textOrange'} className="mb-3">
+									{'*' + errors.dateOfBirth.message}
+								</ThemeText>
+							)}
+							<ThemeText
+								size="xs_12"
+								className="mb-2 text-gray-500 dark:text-gray-400 mx-1"
+							>
+								We have to make sure you're at least {registrationInfo.min_age}{' '}
+								to use {removeHttps(DEFAULT_INSTANCE)}. We won't store this.
+							</ThemeText>
+
+							<DatePicker
+								modal
+								open={datePickerOpen}
+								date={value ? new Date(value) : new Date()}
+								mode="date"
+								maximumDate={new Date()}
+								onConfirm={date => {
+									setDatePickerOpen(false);
+									onChange(date.toISOString().split('T')[0]);
+								}}
+								onCancel={() => setDatePickerOpen(false)}
+							/>
+						</View>
+					)}
+				/>
+			)}
 			<Checkbox
 				isChecked={isAgreeToTerms}
 				handleOnCheck={() => {
@@ -269,11 +364,9 @@ const SignUpForm = () => {
 						components={{
 							tc: (
 								<ThemeText
+									key="tc"
 									onPress={() => {
-										navigation.navigate('WebViewer', {
-											url: 'https://thebristolcable.org/terms/',
-											customTitle: 'Terms & Conditions',
-										});
+										handlePressLink(`${DEFAULT_INSTANCE}/terms/`);
 									}}
 									className="active:opacity-80 underline"
 								/>

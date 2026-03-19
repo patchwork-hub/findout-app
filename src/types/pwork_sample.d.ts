@@ -731,6 +731,14 @@ declare namespace Patchwork {
 				message?: string;
 			};
 		};
+		registrations: {
+			enabled: boolean;
+			approval_required: boolean;
+			reason_required: boolean;
+			message: string | null;
+			min_age: number;
+			url: string | null;
+		};
 		contact: { email: string; account: Account };
 		rules: Rule[];
 		account_domain?: string;

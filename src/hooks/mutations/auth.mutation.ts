@@ -88,6 +88,7 @@ export const useSignUpMutation = (
 			agreement: boolean;
 			locale: string;
 			access_token: string;
+			date_of_birth?: string;
 		}
 	>,
 ) => {

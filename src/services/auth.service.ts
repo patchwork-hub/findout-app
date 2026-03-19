@@ -146,6 +146,7 @@ export const signUp = async (params: {
 	agreement: boolean;
 	locale: string;
 	access_token: string;
+	date_of_birth?: string;
 }) => {
 	try {
 		const { access_token, ...payload } = params;

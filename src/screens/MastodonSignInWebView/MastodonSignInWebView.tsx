@@ -6,15 +6,13 @@ import { verifyAuthToken } from '@/services/auth.service';
 import { useAuthStoreAction } from '@/store/auth/authStore';
 import { GuestStackScreenProps } from '@/types/navigation';
 import { ensureHttp } from '@/util/helper/helper';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import type { WebViewNavigation } from 'react-native-webview';
 import { WebView } from 'react-native-webview';
 import * as Progress from 'react-native-progress';
 import CustomAlert from '@/components/atoms/common/CustomAlert/CustomAlert';
 import { initialAlertState } from '@/util/constant/common';
-import { Button } from '@/components/atoms/common/Button/Button';
-import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
 import { useColorScheme } from 'nativewind';
 import customColor from '@/util/constant/color';
 import { useTranslation } from 'react-i18next';
@@ -26,6 +24,8 @@ import {
 	getAccountId,
 	switchActiveAccount,
 } from '@/util/storage';
+import { useAccounts } from '@/hooks/custom/useAccounts';
+import { useAccountsStore } from '@/store/auth/accountsStore';
 
 const MastodonSignInWebView = ({
 	route,
@@ -34,27 +34,25 @@ const MastodonSignInWebView = ({
 	const { t } = useTranslation();
 	const { setLanguage } = useLanguageStore();
 	const { colorScheme } = useColorScheme();
-	const { url, domain, client_id, client_secret } = route.params;
+	const {
+		url,
+		domain,
+		client_id,
+		client_secret,
+		isAddAccount,
+		isFromSwitchAccount,
+	} = route.params;
 	const [progress, setProgress] = useState(0);
 	const [isLoaded, setLoaded] = useState(false);
-	const { setUserInfo, setUserOriginInstance, setAuthState } =
+	const { setAuthState, setUserInfo, setUserOriginInstance } =
 		useAuthStoreAction();
 	const [alertState, setAlert] = useState(initialAlertState);
+	const { fetchAccounts } = useAccounts();
+	const openAccSwitcher =
+		useAccountsStore(state => state.openAccSwitcher) ?? (() => {});
 
 	const { mutate } = useAuthorizeInstanceMutation({
 		onSuccess: async resp => {
-			// await saveAuthState(
-			// 	'AUTH_STATE',
-			// 	JSON.stringify({
-			// 		access_token: resp.access_token,
-			// 		domain: ensureHttp(domain),
-			// 	}),
-			// );
-			const userPrefs = await getUserLocale();
-			if (userPrefs?.['posting:default:language']) {
-				setLanguage(userPrefs['posting:default:language'] as ILanguage);
-			}
-
 			const userInfo = await verifyAuthToken(
 				resp.access_token,
 				ensureHttp(domain),
@@ -70,21 +68,36 @@ const MastodonSignInWebView = ({
 				},
 			};
 
-			await addOrUpdateAccount(newAuthState);
-			const accId = getAccountId(newAuthState);
-			await switchActiveAccount(accId);
+			if (isAddAccount) {
+				await addOrUpdateAccount(newAuthState, false);
+				if (Platform.OS === 'android' && isFromSwitchAccount) {
+					navigation.goBack();
+					navigation.goBack();
+					fetchAccounts();
+					openAccSwitcher?.();
+				} else {
+					navigation.goBack();
+				}
+			} else {
+				await addOrUpdateAccount(newAuthState);
+				const accId = getAccountId(newAuthState);
+				await switchActiveAccount(accId);
+				setUserInfo(userInfo);
+				setUserOriginInstance(ensureHttp(domain));
+				setAuthState({
+					wordpress: { token: '' },
+					mastodon: { token: resp.access_token },
+				});
+			}
 
-			setUserInfo(userInfo);
-			setUserOriginInstance(domain);
-			setAuthState({
-				wordpress: { token: '' },
-				mastodon: { token: resp.access_token },
-			});
-			// setAuthToken(resp.access_token);
+			const userPrefs = await getUserLocale();
+			if (userPrefs?.['posting:default:language']) {
+				setLanguage(userPrefs['posting:default:language'] as ILanguage);
+			}
 		},
 		onError: async error => {
 			setAlert({
-				message: error?.message || 'Something went wrong.',
+				message: error?.message || t('common.error'),
 				isErrorAlert: true,
 				isOpen: true,
 			});
@@ -100,31 +113,10 @@ const MastodonSignInWebView = ({
 				domain,
 				client_id,
 				client_secret,
-				redirect_uri: 'patchwork://',
+				redirect_uri: 'FindOutMedia://',
 				grant_type: 'authorization_code',
 			});
 		}
-	};
-
-	const clearCookies = async () => {
-		// try {
-		// 	await Cookie.clearAll();
-		// 	Toast.show({
-		// 		type: 'success',
-		// 		text1: t('toast.clear_cookie'),
-		// 		position: 'top',
-		// 		topOffset: 50,
-		// 		visibilityTime: 2000,
-		// 		onHide: () => navigation.push('ServerInstance'),
-		// 	});
-		// } catch (error) {
-		// 	Toast.show({
-		// 		type: 'error',
-		// 		text1: t('toast.cookie_clear_failed'),
-		// 		position: 'top',
-		// 		topOffset: 50,
-		// 	});
-		// }
 	};
 
 	return (
@@ -132,11 +124,6 @@ const MastodonSignInWebView = ({
 			<Header
 				title={''}
 				leftCustomComponent={<BackButton extraClass="border-0" />}
-				rightCustomComponent={
-					<Button variant={'outline'} size={'sm'} onPress={clearCookies}>
-						<ThemeText size={'fs_13'}>{t('login.clear_cookies')}</ThemeText>
-					</Button>
-				}
 				hideUnderline
 			/>
 			{!isLoaded && (

@@ -28,7 +28,6 @@ import Toast from 'react-native-toast-message';
 import CustomAlert from '@/components/atoms/common/CustomAlert/CustomAlert';
 import { Button } from '@/components/atoms/common/Button/Button';
 import AccountSwitchingListItem from '@/components/molecules/switchingAccounts/AccountSwitchingListItem/AccountSwitchingListItem';
-import { useSwitchAccounts } from '@/hooks/custom/useSwitchAccounts';
 import AccountAvatarRow from '@/components/molecules/switchingAccounts/AccountAvatarRow/AccountAvatarRow';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -41,7 +40,6 @@ import { usePushNotiRevokeTokenMutation } from '@/hooks/mutations/pushNoti.mutat
 import { DEFAULT_INSTANCE } from '@/util/constant';
 import { useAccountsStore } from '@/store/auth/accountsStore';
 import { useAccounts } from '@/hooks/custom/useAccounts';
-import { ChevronRightIcon } from '@/util/svg/icon.common';
 import customColor from '@/util/constant/color';
 
 type Props = {
@@ -81,6 +79,9 @@ const AccountSwitchingModal = ({ isWelcome = false }: Props) => {
 		mastodon,
 		isHydrating,
 	} = useAuthStore();
+
+	const { setOpenAccSwitcher } = useAccountsStore();
+
 	const currentAccessToken = mastodon.token;
 
 	const { mutateAsync: revokePushNotiToken } = usePushNotiRevokeTokenMutation(
@@ -120,6 +121,20 @@ const AccountSwitchingModal = ({ isWelcome = false }: Props) => {
 			addOrUpdateAccount(updatedAuthState, true).then(() => fetchAccounts());
 		}
 	}, [currentUserInfo, currentUserInstance, currentUserTheme, accounts]);
+
+	useEffect(() => {
+		const openModalFn = () => {
+			if (bottomSheetModalRef.current) {
+				bottomSheetModalRef.current.present();
+			}
+		};
+
+		setOpenAccSwitcher(openModalFn);
+
+		return () => {
+			setOpenAccSwitcher(null);
+		};
+	}, [setOpenAccSwitcher]);
 
 	const retrieveToken = async (newAcc: AuthState) => {
 		const { access_token, domain } = newAcc;

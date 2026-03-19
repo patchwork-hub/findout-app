@@ -16,6 +16,7 @@ import {
 	Compose,
 	LoginAnotherAccount,
 	Verification,
+	MastodonSignInWebView,
 } from '@/screens';
 import ProfileOther from '@/screens/ProfileOther/ProfileOther';
 import { SettingStackParamList } from '@/types/navigation';
@@ -110,6 +111,10 @@ const SettingStack = () => {
 				options={{ presentation: 'modal', headerShown: false }}
 			/>
 			<Stack.Screen name="Verification" component={Verification} />
+			<Stack.Screen
+				name="MastodonSignInWebView"
+				component={MastodonSignInWebView}
+			/>
 		</Stack.Navigator>
 	);
 };

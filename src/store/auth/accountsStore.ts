@@ -6,6 +6,8 @@ interface AccountsState {
 	activeAccId?: string;
 	fetchAccounts: () => Promise<void>;
 	setAccounts: (accs: AuthState[], activeId?: string) => void;
+	openAccSwitcher: (() => void) | null;
+	setOpenAccSwitcher: (fn: (() => void) | null) => void;
 }
 
 export const useAccountsStore = create<AccountsState>(set => ({
@@ -22,4 +24,6 @@ export const useAccountsStore = create<AccountsState>(set => ({
 	},
 	setAccounts: (accs, activeId) =>
 		set({ accounts: accs, activeAccId: activeId }),
+	openAccSwitcher: null,
+	setOpenAccSwitcher: fn => set({ openAccSwitcher: fn }),
 }));

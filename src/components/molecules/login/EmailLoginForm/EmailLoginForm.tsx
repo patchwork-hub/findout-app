@@ -1,4 +1,4 @@
-import { View, Pressable } from 'react-native';
+import { View, Pressable, Modal } from 'react-native';
 import { useState } from 'react';
 import TextInput from '@/components/atoms/common/TextInput/TextInput';
 import { useColorScheme } from 'nativewind';
@@ -9,14 +9,10 @@ import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { getLoginSchema } from '@/util/schema/loginSchema';
-import {
-	useMastodonLoginMutation,
-	useWordpressLoginMutation,
-} from '@/hooks/mutations/auth.mutation';
+import { useMastodonLoginMutation } from '@/hooks/mutations/auth.mutation';
 import { Flow } from 'react-native-animated-spinkit';
 import { HTTP_ERROR_MESSAGE } from '@/util/constant';
 import { useAuthStoreAction } from '@/store/auth/authStore';
-import { saveAuthState } from '@/util/helper/helper';
 import { verifyAuthToken } from '@/services/auth.service';
 import { GuestStackParamList } from '@/types/navigation';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -32,6 +28,8 @@ import {
 	getAccountId,
 	switchActiveAccount,
 } from '@/util/storage';
+import customColor from '@/util/constant/color';
+import { useMastodonAuth } from '@/hooks/custom/useMastodonAuth';
 
 const EmailLoginForm = () => {
 	const { t } = useTranslation();
@@ -45,12 +43,28 @@ const EmailLoginForm = () => {
 	});
 	const { setAuthState, setUserInfo, setSelectedTimeline } =
 		useAuthStoreAction();
-	const [alertState, setAlert] = useState({
+	const [alertState, setAlert] = useState<{
+		message: string;
+		isOpen: boolean;
+		isErrorAlert: boolean;
+		alertType?: 'link-extended' | 'default';
+		linkText?: string;
+		onLinkPress?: () => void;
+	}>({
 		message: '',
 		isOpen: false,
 		isErrorAlert: false,
 	});
 	const navigation = useNavigation<StackNavigationProp<GuestStackParamList>>();
+
+	const { startAuth, isLoading } = useMastodonAuth({
+		onError: error =>
+			setAlert({
+				message: error?.message || t('common.error'),
+				isErrorAlert: true,
+				isOpen: true,
+			}),
+	});
 
 	const { mutateAsync: mastodonLogin, isPending: isMastodonPending } =
 		useMastodonLoginMutation({
@@ -93,9 +107,15 @@ const EmailLoginForm = () => {
 				if (error.status == 400) {
 					if (error?.message == HTTP_ERROR_MESSAGE?.INVALID_GRANT) {
 						return setAlert({
-							message: 'Invalid login credentials',
+							message: t('login.two_factor_auth_error_message'),
 							isErrorAlert: true,
 							isOpen: true,
+							alertType: 'link-extended',
+							linkText: t('login.two_factor_auth_error_link'),
+							onLinkPress: () => {
+								setAlert(prev => ({ ...prev, isOpen: false }));
+								startAuth();
+							},
 						});
 					}
 				}
@@ -222,7 +242,7 @@ const EmailLoginForm = () => {
 				</Pressable>
 			</View>
 			<Button onPress={handleSubmit(onSubmit)} className="my-3 h-[48]">
-				{isMastodonPending ? (
+				{isMastodonPending || isLoading ? (
 					<Flow size={25} color={'#fff'} />
 				) : (
 					<ThemeText className="text-white dark:text-white">
@@ -230,6 +250,19 @@ const EmailLoginForm = () => {
 					</ThemeText>
 				)}
 			</Button>
+			{isLoading && (
+				<Modal
+					transparent
+					visible={isLoading}
+					animationType="fade"
+					statusBarTranslucent
+				>
+					<View className="flex-1 items-center justify-center">
+						<View className="absolute top-0 right-0 bottom-0 left-0 bg-black opacity-70" />
+						<Flow size={35} color={customColor['patchwork-primary']} />
+					</View>
+				</Modal>
+			)}
 			<CustomAlert
 				isVisible={alertState.isOpen}
 				extraTitleStyle="text-white text-center -ml-2"
@@ -238,6 +271,9 @@ const EmailLoginForm = () => {
 				title={
 					alertState.isErrorAlert ? t('common.error') : t('common.success')
 				}
+				alertType={alertState.alertType}
+				linkText={alertState.linkText}
+				onLinkPress={alertState.onLinkPress}
 				handleCancel={() =>
 					setAlert(prev => ({
 						...prev,

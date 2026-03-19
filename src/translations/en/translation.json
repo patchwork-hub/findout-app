@@ -292,7 +292,9 @@
 		"verification_otp_explanation": "We've sent a 4-digit verification code to your email.",
 		"verify_your_email": "Verify your email",
 		"visit": "Visit",
-		"welcome_page_agreement": "By continuing, you agree to our <terms>Terms & Conditions</terms>, <privacy>Privacy Policy</privacy>."
+		"welcome_page_agreement": "By continuing, you agree to our <terms>Terms & Conditions</terms>, <privacy>Privacy Policy</privacy>.",
+		"two_factor_auth_error_message": "Invalid login credentials. If you have enabled two-factor authentication, please try logging in from",
+		"two_factor_auth_error_link": "here"
 	},
 	"long_post": "Long post",
 	"my_channels": "My channels",

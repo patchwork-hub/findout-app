@@ -17,6 +17,7 @@ type UserAccountInfoProps = {
 	acctNameTextStyle?: string;
 	emojis?: Patchwork.Emoji[];
 	userRoles?: Patchwork.Role[] | undefined;
+	locked?: boolean;
 };
 
 const UserAccountInfo = ({
@@ -29,6 +30,7 @@ const UserAccountInfo = ({
 	acctNameTextStyle,
 	emojis,
 	userRoles,
+	locked,
 }: UserAccountInfoProps) => {
 	const bottomSheetRef = useRef<BottomSheetModal>(null);
 	const handlePress = useCallback(() => {
@@ -39,7 +41,14 @@ const UserAccountInfo = ({
 	return (
 		<View className="flex-1 flex-col px-4">
 			<AccountName
-				{...{ accountName, acctNameTextStyle, hasRedMark, emojis, userRoles }}
+				{...{
+					accountName,
+					acctNameTextStyle,
+					hasRedMark,
+					emojis,
+					userRoles,
+					locked,
+				}}
 				onPress={handlePress}
 			/>
 			<UserName {...{ username, joinedDate }} onPress={handlePress} />

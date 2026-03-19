@@ -85,15 +85,14 @@ const SearchedAccountListItem = ({
 		});
 	}, [mutate, item.id, relationship]);
 
-	const displayRelationshipText = useMemo(
-		() =>
-			relationship?.following
-				? t('timeline.unfollow')
-				: relationship?.requested
-				? t('timeline.requested')
-				: t('timeline.follow'),
-		[relationship],
-	);
+	const displayRelationshipText = useMemo(() => {
+		if (relationship?.following) return t('timeline.unfollow');
+		if (relationship?.requested && item.locked)
+			return t('timeline.cancel_request');
+		if (relationship?.requested) return t('timeline.requested');
+		if (item.locked) return t('timeline.request_follow');
+		return t('timeline.follow');
+	}, [relationship?.following, relationship?.requested, item.locked, t]);
 
 	return (
 		<View>

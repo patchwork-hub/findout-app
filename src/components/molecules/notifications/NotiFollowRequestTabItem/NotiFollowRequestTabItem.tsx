@@ -59,18 +59,26 @@ const NotiFollowRequestTabItem = ({ item }: { item: Patchwork.Account }) => {
 							<ThemeText
 								emojis={item.emojis}
 								size={'md_16'}
-								className="opacity-80"
+								className="opacity-80 font-NewsCycle_Bold"
 							>
-								{item.display_name} requested to follow you
+								{item.display_name || item.username}{' '}
+								<ThemeText>{t('timeline.requested_to_follow_you')}</ThemeText>
 							</ThemeText>
-							<ThemeText size={'md_16'} className="opacity-50">
-								@{displayAcct}
-							</ThemeText>
+							<ThemeText className="opacity-50">@{displayAcct}</ThemeText>
 						</View>
 					</Pressable>
 
 					{/* Follow Request Accept/Reject Actions */}
-					<View className="flex-1 flex-row justify-around mt-3">
+					<View className="flex-1 flex-row justify-end mt-3">
+						<Button
+							variant={'outline'}
+							size={'sm'}
+							className="px-10 mr-3"
+							onPress={() => handleFollowRequest('reject')}
+							disabled={isPending}
+						>
+							<ThemeText>{t('common.reject')}</ThemeText>
+						</Button>
 						<Button
 							className="px-10"
 							size={'sm'}
@@ -78,15 +86,6 @@ const NotiFollowRequestTabItem = ({ item }: { item: Patchwork.Account }) => {
 							disabled={isPending}
 						>
 							<ThemeText className="text-white">{t('common.accept')}</ThemeText>
-						</Button>
-						<Button
-							variant={'outline'}
-							size={'sm'}
-							className="px-10"
-							onPress={() => handleFollowRequest('reject')}
-							disabled={isPending}
-						>
-							<ThemeText>{t('common.reject')}</ThemeText>
 						</Button>
 					</View>
 				</View>

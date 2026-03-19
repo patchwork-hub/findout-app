@@ -119,7 +119,7 @@ export const relationshipQueryFn = async ({
 		const relation = isFollowing ? 'unfollow' : 'follow';
 		const resp: AxiosResponse<Patchwork.RelationShip> = await instance.post(
 			appendApiVersion(`accounts/${accountId}/${relation}`, 'v1'),
-			!isFollowing && { reblogs: true },
+			isFollowing ? undefined : { reblogs: true },
 		);
 		return resp.data;
 	} catch (error) {
@@ -277,8 +277,16 @@ export const updateProfile = async (
 			};
 			formData.append('header', header);
 		}
-		formData.append('display_name', params.display_name);
-		formData.append('note', params.note);
+		if (params.display_name !== undefined) {
+			formData.append('display_name', params.display_name);
+		}
+		if (params.note !== undefined) {
+			formData.append('note', params.note);
+		}
+
+		if (params.locked !== undefined) {
+			formData.append('locked', params.locked.toString());
+		}
 
 		if (params.fields_attributes) {
 			Object.values(params.fields_attributes).forEach((field, index) => {

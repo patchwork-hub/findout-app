@@ -65,7 +65,7 @@ const SocialSection = ({ accountInfo }: SocialSectionProps) => {
 					return (
 						<View
 							key={index}
-							className="mx-1.5 p-1.5 rounded-full bg-patchwork-light-100 dark:bg-patchwork-dark-400 shadow-sm"
+							className="aspect-square justify-center items-center mx-1.5 p-1.5 rounded-full bg-patchwork-light-100 dark:bg-neutral-800 shadow-sm"
 						>
 							{match.icon}
 						</View>

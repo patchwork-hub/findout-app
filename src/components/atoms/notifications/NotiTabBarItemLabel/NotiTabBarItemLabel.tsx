@@ -9,7 +9,7 @@ type NotiTabBarItemLabelProps = {
 const NotiTabBarItemLabel = ({ route, focused }: NotiTabBarItemLabelProps) => {
 	return (
 		<ThemeText
-			className={`text-sm font-NewsCycle_Bold ${
+			className={`text-[14px] font-NewsCycle_Bold ${
 				focused
 					? 'text-patchwork-primary dark:text-patchwork-soft-primary'
 					: 'text-slate-400 dark:text-patchwork-grey-100'

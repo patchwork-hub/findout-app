@@ -420,6 +420,7 @@
 		"receive_email_notification": "Receive email notification",
 		"receive_push_notification": "Receive push notification",
 		"enable_alt_text": "Enable auto ALT text",
+		"require_follow_approval": "Require follow approval",
 		"scheduled_posts": "Scheduled posts",
 		"switch_account": {
 			"add_another_account": "Add another account",
@@ -453,6 +454,9 @@
 		"website_placeholder": "Enter website URL"
 	},
 	"timeline": {
+		"request_follow": "Request to follow",
+		"cancel_request": "Cancel request",
+		"requested_to_follow_you": "has requested to follow you",
 		"continued_thread": "Continued thread",
 		"block": "Block",
 		"boosted": "reposted",
@@ -580,7 +584,7 @@
 		"log_in": "Sign-in",
 		"manage_list_members": "Manage list members",
 		"message_requests": "Message requests",
-		"mutes_and_blocks": "Mutes and blocks",
+		"mute_and_block": "Mutes and blocks",
 		"muted_contributors": "Muted contributors",
 		"my_channels": "My channels",
 		"my_information": "My information",

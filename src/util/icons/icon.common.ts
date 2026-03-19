@@ -67,6 +67,7 @@ import {
 	faRetweet,
 	faLocationDot,
 	faCheckDouble,
+	faUserClock,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const AppIcons = {
@@ -136,4 +137,5 @@ export const AppIcons = {
 	location: faLocationDot as IconProp,
 	email: faEnvelope as IconProp,
 	circleCheck: faCircleCheck as IconProp,
+	userClock: faUserClock as IconProp,
 };

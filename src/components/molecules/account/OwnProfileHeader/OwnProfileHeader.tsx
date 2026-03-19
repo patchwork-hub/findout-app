@@ -6,6 +6,9 @@ import FastImage from '@d11/react-native-fast-image';
 import dayjs from 'dayjs';
 import Image from '@/components/atoms/common/Image/Image';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faLock } from '@fortawesome/free-solid-svg-icons';
+import { useColorScheme } from 'nativewind';
 
 type OwnProfileHeaderProps = {
 	profile: Patchwork.Account;
@@ -16,6 +19,7 @@ const OwnProfileHeader: React.FC<OwnProfileHeaderProps> = ({
 	profile,
 	onPressPreview = () => {},
 }) => {
+	const { colorScheme } = useColorScheme();
 	const cleanBio = profile.note.replace(/<[^>]*>?/gm, '');
 
 	return (
@@ -47,9 +51,20 @@ const OwnProfileHeader: React.FC<OwnProfileHeaderProps> = ({
 				</Pressable>
 
 				{profile.display_name && (
-					<ThemeText className="text-2xl font-NewsCycle_Bold">
-						{profile.display_name}
-					</ThemeText>
+					<View className="flex-row items-center justify-center">
+						<ThemeText className="text-2xl font-NewsCycle_Bold">
+							{profile.display_name}
+						</ThemeText>
+						{profile.locked && (
+							<View style={{ marginStart: 6 }}>
+								<FontAwesomeIcon
+									icon={faLock}
+									color={colorScheme === 'dark' ? '#9CA3AF' : '#6B7280'}
+									size={16}
+								/>
+							</View>
+						)}
+					</View>
 				)}
 				<View className="flex-row items-center mt-1">
 					<Text className="text-sm text-gray-400">@{profile.acct}</Text>

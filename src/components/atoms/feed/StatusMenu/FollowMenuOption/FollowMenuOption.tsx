@@ -63,12 +63,21 @@ const FollowMenuOption = ({
 	};
 
 	const displayRelationshipText = useMemo(() => {
-		if (relationships && relationships[0]?.following)
-			return t('timeline.unfollow');
-		if (relationships && relationships[0]?.requested)
-			return t('timeline.requested');
+		const relationship = relationships?.[0];
+		const isLocked = status?.account?.locked;
+
+		if (relationship?.following) return t('timeline.unfollow');
+		if (relationship?.requested && isLocked)
+			return t('timeline.cancel_request');
+		if (relationship?.requested) return t('timeline.requested');
+		if (isLocked) return t('timeline.request_follow');
 		return t('timeline.follow');
-	}, [relationships && relationships[0]]);
+	}, [
+		relationships?.[0]?.following,
+		relationships?.[0]?.requested,
+		status?.account?.locked,
+		t,
+	]);
 
 	const followMenuLoading = isPending;
 

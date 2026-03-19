@@ -142,6 +142,10 @@ const StatusVideo = ({ status, isFromQuoteCompose = false }: Props) => {
 										paused={false}
 										controls={false}
 										repeat
+										muted={true}
+										playInBackground={false}
+										playWhenInactive={false}
+										disableFocus={true}
 										resizeMode={ResizeMode.COVER}
 										source={{ uri: status.media_attachments[index].url }}
 										className={cn(
@@ -240,6 +244,10 @@ const StatusVideo = ({ status, isFromQuoteCompose = false }: Props) => {
 											paused={false}
 											controls={false}
 											repeat
+											muted={true}
+											playInBackground={false}
+											playWhenInactive={false}
+											disableFocus={true}
 											resizeMode={ResizeMode.COVER}
 											source={{ uri: status.media_attachments[index].url }}
 											className={`w-full h-full bg-white border border-slate-50 dark:border-slate-900 overflow-hidden ${borderRadius}`}

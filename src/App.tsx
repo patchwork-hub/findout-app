@@ -43,6 +43,9 @@ import {
 import { useAccounts } from './hooks/custom/useAccounts';
 import SplashAnimation from './components/organisms/SplashAnimation/SplashAnimation';
 import { SystemBars } from 'react-native-edge-to-edge';
+import Sound from 'react-native-sound';
+
+Sound.setCategory('Ambient', true);
 
 Sentry.init({
 	dsn: isDevelopment() ? undefined : process.env.DEFAULT_SENTRY_DSN,

@@ -1,10 +1,11 @@
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { ElementType } from 'htmlparser2';
 import type { ChildNode } from 'domhandler';
 import { Platform } from 'react-native';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
 import ParseEmojis from '@/components/atoms/common/ParseEmojis/ParnseEmojis';
 import { unwrapNode, shouldRenderHashtag } from '@/util/helper/htmlParserUtils';
+import { checkIfNodesAreOnlyTags } from '@/util/helper/hashtags';
 
 type UseHtmlRendererProps = {
 	status: Patchwork.Status;
@@ -29,6 +30,83 @@ export const useHtmlRenderer = ({
 	const adaptedLineheight = Platform.OS === 'ios' ? 18 : undefined;
 
 	const isImageMissing = status?.media_attachments?.length !== 0;
+
+	const isEntireDocTags = useMemo(() => {
+		return checkIfNodesAreOnlyTags(documentChildren);
+	}, [documentChildren]);
+
+	// Cache the list of paragraph nodes to find them instantly
+	const cachedParagraphNodes = useMemo(
+		() =>
+			documentChildren?.filter(
+				child => child.type === ElementType.Tag && child.name === 'p',
+			) || [],
+		[documentChildren],
+	);
+
+	// Helper function to check if a node or its children contain any visible content
+	// This respects the 'continuedTagNames' logic (hiding hashtags moved to the bottom)
+	const shouldNodeRender = (node: ChildNode): boolean => {
+		switch (node.type) {
+			case ElementType.Text:
+				return !!node.data.trim();
+			case ElementType.Tag:
+				if (node.name === 'br') return true;
+				if (node.name === 'a') {
+					if (node.attribs?.class?.includes('hashtag')) {
+						const href = node.attribs.href;
+						const rawHashtagFromHref = href?.match(/\/tags\/([^/?#]+)/)?.[1];
+						const normalizedHashtag = rawHashtagFromHref?.toLowerCase();
+						const tagsToHide =
+							continuedTagNames?.map(t => t.toLowerCase()) || [];
+
+						const isLastParagraph =
+							node.parent ===
+							cachedParagraphNodes[cachedParagraphNodes.length - 1];
+
+						const isOnlyHashtagParagraph =
+							node.parent &&
+							'name' in node.parent &&
+							node.parent.name === 'p' &&
+							node.parent.children.every(
+								n =>
+									(n.type === ElementType.Tag &&
+										n.name === 'a' &&
+										n.attribs?.class?.includes('hashtag')) ||
+									(n.type === ElementType.Text && !n.data.trim()),
+							);
+
+						if (
+							(normalizedHashtag && tagsToHide.includes(normalizedHashtag)) ||
+							(isLastParagraph && isOnlyHashtagParagraph && !isEntireDocTags)
+						) {
+							return false;
+						}
+					}
+					return true;
+				}
+				if (node.name === 'p') {
+					if (status?.quote && node.attribs?.class?.includes('quote-inline')) {
+						return false;
+					}
+					return node.children.some(child => shouldNodeRender(child));
+				}
+				return node.children.some(child => shouldNodeRender(child));
+			default:
+				return false;
+		}
+	};
+
+	// Determine the index of the last node that will actually be rendered.
+	// We use this to avoid adding extra bottom margin after the last visible text.
+	const lastContentNodeIndex = useMemo(() => {
+		for (let i = documentChildren.length - 1; i >= 0; i--) {
+			if (shouldNodeRender(documentChildren[i])) {
+				return i;
+			}
+		}
+		return -1;
+	}, [documentChildren, cachedParagraphNodes, status, continuedTagNames]);
 
 	const renderNode = (node: ChildNode, index: number): React.ReactNode => {
 		let classes: string | undefined;
@@ -58,13 +136,17 @@ export const useHtmlRenderer = ({
 						if (classes) {
 							if (classes.includes('hashtag')) {
 								const children = node.children.map(unwrapNode).join('');
-								const tagNameRaw = href?.match(/\/tags\/([^/?#]+)/)?.[1];
+								const rawHashtagFromHref =
+									href?.match(/\/tags\/([^/?#]+)/)?.[1];
+								const tagNameRaw = rawHashtagFromHref?.toLowerCase();
 
 								const shouldRender = shouldRenderHashtag(
 									tagNameRaw,
 									node,
 									documentChildren,
 									continuedTagNames,
+									cachedParagraphNodes,
+									isEntireDocTags,
 								);
 
 								if (!shouldRender) {

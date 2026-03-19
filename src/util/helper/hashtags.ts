@@ -1,10 +1,34 @@
 import { parseDocument, ElementType } from 'htmlparser2';
-import { Node, Element } from 'domhandler';
+import { Node, Element, Text } from 'domhandler';
+
+// Helper to check if a list of nodes contains only hashtags, whitespace, or break lines.
+export const checkIfNodesAreOnlyTags = (nodes: Node[]): boolean => {
+	const isOnlyTagsNode = (node: Node): boolean => {
+		if (node.type === 'text') return !(node as Text).data.trim();
+		if (node.type === 'comment') return true;
+		if (node.type === 'tag') {
+			const el = node as Element;
+			if (el.name === 'br') return true;
+			if (el.name === 'a' && el.attribs?.class?.includes('hashtag'))
+				return true;
+			if (['p', 'div', 'span'].includes(el.name)) {
+				return checkIfNodesAreOnlyTags(el.children);
+			}
+		}
+		return false;
+	};
+	return nodes.every(isOnlyTagsNode);
+};
 
 // This helper func is used to extract hashtags which stand allone at the end of the line from the HTML content
 // These hashtags are hidden in the main content and shown in StatusTags
 export const getContinuedHashtags = (html: string): string[] => {
 	const doc = parseDocument(html);
+
+	if (checkIfNodesAreOnlyTags(doc.children)) {
+		return [];
+	}
+
 	const continuedHashtags = new Set<string>();
 	const allSeenHashtagsInOrder = new Set<string>(); // All hashtags found, in order
 	const alreadySeenOutsideContinuedBlock = new Set<string>(); // Hashtags already used in content

@@ -60,7 +60,7 @@ const StatusTags = ({
 	};
 
 	return (
-		<View className="flex-row flex-wrap mt-2">
+		<View className="flex-row flex-wrap">
 			{visibleTags.map(tag => (
 				<Pressable
 					disabled={isFromQuoteCompose}

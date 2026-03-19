@@ -36,7 +36,7 @@ const RssContentCard = ({
 	return (
 		<View
 			className={cn(
-				'border border-slate-200 dark:border-gray-800 rounded-lg overflow-hidden',
+				'border border-slate-200 dark:border-gray-800 rounded-lg overflow-hidden mb-3',
 				extraStyle,
 			)}
 		>

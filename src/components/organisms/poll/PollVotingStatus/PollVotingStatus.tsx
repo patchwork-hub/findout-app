@@ -142,7 +142,7 @@ const PollVotingStatus = ({
 	const showResults = status.poll.voted || expired;
 
 	return (
-		<View className={`py-1`}>
+		<View className={`py-1 mb-1`}>
 			<View>
 				{status.poll.options.map((option, index) => (
 					<PollVotingOption

@@ -105,7 +105,7 @@ const StatusVideo = ({ status, isFromQuoteCompose = false }: Props) => {
 
 	return (
 		<View
-			className={`flex-row mt-1 w-full`}
+			className={`flex-row mt-1 mb-2 w-full`}
 			style={{ height: containerHeight }}
 		>
 			<View className="flex-1">

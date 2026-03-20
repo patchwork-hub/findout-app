@@ -63,8 +63,6 @@ const InitiateNewConversation = ({
 		if (keyboardHeight > 0) {
 			targetHeight = hasBottomTabBar
 				? Math.max(0, keyboardHeight - tabBarHeight)
-				: Platform.OS === 'ios'
-				? keyboardHeight
 				: Math.max(0, keyboardHeight - insets.bottom);
 		} else {
 			targetHeight = 0;

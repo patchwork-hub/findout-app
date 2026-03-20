@@ -107,6 +107,7 @@ const Welcome: React.FC<GuestStackScreenProps<'Welcome'>> = ({
 							components={{
 								terms: (
 									<ThemeText
+										key={'terms'}
 										className="my-4 active:opacity-80"
 										onPress={() => {
 											navigation.navigate('WebViewer', {
@@ -118,6 +119,7 @@ const Welcome: React.FC<GuestStackScreenProps<'Welcome'>> = ({
 								),
 								privacy: (
 									<ThemeText
+										key={'privacy'}
 										className="my-4 active:opacity-80"
 										onPress={() => {
 											navigation.navigate('WebViewer', {

@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { AppIcons } from '@/util/icons/icon.common';
 import customColor from '@/util/constant/color';
+import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
 
 const MuteMenuOption = ({
 	status,
@@ -78,23 +79,26 @@ const MuteMenuOption = ({
 	return (
 		<MenuOption onSelect={onMakeMuteUnmuteUser} disableTouchable={isPending}>
 			<View className="flex-row items-center">
-				<MenuOptionIcon
-					icon={
-						<FontAwesomeIcon
-							icon={AppIcons.mute}
-							size={18}
-							color={
-								colorScheme == 'dark'
-									? '#fff'
-									: customColor['patchwork-grey-100']
-							}
-						/>
-					}
-					name={isPending ? '' : t('timeline.mute')}
-					disabled={isPending}
-				/>
-				{isPending && (
-					<Flow size={20} color={colorScheme === 'dark' ? 'white' : '#000'} />
+				<View className="w-9 h-9 items-center mr-1 justify-center">
+					<FontAwesomeIcon
+						icon={AppIcons.mute}
+						size={18}
+						color={
+							colorScheme == 'dark' ? '#fff' : customColor['patchwork-grey-100']
+						}
+					/>
+				</View>
+				{isPending ? (
+					<Flow size={25} color={colorScheme === 'dark' ? 'white' : '#000'} />
+				) : (
+					<ThemeText
+						size={'sm_14'}
+						variant={isPending ? 'textGrey' : 'default'}
+						className="font-Inter_Regular text-black dark:text-white flex-1 flex-shrink"
+						numberOfLines={2}
+					>
+						{t('timeline.mute')}
+					</ThemeText>
 				)}
 			</View>
 		</MenuOption>

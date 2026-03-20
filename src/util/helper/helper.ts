@@ -23,6 +23,7 @@ import { getFavouriteChannelLists } from '@/services/channel.service';
 import { log } from 'console';
 import { useTranslation } from 'react-i18next';
 import { QuotePolicy } from '@/context/composeStatusContext/composeStatus.type';
+import { TFunction } from 'i18next';
 
 export const handleError = (error: any) => {
 	return Promise.reject({
@@ -56,11 +57,13 @@ export const appendDynamicDomain = (domainName: string, apiPath: string) => {
 	return domainName + apiPath;
 };
 
-export const timelineDateFormatter = (createdAt: moment.Moment) => {
+export const timelineDateFormatter = (
+	createdAt: moment.Moment,
+	t: TFunction,
+) => {
 	const now = moment();
 	const seconds = now.diff(createdAt, 'seconds');
 	const duration = moment.duration(now.diff(createdAt));
-	const { t } = useTranslation();
 
 	if (seconds < 60) {
 		return t('conversation.time_stamp.duration_seconds', {

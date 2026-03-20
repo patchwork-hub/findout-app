@@ -120,7 +120,7 @@ const MastodonSignInWebView = ({
 	};
 
 	return (
-		<SafeScreen>
+		<SafeScreen style={{ flex: 1 }}>
 			<Header
 				title={''}
 				leftCustomComponent={<BackButton extraClass="border-0" />}

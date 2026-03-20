@@ -48,6 +48,7 @@ const GroupedNotificationItem = ({
 							<ThemeText size={'fs_13'} variant={'textGrey'}>
 								{timelineDateFormatter(
 									moment(notification?.latest_page_notification_at),
+									t,
 								)}
 							</ThemeText>
 						</View>
@@ -73,6 +74,7 @@ const GroupedNotificationItem = ({
 									<ThemeText size={'fs_13'} variant={'textGrey'}>
 										{timelineDateFormatter(
 											moment(notification?.latest_page_notification_at),
+											t,
 										)}
 									</ThemeText>
 								</View>
@@ -280,6 +282,7 @@ const GroupedNotificationItem = ({
 								>
 									{timelineDateFormatter(
 										moment(notification?.latest_page_notification_at),
+										t,
 									)}
 								</ThemeText>
 							</View>

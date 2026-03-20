@@ -66,7 +66,7 @@ const StatusShareMenu: React.FC<Props> = ({ status }: Props) => {
 			className={cn(
 				'flex flex-row items-center gap-1 active:opacity-80 mb-0.5',
 			)}
-			hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+			hitSlop={{ top: 10, bottom: 10, left: 3, right: 10 }}
 			onPress={onSocialShare}
 		>
 			<StatusCopyIcon

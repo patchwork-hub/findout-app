@@ -164,7 +164,7 @@ const StatusHeader = ({
 								className="ml-0 mt-[2]"
 								size="xs_12"
 							>
-								{timelineDateFormatter(moment(status.created_at))}
+								{timelineDateFormatter(moment(status.created_at), t)}
 							</ThemeText>
 							<ThemeText
 								variant="textGrey"

@@ -53,7 +53,7 @@ const NotificationTabItem = ({ item }: { item: INotificationResponse }) => {
 							)}
 							<View className="flex-1 items-end">
 								<ThemeText size={'fs_13'} variant={'textGrey'}>
-									{timelineDateFormatter(moment(created_at))}
+									{timelineDateFormatter(moment(created_at), t)}
 								</ThemeText>
 							</View>
 						</View>
@@ -77,7 +77,7 @@ const NotificationTabItem = ({ item }: { item: INotificationResponse }) => {
 								</Pressable>
 								<View className="flex-1 items-end">
 									<ThemeText size={'fs_13'} variant={'textGrey'}>
-										{timelineDateFormatter(moment(created_at))}
+										{timelineDateFormatter(moment(created_at), t)}
 									</ThemeText>
 								</View>
 							</View>

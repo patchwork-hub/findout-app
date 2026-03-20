@@ -374,7 +374,7 @@
 			"additional_comments": "Additional comments"
 		},
 		"forward": {
-			"anonymized_message": "The account is from another server. Send an anonymized copy of the report there as well?",
+			"anonymized_message": "The account is from another server. Send an anonymised copy of the report there as well?",
 			"forward_to_domain": "Forward to {{domain}}"
 		},
 		"reporting": "Reporting",
@@ -441,7 +441,7 @@
 		"notification_settings": "Notification settings",
 		"timeline_feed": "Timeline & feed",
 		"privacy_safety": "Privacy & safety",
-		"personalization": "Personalization",
+		"personalization": "Personalisation",
 		"account_management": "Account management",
 		"timeline": "Timeline"
 	},
@@ -697,7 +697,7 @@
 		"title": "Verification",
 		"add_website_to_profile": "Add website to profile",
 		"copy": "Copy",
-		"description": "Verifying your identity on Mastodon is for everyone. Based on open web standards, now and forever free. All you need is a personal website that people recognize you by. When you link to this website from your profile, we will check that the website links back to your profile and show a visual indicator on it.",
+		"description": "Verifying your identity on Mastodon is for everyone. Based on open web standards, now and forever free. All you need is a personal website that people recognise you by. When you link to this website from your profile, we will check that the website links back to your profile and show a visual indicator on it.",
 		"heres_how": "HERE'S HOW",
 		"instructions": "Copy and paste the code below into the HTML of your website. Then add the address of your website into one of the extra fields on your profile from the \"Edit profile\" tab and save changes.",
 		"loading": "Loading...",

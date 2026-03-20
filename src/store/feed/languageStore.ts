@@ -11,10 +11,14 @@ export type ILanguage =
 	| 'it'
 	| 'pt-BR'
 	| 'es'
-	| 'my';
+	| 'my'
+	| 'en-GB'
+	| 'fi'
+	| 'da'
+	| 'pt-PT';
 
 export const supportedLanguage = [
-	'en',
+	'en', // 'English (US)',
 	'ja',
 	'cy',
 	'de',
@@ -23,6 +27,10 @@ export const supportedLanguage = [
 	'pt-BR',
 	'es',
 	'my',
+	'en-GB', // 'English (UK)',
+	'fi',
+	'da',
+	'pt-PT',
 ];
 
 interface LanguageState {

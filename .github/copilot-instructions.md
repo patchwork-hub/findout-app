@@ -1,4 +1,4 @@
-Hi GitHub Copilot! 👋 This file allows you to sync with the "vibe" and technical standards of the **Totnes Pulse** project. Please treat the instructions below as the **source of truth** for code generation, refactoring, and architectural decisions.
+Hi GitHub Copilot! 👋 This file allows you to sync with the "vibe" and technical standards of the **Find Out Media** project. Please treat the instructions below as the **source of truth** for code generation, refactoring, and architectural decisions.
 
 ---
 
@@ -7,7 +7,6 @@ Hi GitHub Copilot! 👋 This file allows you to sync with the "vibe" and technic
 **FindOut Media** is a community-focused mobile application for **FindOutMedia**, built with **React Native**. It integrates with social protocols (likely **Mastodon/Fediverse**) and content platforms (**WordPress**) to bring local news and social interactions to users.
 
 - **Vibe**: Community-driven, modern, performant, and reliable.
-- **Target Audience**: Local residents and visitors of Totnes.
 
 ---
 

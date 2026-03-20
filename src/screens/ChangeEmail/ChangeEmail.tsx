@@ -109,12 +109,11 @@ const ChangeEmail: React.FC<SettingStackScreenProps<'ChangeEmail'>> = ({
 					isTablet ? 'w-[50%] self-center' : '',
 				)}
 			>
-				<ThemeText className="mb-2 ml-1.5">Current email address</ThemeText>
-				<View className="mb-6 p-3 px-4 bg-patchwork-light-100 dark:bg-patchwork-dark-50 rounded-xl border border-gray-200 dark:border-gray-700">
-					<ThemeText
-						className="text-patchwork-grey-70 dark:text-patchwork-dark-50"
-						size="md_16"
-					>
+				<ThemeText className="mb-2 ml-1.5">
+					{t('login.current_email_address')}
+				</ThemeText>
+				<View className="mb-6 p-3 px-4 bg-patchwork-light-100 dark:bg-patchwork-dark-400 rounded-xl border border-gray-200 dark:border-gray-700">
+					<ThemeText className="text-patchwork-grey-70 dark:text-white">
 						{oldEmail}
 					</ThemeText>
 				</View>

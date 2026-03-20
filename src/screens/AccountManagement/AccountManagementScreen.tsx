@@ -35,7 +35,7 @@ const AccountManagementScreen: React.FC<
 					sectionKey="verification"
 					colorScheme={colorScheme!}
 					icon={AppIcons.circleCheck}
-					title={t('setting.verification', 'Verification')}
+					title={t('verification.title', 'Verification')}
 					onPress={() => navigation.navigate('Verification')}
 				/>
 				<SettingSection

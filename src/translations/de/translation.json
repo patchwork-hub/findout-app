@@ -78,6 +78,7 @@
 		"select_five": "Wähle mindestens 5 aus"
 	},
 	"compose": {
+		"add_file": "Datei hinzufügen",
 		"delete_image": "Bild löschen",
 		"draft": {
 			"save": "Entwurf speichern",
@@ -127,6 +128,10 @@
 		"take_a_photo": "Foto aufnehmen",
 		"select_language": "Sprache auswählen",
 		"select_date": "Datum auswählen",
+		"show_content": "Inhalt anzeigen",
+		"spoiler_placeholder": "Schreibe deine Warnung hier...",
+		"spoiler_warning_message": "{{spoiler_text}}",
+		"spoiler_warning_title": "Inhaltswarnung",
 		"drafts": "Entwürfe"
 	},
 	"conversation": {
@@ -189,6 +194,10 @@
 	"display_name": "Anzeigename",
 	"edit": "Bearbeiten",
 	"edit_account": "Konto bearbeiten",
+	"edit_profile": {
+		"content": "Inhalt",
+		"label": "Beschriftung"
+	},
 	"filter_setting": "Filtereinstellung",
 	"for_you": "Für dich",
 	"hashtag": "Hashtag",
@@ -245,6 +254,7 @@
 		"clear_cookies": "Cookies löschen",
 		"confirm_password": "Passwort bestätigen",
 		"create_account": "Konto erstellen",
+		"current_email_address": "Aktuelle E-Mail-Adresse",
 		"current_password": "Aktuelles Passwort",
 		"email": "E-Mail",
 		"email_address": "E-Mail-Adresse",
@@ -392,6 +402,7 @@
 		"bluesky_bridge": "Bluesky-Brücke",
 		"bookmarks": "Lesezeichen",
 		"change_password": "Passwort ändern",
+		"choose_audience": "Zielgruppe wählen",
 		"community_guidelines": "Community-Richtlinien",
 		"delete_account": "Konto löschen",
 		"delete_confirmation": "Du wirst zur offiziellen mo-me.social-Website weitergeleitet, wo du den Schritten zur endgültigen Löschung deines Kontos folgen kannst. Dadurch werden dein Konto und alle zugehörigen Daten dauerhaft entfernt.",
@@ -402,6 +413,7 @@
 		"privacy_policy": "Datenschutzrichtlinie",
 		"receive_email_notification": "E-Mail-Benachrichtigungen erhalten",
 		"receive_push_notification": "Push-Benachrichtigungen erhalten",
+		"require_follow_approval": "Folgeanfrage-Genehmigung anfordern",
 		"enable_alt_text": "Automatischen ALT-Text aktivieren",
 		"scheduled_posts": "Geplante Beiträge",
 		"switch_account": {
@@ -496,6 +508,11 @@
 		"type_your_reply": "Gib deine Antwort ein",
 		"unfollow": "Entfolgen",
 		"visibility": {
+			"followers_only": "Nur Follower",
+			"just_me": "Nur ich",
+			"local_only": "Nur lokal",
+			"select_quote": "Wer kann diesen Beitrag zitieren?",
+			"select_visibility": "Wer kann diesen Beitrag sehen?",
 			"public": "Jeder",
 			"unlisted": "Jeder, aber nicht in Timelines aufgeführt",
 			"private": "Nur Follower",
@@ -647,5 +664,32 @@
 		"create_a_new_one": "Einen neuen erstellen",
 		"user_blocked": "{{user}} wurde blockiert",
 		"user_muted": "{{user}} wurde stummgeschaltet"
+	},
+	"verification": {
+		"title": "Verifizierung",
+		"add_website_to_profile": "Website zum Profil hinzufügen",
+		"copy": "Kopieren",
+		"description": "Die Verifizierung Ihrer Identität auf Mastodon ist für jeden möglich. Basierend auf offenen Webstandards, jetzt und für immer kostenlos. Alles, was Sie brauchen, ist eine persönliche Website, an der die Leute Sie erkennen. Wenn Sie von Ihrem Profil auf diese Website verlinken, prüfen wir, ob die Website auf Ihr Profil zurückverlinkt, und zeigen einen visuellen Indikator darauf an.",
+		"heres_how": "SO GEHT'S",
+		"instructions": "Kopieren Sie den untenstehenden Code und fügen Sie ihn in den HTML-Code Ihrer Website ein. Fügen Sie dann die Adresse Ihrer Website in eines der zusätzlichen Felder in Ihrem Profil auf der Registerkarte „Profil bearbeiten“ ein und speichern Sie die Änderungen.",
+		"loading": "Laden...",
+		"tip_label": "Tipp: ",
+		"tip_part_1": "Der Link auf Ihrer Website kann unsichtbar sein. Der wichtige Teil ist ",
+		"tip_part_2": " was Identitätsdiebstahl auf Websites mit benutzergenerierten Inhalten verhindert. Sie können sogar ein ",
+		"tip_part_3": "Tag im Header der Seite anstelle von a verwenden, aber das HTML muss ohne Ausführung von JavaScript zugänglich sein."
+	},
+	"website_verification": "Website-Verifizierung",
+	"handle_info": {
+		"title": "Was steckt in einem Handle?",
+		"account_handle": "Konto-Handle:",
+		"username": "Benutzername",
+		"username_description": "Ihre eindeutige Kennung auf ihrem Server. Es ist möglich, Benutzer mit demselben Benutzernamen auf verschiedenen Servern zu finden.",
+		"server": "Server",
+		"server_description": "Ihr digitales Zuhause, wo alle ihre Beiträge leben.",
+		"joined": "Beigetreten",
+		"footer_description": "Da Handles sagen, wer jemand ist und wo er sich befindet, können Sie mit Menschen im gesamten sozialen Web interagieren von ",
+		"activitypub_platforms": "ActivityPub-betriebene Plattformen",
+		"activitypub_header": "ActivityPub ist wie die Sprache, die Mastodon mit anderen sozialen Netzwerken spricht.",
+		"activitypub_description": "Es ermöglicht Ihnen, sich mit Menschen nicht nur auf Mastodon, sondern auch über verschiedene soziale Apps hinweg zu verbinden und zu interagieren."
 	}
 }

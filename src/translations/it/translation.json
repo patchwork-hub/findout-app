@@ -78,6 +78,7 @@
 		"select_five": "Selezionane almeno 5"
 	},
 	"compose": {
+		"add_file": "Aggiungi file",
 		"delete_image": "Elimina immagine",
 		"draft": {
 			"save": "Salva bozza",
@@ -127,6 +128,10 @@
 		"take_a_photo": "Scatta una foto",
 		"select_language": "Seleziona lingua",
 		"select_date": "Seleziona data",
+		"show_content": "Mostra contenuto",
+		"spoiler_placeholder": "Scrivi qui il tuo avvertimento...",
+		"spoiler_warning_message": "{{spoiler_text}}",
+		"spoiler_warning_title": "Avviso sui contenuti",
 		"drafts": "Bozze"
 	},
 	"conversation": {
@@ -189,6 +194,10 @@
 	"display_name": "Nome visualizzato",
 	"edit": "Modifica",
 	"edit_account": "Modifica account",
+	"edit_profile": {
+		"content": "Contenuto",
+		"label": "Etichetta"
+	},
 	"filter_setting": "Impostazioni filtro",
 	"for_you": "Per te",
 	"hashtag": "Hashtag",
@@ -245,6 +254,7 @@
 		"clear_cookies": "Cancella cookie",
 		"confirm_password": "Conferma password",
 		"create_account": "Crea account",
+		"current_email_address": "Indirizzo email attuale",
 		"current_password": "Password attuale",
 		"email": "Email",
 		"email_address": "Indirizzo email",
@@ -392,6 +402,7 @@
 		"bluesky_bridge": "Ponte Bluesky",
 		"bookmarks": "Segnalibri",
 		"change_password": "Cambia password",
+		"choose_audience": "Scegli il pubblico",
 		"community_guidelines": "Linee guida della comunità",
 		"delete_account": "Elimina account",
 		"delete_confirmation": "Sarai reindirizzato al sito ufficiale mo-me.social, dove potrai seguire i passaggi per eliminare definitivamente il tuo account. Questo rimuoverà permanentemente il tuo account e tutti i dati associati.",
@@ -402,6 +413,7 @@
 		"privacy_policy": "Informativa sulla privacy",
 		"receive_email_notification": "Ricevi notifiche via email",
 		"receive_push_notification": "Ricevi notifiche push",
+		"require_follow_approval": "Richiedi approvazione per seguirti",
 		"enable_alt_text": "Abilita testo ALT automatico",
 		"scheduled_posts": "Post programmati",
 		"switch_account": {
@@ -496,6 +508,11 @@
 		"type_your_reply": "Scrivi la tua risposta",
 		"unfollow": "Smetti di seguire",
 		"visibility": {
+			"followers_only": "Solo follower",
+			"just_me": "Solo io",
+			"local_only": "Solo locale",
+			"select_quote": "Chi può citare questo post?",
+			"select_visibility": "Chi può vedere questo post?",
 			"public": "Chiunque",
 			"unlisted": "Chiunque, ma non elencato nelle timeline",
 			"private": "Solo follower",
@@ -647,5 +664,32 @@
 		"create_a_new_one": "Crea uno nuovo",
 		"user_blocked": "{{user}} è stato bloccato",
 		"user_muted": "{{user}} è stato silenziato"
+	},
+	"verification": {
+		"title": "Verifica",
+		"add_website_to_profile": "Aggiungi sito web al profilo",
+		"copy": "Copia",
+		"description": "Verificare la propria identità su Mastodon è per tutti. Basato su standard web aperti, gratuito ora e per sempre. Tutto ciò di cui hai bisogno è un sito web personale per il quale le persone ti riconoscono. Quando colleghi questo sito web dal tuo profilo, verificheremo che il sito web rimandi al tuo profilo e mostreremo un indicatore visivo su di esso.",
+		"heres_how": "ECCO COME",
+		"instructions": "Copia e incolla il codice sottostante nell'HTML del tuo sito web. Quindi aggiungi l'indirizzo del tuo sito web in uno dei campi extra del tuo profilo dalla scheda \"Modifica profilo\" e salva le modifiche.",
+		"loading": "Caricamento...",
+		"tip_label": "Suggerimento: ",
+		"tip_part_1": "Il link sul tuo sito web può essere invisibile. La parte importante è ",
+		"tip_part_2": " che impedisce il furto d'identità sui siti web con contenuti generati dagli utenti. Puoi anche usare un tag ",
+		"tip_part_3": "nell'intestazione della pagina invece di a, ma l'HTML deve essere accessibile senza eseguire JavaScript."
+	},
+	"website_verification": "Verifica del sito web",
+	"handle_info": {
+		"title": "Cosa c'è in un handle?",
+		"account_handle": "Handle dell'account:",
+		"username": "Nome utente",
+		"username_description": "Il loro identificatore univoco sul loro server. È possibile trovare utenti con lo stesso nome utente su server diversi.",
+		"server": "Server",
+		"server_description": "La loro casa digitale, dove vivono tutti i loro post.",
+		"joined": "Iscritto",
+		"footer_description": "Poiché gli handle dicono chi è qualcuno e dove si trova, puoi interagire con le persone attraverso il web sociale di ",
+		"activitypub_platforms": "Piattaforme basate su ActivityPub",
+		"activitypub_header": "ActivityPub è come la lingua che Mastodon parla con altri social network.",
+		"activitypub_description": "Ti consente di connetterti e interagire con le persone non solo su Mastodon, ma anche attraverso diverse app sociali."
 	}
 }

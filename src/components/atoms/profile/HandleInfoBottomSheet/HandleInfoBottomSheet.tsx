@@ -14,6 +14,7 @@ import { layoutAnimation } from '@/util/helper/timeline';
 import customColor from '@/util/constant/color';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
 type HandleInfoBottomSheetProps = {
 	username: string;
@@ -30,6 +31,7 @@ const HandleInfoBottomSheet = React.forwardRef<
 	BottomSheetModal,
 	HandleInfoBottomSheetProps
 >(({ username, domain, joinedDate }, ref) => {
+	const { t } = useTranslation();
 	const { colorScheme } = useColorScheme();
 	const { bottom } = useSafeAreaInsets();
 	const [showActivityPub, setShowActivityPub] = useState(false);
@@ -83,7 +85,7 @@ const HandleInfoBottomSheet = React.forwardRef<
 			backdropComponent={renderBackdrop}
 		>
 			<BottomSheetScrollView
-				style={{ paddingHorizontal: 24, paddingTop: 8, paddingBottom: 32 }}
+				style={{ paddingTop: 8, paddingBottom: 32 }}
 				contentContainerStyle={{
 					paddingHorizontal: 24,
 					paddingTop: 8,
@@ -96,12 +98,13 @@ const HandleInfoBottomSheet = React.forwardRef<
 						<FontAwesomeIcon icon={AppIcons.users} color="#fff" size={18} />
 					</View>
 					<ThemeText size="md_16" className="mt-2">
-						What's in a handle?
+						{t('handle_info.title')}
 					</ThemeText>
 				</View>
 
 				<View className="bg-zinc-300 dark:bg-zinc-800 rounded-lg p-4 mb-6">
 					<ThemeText size="xs_12" className="text-zinc-400 mb-1">
+						{t('handle_info.account_handle')}
 						Account handle:
 					</ThemeText>
 					<View className="flex-row items-center justify-between">
@@ -133,8 +136,8 @@ const HandleInfoBottomSheet = React.forwardRef<
 								size={14}
 							/>
 						}
-						title="Username"
-						description="Their unique identifier on their server. It's possible to find users with the same username on different servers."
+						title={t('handle_info.username')}
+						description={t('handle_info.username_description')}
 					/>
 					<InfoRow
 						icon={
@@ -144,8 +147,8 @@ const HandleInfoBottomSheet = React.forwardRef<
 								size={14}
 							/>
 						}
-						title="Server"
-						description="Their digital home, where all of their posts live."
+						title={t('handle_info.server')}
+						description={t('handle_info.server_description')}
 					/>
 					{joinedDate ? (
 						<InfoRow
@@ -156,7 +159,7 @@ const HandleInfoBottomSheet = React.forwardRef<
 									size={14}
 								/>
 							}
-							title="Joined"
+							title={t('handle_info.joined')}
 							description={joinedDate}
 						/>
 					) : null}
@@ -165,8 +168,7 @@ const HandleInfoBottomSheet = React.forwardRef<
 				{/* Footer */}
 				<View className="mb-4">
 					<ThemeText size="xs_12" variant="textGrey">
-						Since handles say who someone is and where they are, you can
-						interact with people across the social web of{' '}
+						{t('handle_info.footer_description')}
 					</ThemeText>
 					<TouchableOpacity
 						onPress={toggleActivityPub}
@@ -177,7 +179,7 @@ const HandleInfoBottomSheet = React.forwardRef<
 							size="xs_12"
 							className="text-patchwork-primary dark:text-patchwork-soft-primary"
 						>
-							ActivityPub-powered platforms
+							{t('handle_info.activitypub_platforms')}
 						</ThemeText>
 					</TouchableOpacity>
 				</View>
@@ -186,12 +188,10 @@ const HandleInfoBottomSheet = React.forwardRef<
 				{showActivityPub && (
 					<View className="gap-4">
 						<ThemeText size="xs_12" variant="textGrey">
-							ActivityPub is like the language Mastodon speaks with other social
-							networks.
+							{t('handle_info.activitypub_header')}
 						</ThemeText>
 						<ThemeText size="xs_12" variant="textGrey">
-							It lets you connect and interact with people not just on Mastodon,
-							but across different social apps too.
+							{t('handle_info.activitypub_description')}
 						</ThemeText>
 					</View>
 				)}

@@ -78,6 +78,7 @@
 		"select_five": "Selecciona al menos 5"
 	},
 	"compose": {
+		"add_file": "Añadir archivo",
 		"delete_image": "Eliminar imagen",
 		"draft": {
 			"save": "Guardar borrador",
@@ -127,6 +128,10 @@
 		"take_a_photo": "Tomar una foto",
 		"select_language": "Seleccionar idioma",
 		"select_date": "Seleccionar fecha",
+		"show_content": "Mostrar contenido",
+		"spoiler_placeholder": "Escribe tu advertencia aquí...",
+		"spoiler_warning_message": "{{spoiler_text}}",
+		"spoiler_warning_title": "Advertencia de contenido",
 		"drafts": "Borradores"
 	},
 	"conversation": {
@@ -189,6 +194,10 @@
 	"display_name": "Nombre a mostrar",
 	"edit": "Editar",
 	"edit_account": "Editar cuenta",
+	"edit_profile": {
+		"content": "Contenido",
+		"label": "Etiqueta"
+	},
 	"filter_setting": "Configuración de filtro",
 	"for_you": "Para ti",
 	"hashtag": "Etiqueta",
@@ -245,6 +254,7 @@
 		"clear_cookies": "Limpiar cookies",
 		"confirm_password": "Confirmar contraseña",
 		"create_account": "Crear cuenta",
+		"current_email_address": "Dirección de correo electrónico actual",
 		"current_password": "Contraseña actual",
 		"email": "Correo electrónico",
 		"email_address": "Dirección de correo electrónico",
@@ -392,6 +402,7 @@
 		"bluesky_bridge": "Puente Bluesky",
 		"bookmarks": "Marcadores",
 		"change_password": "Cambiar contraseña",
+		"choose_audience": "Elegir audiencia",
 		"community_guidelines": "Directrices de la comunidad",
 		"delete_account": "Eliminar cuenta",
 		"delete_confirmation": "Serás redirigido al sitio web oficial de patchwork.io, donde puedes seguir los pasos para eliminar permanentemente tu cuenta. Esto eliminará permanentemente tu cuenta y todos los datos asociados.",
@@ -402,6 +413,7 @@
 		"privacy_policy": "Política de privacidad",
 		"receive_email_notification": "Recibir notificación por correo electrónico",
 		"receive_push_notification": "Recibir notificación push",
+		"require_follow_approval": "Requerir aprobación de seguimiento",
 		"enable_alt_text": "Activar texto ALT automático",
 		"scheduled_posts": "Publicaciones programadas",
 		"switch_account": {
@@ -496,6 +508,11 @@
 		"type_your_reply": "Escribe tu respuesta",
 		"unfollow": "Dejar de seguir",
 		"visibility": {
+			"followers_only": "Solo seguidores",
+			"just_me": "Solo yo",
+			"local_only": "Solo local",
+			"select_quote": "¿Quién puede citar esta publicación?",
+			"select_visibility": "¿Quién puede ver esta publicación?",
 			"public": "Cualquiera",
 			"unlisted": "Cualquiera, pero no listado en cronologías",
 			"private": "Solo seguidores",
@@ -648,5 +665,32 @@
 		"create_a_new_one": "Crear una nueva",
 		"user_blocked": "{{user}} ha sido bloqueado",
 		"user_muted": "{{user}} ha sido silenciado"
+	},
+	"verification": {
+		"title": "Verificación",
+		"add_website_to_profile": "Agregar sitio web al perfil",
+		"copy": "Copiar",
+		"description": "Verificar su identidad en Mastodon es para todos. Basado en estándares web abiertos, gratuito ahora y siempre. Todo lo que necesita es un sitio web personal por el cual la gente lo reconozca. Cuando enlace a este sitio web desde su perfil, verificaremos que el sitio web enlace de vuelta a su perfil y mostraremos un indicador visual en él.",
+		"heres_how": "ASÍ ES COMO",
+		"instructions": "Copie y pegue el código a continuación en el HTML de su sitio web. Luego agregue la dirección de su sitio web en uno de los campos adicionales en su perfil desde la pestaña \"Editar perfil\" y guarde los cambios.",
+		"loading": "Cargando...",
+		"tip_label": "Consejo: ",
+		"tip_part_1": "El enlace en su sitio web puede ser invisible. La parte importante es ",
+		"tip_part_2": " lo que evita la suplantación de identidad en sitios web con contenido generado por el usuario. Incluso puede usar una etiqueta ",
+		"tip_part_3": "en la cabecera de la página en lugar de a, pero el HTML debe ser accesible sin ejecutar JavaScript."
+	},
+	"website_verification": "Verificación del sitio web",
+	"handle_info": {
+		"title": "¿Qué hay en un nombre de usuario?",
+		"account_handle": "Nombre de usuario de la cuenta:",
+		"username": "Nombre de usuario",
+		"username_description": "Su identificador único en su servidor. Es posible encontrar usuarios con el mismo nombre de usuario en diferentes servidores.",
+		"server": "Servidor",
+		"server_description": "Su hogar digital, donde viven todas sus publicaciones.",
+		"joined": "Se unió",
+		"footer_description": "Dado que los nombres de usuario dicen quién es alguien y dónde está, puedes interactuar con personas en toda la red social de ",
+		"activitypub_platforms": "Plataformas basadas en ActivityPub",
+		"activitypub_header": "ActivityPub es como el idioma que habla Mastodon con otras redes sociales.",
+		"activitypub_description": "Te permite conectarte e interactuar con personas no solo en Mastodon, sino también a través de diferentes aplicaciones sociales."
 	}
 }

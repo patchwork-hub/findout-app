@@ -56,9 +56,7 @@ const ComposeButton = ({
 			) : (
 				<ThemeText
 					size={'fs_13'}
-					className={`${
-						disabledComposeButton() && 'opacity-40'
-					} leading-5 text-white dark:text-white`}
+					className={`leading-5 text-white dark:text-white`}
 				>
 					{composeState.schedule ? textForSchedule : renderComposeHeaderTitle()}
 				</ThemeText>

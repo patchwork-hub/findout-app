@@ -38,7 +38,7 @@ const TextInput = forwardRef<RNTextInput, InputProps>(
 		);
 
 		const selectionColor = useAppropiateColorHash(
-			'patchwork-primary-dark',
+			'patchwork-soft-primary',
 			'patchwork-primary',
 		);
 		const [isFocused, setIsFocused] = useState(false);
@@ -49,7 +49,7 @@ const TextInput = forwardRef<RNTextInput, InputProps>(
 					styles.textInputWrapper,
 					startIcon ? 'pl-9' : 'pl-5',
 					showUnderLine
-						? 'border-b border-b-patchwork-primary dark:border-b-patchwork-primary-dark'
+						? 'border-b border-b-patchwork-primary dark:border-b-patchwork-soft-primary'
 						: '',
 					textArea ? 'h-32' : 'h-12',
 					extraContainerStyle,

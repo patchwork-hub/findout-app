@@ -396,7 +396,7 @@ const FeedDetail = ({
 								<ThemeText
 									size={'xs_12'}
 									variant="textSecondary"
-									className="mb-2 ml-1 text-patchwork-primary dark:text-patchwork-primary-dark"
+									className="mb-2 ml-1 text-patchwork-primary dark:text-patchwork-soft-primary"
 								>
 									@{currentFocusStatus?.account?.acct}
 								</ThemeText>

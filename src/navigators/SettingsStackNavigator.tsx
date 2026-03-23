@@ -50,14 +50,12 @@ const SettingStack = () => {
 			<Stack.Screen
 				name="NotificationSettings"
 				component={NotificationSettingsScreen}
-				options={{ presentation: 'modal', headerShown: false }}
 			/>
 			<Stack.Screen name="FeedSettings" component={FeedSettingsScreen} />
 			<Stack.Screen name="PrivacySettings" component={PrivacySettingsScreen} />
 			<Stack.Screen
 				name="PersonalizationSettings"
 				component={PersonalizationSettingsScreen}
-				options={{ presentation: 'modal', headerShown: false }}
 			/>
 			<Stack.Screen
 				name="AccountManagement"

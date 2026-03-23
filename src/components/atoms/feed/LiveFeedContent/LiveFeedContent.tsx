@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { View, Text, useWindowDimensions, Pressable } from 'react-native';
+import { View, useWindowDimensions, Pressable } from 'react-native';
 import RenderHTML, { MixedStyleDeclaration } from 'react-native-render-html';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
 import { useColorScheme } from 'nativewind';
@@ -30,6 +30,16 @@ export const LiveFeedContent: React.FC<FeedContentProps> = ({
 		() => cleanHtmlContent(post.content.rendered),
 		[post.content.rendered],
 	);
+
+	const plainTextLength = useMemo(
+		() => stripTags(post.content.rendered).trim().length,
+		[post.content.rendered],
+	);
+
+	// noted: calculates if the text length overflow the est char the parent view
+	const maxChars =
+		(contentWidth / 7.5) * (isLandscape ? landscapeLines : PORTRAIT_LINES);
+	const shouldShowSeeMore = plainTextLength > maxChars;
 
 	const textColor = !isLandscape
 		? 'white'
@@ -78,7 +88,11 @@ export const LiveFeedContent: React.FC<FeedContentProps> = ({
 						ignoredDomTags={['img', 'iframe', 'video', 'source', 'br']}
 					/>
 				</View>
-				<Text className="text-[#999] mt-1 font-semibold text-sm">See more</Text>
+				{shouldShowSeeMore && (
+					<ThemeText className="text-[#999] mt-1 font-semibold text-sm">
+						See more
+					</ThemeText>
+				)}
 			</Pressable>
 		</View>
 	);

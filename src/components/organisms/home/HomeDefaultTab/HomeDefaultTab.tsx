@@ -16,6 +16,8 @@ import { queryClient } from '@/App';
 import { useWordpressFeed } from '@/hooks/queries/wpFeed.queries';
 import { Flow } from 'react-native-animated-spinkit';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faPodcast } from '@fortawesome/free-solid-svg-icons';
 import VideoFeedItem from '@/components/molecules/home/VideoFeedItem/VideoFeedItem';
 import PreloadManager from '@/components/molecules/home/PreloadManager/PreloadManager';
 import LiveVideoFeedFilterBar from '@/components/atoms/feed/LiveVideoFeedFilterBar/LiveVideoFeedFilterBar';
@@ -35,6 +37,9 @@ const HomeDefaultTab = () => {
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 	const [filter, setFilter] = useState('Most recent');
+	const [selectedCategoryId, setSelectedCategoryId] = useState<
+		number | string | undefined
+	>();
 	const insets = useSafeAreaInsets();
 	const bottomTabBarHeight = useBottomTabBarHeight();
 	const tabBarHeight =
@@ -43,7 +48,15 @@ const HomeDefaultTab = () => {
 
 	const order = filter === 'Oldest' ? 'asc' : 'desc';
 	const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
-		useWordpressFeed(order);
+		useWordpressFeed(order, selectedCategoryId);
+
+	const handleFilterChange = (
+		newFilter: string,
+		categoryId?: number | string,
+	) => {
+		setFilter(newFilter);
+		setSelectedCategoryId(categoryId);
+	};
 	const feedItems = data?.pages.flatMap(page => page.posts) ?? [];
 	const displayData = viewMode === 'list' ? feedItems : chunk(feedItems, 2);
 
@@ -117,7 +130,7 @@ const HomeDefaultTab = () => {
 								viewMode={viewMode}
 								onViewModeChange={setViewMode}
 								filter={filter}
-								onFilterChange={setFilter}
+								onFilterChange={handleFilterChange}
 							/>
 						</View>
 					)
@@ -141,7 +154,7 @@ const HomeDefaultTab = () => {
 										viewMode={viewMode}
 										onViewModeChange={setViewMode}
 										filter={filter}
-										onFilterChange={setFilter}
+										onFilterChange={handleFilterChange}
 									/>
 								</View>
 							)}
@@ -194,32 +207,66 @@ const HomeDefaultTab = () => {
 					/>
 				}
 				ListEmptyComponent={() => {
-					return isLoading ? (
-						<View
-							style={{
-								height: VISIBLE_HEIGHT,
-								alignItems: 'center',
-								justifyContent: 'center',
-							}}
-						>
-							<Flow
-								size={32}
-								color={
-									colorScheme === 'dark'
-										? customColor['patchwork-primary-dark']
-										: customColor['patchwork-primary']
-								}
-							/>
-						</View>
-					) : (
-						<View
-							style={{
-								height: VISIBLE_HEIGHT,
-								alignItems: 'center',
-								justifyContent: 'center',
-							}}
-						>
-							<ThemeText className="text-white">No posts found</ThemeText>
+					return (
+						<View style={{ flex: 1, minHeight: VISIBLE_HEIGHT }}>
+							{viewMode === 'list' && (
+								<View
+									className={cn(
+										'absolute left-0 right-0 z-50',
+										Platform.OS === 'ios' ? '-top-[100]' : 'top-14',
+									)}
+								>
+									<LiveVideoFeedFilterBar
+										viewMode={viewMode}
+										onViewModeChange={setViewMode}
+										filter={filter}
+										onFilterChange={handleFilterChange}
+									/>
+								</View>
+							)}
+							{isLoading ? (
+								<View
+									style={{
+										flex: 1,
+										alignItems: 'center',
+										justifyContent: 'center',
+									}}
+								>
+									<Flow
+										size={32}
+										color={
+											colorScheme === 'dark'
+												? customColor['patchwork-primary-dark']
+												: customColor['patchwork-primary']
+										}
+									/>
+								</View>
+							) : (
+								<View
+									style={{
+										flex: 1,
+										alignItems: 'center',
+										justifyContent: 'center',
+									}}
+									className="px-6 -mt-48"
+								>
+									<View className="mb-6 p-6 rounded-full bg-gray-100 dark:bg-gray-800">
+										<FontAwesomeIcon
+											icon={faPodcast}
+											size={48}
+											color={colorScheme === 'dark' ? '#9ca3af' : '#9ca3af'}
+										/>
+									</View>
+									<ThemeText className="text-xl font-bold text-center mb-2">
+										No podcast found
+									</ThemeText>
+									<ThemeText className="text-center text-gray-500 dark:text-gray-400">
+										There are currently no podcasts available for this category.
+										Please try selecting a different category or check back
+										later.
+									</ThemeText>
+								</View>
+							)}
 						</View>
 					);
 				}}

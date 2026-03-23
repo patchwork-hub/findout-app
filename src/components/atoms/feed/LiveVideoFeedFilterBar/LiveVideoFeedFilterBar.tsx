@@ -1,4 +1,4 @@
-import { Pressable, View } from 'react-native';
+import { Pressable, View, ScrollView } from 'react-native';
 import {
 	Menu,
 	MenuOption,
@@ -7,21 +7,17 @@ import {
 } from 'react-native-popup-menu';
 import { ThemeText } from '../../common/ThemeText/ThemeText';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import {
-	faCaretDown,
-	faList,
-	faTableCellsLarge,
-} from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown, faList } from '@fortawesome/free-solid-svg-icons';
 import { useColorScheme } from 'nativewind';
-import { useState } from 'react';
 import colors from 'tailwindcss/colors';
 import { GridIcon } from '@/util/svg/icon.common';
+import { useGetWordpressCategories } from '@/hooks/queries/wpFeed.queries';
 
 interface LiveVideoFeedFilterBarProps {
 	viewMode: 'grid' | 'list';
 	onViewModeChange: (mode: 'grid' | 'list') => void;
 	filter: string;
-	onFilterChange: (filter: string) => void;
+	onFilterChange: (filter: string, categoryId?: number | string) => void;
 }
 
 const LiveVideoFeedFilterBar = ({
@@ -32,6 +28,7 @@ const LiveVideoFeedFilterBar = ({
 }: LiveVideoFeedFilterBarProps) => {
 	const { colorScheme } = useColorScheme();
 	const isDark = colorScheme === 'dark';
+	const { data: categories } = useGetWordpressCategories();
 
 	return (
 		<View className="flex-row justify-between items-center px-4 py-3 bg-white dark:bg-black z-50">
@@ -64,52 +61,73 @@ const LiveVideoFeedFilterBar = ({
 								borderColor: isDark ? colors.zinc[800] : colors.gray[200],
 								borderWidth: 0.5,
 								borderRadius: 8,
-								width: 150,
+								width: 200,
+								maxHeight: 300,
 							},
 						}}
 					>
-						<MenuOption
-							onSelect={() => onFilterChange('Most recent')}
-							customStyles={{
-								optionWrapper: {
-									padding: 16,
-								},
-								optionTouchable: {
-									underlayColor: isDark ? colors.zinc[800] : colors.gray[100],
-									activeOpacity: 1,
-								},
-							}}
+						<ScrollView
+							nestedScrollEnabled
+							showsVerticalScrollIndicator={false}
 						>
-							<ThemeText className="text-md">Most recent</ThemeText>
-						</MenuOption>
-						{/* <MenuOption
-							onSelect={() => onFilterChange('Trending')}
-							customStyles={{
-								optionWrapper: {
-									padding: 12,
-								},
-								optionTouchable: {
-									underlayColor: isDark ? colors.zinc[800] : colors.gray[100],
-									activeOpacity: 1,
-								},
-							}}
-						>
-							<ThemeText className="text-xs">Trending</ThemeText>
-						</MenuOption> */}
-						<MenuOption
-							onSelect={() => onFilterChange('Oldest')}
-							customStyles={{
-								optionWrapper: {
-									padding: 12,
-								},
-								optionTouchable: {
-									underlayColor: isDark ? colors.zinc[800] : colors.gray[100],
-									activeOpacity: 1,
-								},
-							}}
-						>
-							<ThemeText className="text-md">Oldest</ThemeText>
-						</MenuOption>
+							<MenuOption
+								onSelect={() => onFilterChange('Most recent')}
+								customStyles={{
+									optionWrapper: {
+										padding: 16,
+										borderBottomColor: isDark
+											? colors.zinc[800]
+											: colors.gray[200],
+										borderBottomWidth: 0.5,
+									},
+									optionTouchable: {
+										underlayColor: isDark ? colors.zinc[800] : colors.gray[100],
+										activeOpacity: 1,
+									},
+								}}
+							>
+								<ThemeText className="text-md">Most recent</ThemeText>
+							</MenuOption>
+							{categories?.map(cat => (
+								<MenuOption
+									key={cat.id}
+									onSelect={() => onFilterChange(cat.name, cat.id)}
+									customStyles={{
+										optionWrapper: {
+											padding: 12,
+											paddingLeft: 16,
+										},
+										optionTouchable: {
+											underlayColor: isDark
+												? colors.zinc[800]
+												: colors.gray[100],
+											activeOpacity: 1,
+										},
+									}}
+								>
+									<ThemeText className="text-md">{cat.name}</ThemeText>
+								</MenuOption>
+							))}
+							<MenuOption
+								onSelect={() => onFilterChange('Oldest')}
+								customStyles={{
+									optionWrapper: {
+										padding: 12,
+										paddingLeft: 16,
+										borderTopColor: isDark
+											? colors.zinc[800]
+											: colors.gray[200],
+										borderTopWidth: 0.5,
+									},
+									optionTouchable: {
+										underlayColor: isDark ? colors.zinc[800] : colors.gray[100],
+										activeOpacity: 1,
+									},
+								}}
+							>
+								<ThemeText className="text-md">Oldest</ThemeText>
+							</MenuOption>
+						</ScrollView>
 					</MenuOptions>
 				</Menu>
 			</View>

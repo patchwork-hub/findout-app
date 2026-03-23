@@ -61,7 +61,7 @@ const InitialMessageActionsBar = ({
 	);
 	const iosTextColor =
 		colorScheme === 'dark'
-			? customColor['patchwork-primary-dark']
+			? customColor['patchwork-soft-primary']
 			: customColor['patchwork-primary'];
 	const androidTextColor =
 		colorScheme === 'dark'

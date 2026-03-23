@@ -55,19 +55,42 @@ export const getWordpressPostById = async ({ postId }: { postId: number }) => {
 	}
 };
 
+export const getWordpressCategories = async () => {
+	try {
+		const resp: AxiosResponse<Patchwork.WpCategory[]> = await instance.get(
+			appendWPApiVersion('categories?per_page=100', 'v2'),
+			{
+				params: {
+					isDynamicDomain: true,
+					domain_name: process.env.WORDPRESS_API_URL || '',
+					removeBearerToken: true,
+				},
+			},
+		);
+		return resp.data;
+	} catch (error) {
+		return handleError(error);
+	}
+};
+
 export const getWordpressFeed = async ({
 	page = 1,
 	per_page = 10,
 	order = 'desc',
 	orderby = 'date',
+	categories,
 }: {
 	page?: number;
 	per_page?: number;
 	order?: 'asc' | 'desc';
 	orderby?: string;
+	categories?: string | number;
 }) => {
 	try {
-		const url = `posts?_embed&page=${page}&per_page=${per_page}&order=${order}&orderby=${orderby}`;
+		let url = `posts?_embed&page=${page}&per_page=${per_page}&order=${order}&orderby=${orderby}`;
+		if (categories) {
+			url += `&categories=${categories}`;
+		}
 		const resp: AxiosResponse<Patchwork.WPStory[]> = await instance.get(
 			appendWPApiVersion(url, 'v2'),
 			{

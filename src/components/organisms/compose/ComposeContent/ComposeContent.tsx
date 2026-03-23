@@ -4,7 +4,7 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import ComposeActionsBar from '@/components/molecules/compose/ComposeActionsBar/ComposeActionsBar';
 import BackButton from '@/components/atoms/common/BackButton/BackButton';
 import Header from '@/components/atoms/common/Header/Header';
-import { HomeStackParamList } from '@/types/navigation';
+import { TabBarScreenNavigationProp } from '@/types/navigation';
 import QuotePostButton from '@/components/atoms/compose/QuotePostButton/QuotePostButton';
 import RepostStatus from '@/components/organisms/compose/RepostStatus/RepostStatus';
 import { useComposeStatus } from '@/context/composeStatusContext/composeStatus.context';
@@ -73,7 +73,7 @@ type Props = {
 };
 
 const ComposeContent = ({ composeParams }: Props) => {
-	const navigation = useNavigation<StackNavigationProp<HomeStackParamList>>();
+	const navigation = useNavigation<TabBarScreenNavigationProp<'Compose'>>();
 	const isQuotePost = composeParams?.type === 'quote';
 	const isEdit = composeParams?.type === 'edit';
 	const { closeEditPhotoModal } = useEditPhotoMetaActions();
@@ -97,16 +97,38 @@ const ComposeContent = ({ composeParams }: Props) => {
 	const hasTabBar = tabBarHeight !== undefined;
 
 	useEffect(() => {
-		if (composeParams.type === 'create') {
-			if (composeParams.prefilledAudience) {
-				setSelectedAudience([composeParams.prefilledAudience]);
-				composeDispatch({
-					type: 'visibility_change',
-					payload: composeParams.channelType === 'public' ? 'public' : 'local',
-				});
+		const applyPrefilledData = () => {
+			if (composeParams.type === 'create') {
+				if (composeParams.prefilledAudience) {
+					setSelectedAudience([composeParams.prefilledAudience]);
+					composeDispatch({
+						type: 'visibility_change',
+						payload:
+							composeParams.channelType === 'public' ? 'public' : 'local',
+					});
+					// noted: set the params as below to be re-triggered when visiting the same channel again
+					navigation.setParams({
+						prefilledAudience: undefined,
+						prefilledHashtags: undefined,
+					});
+				}
 			}
-		}
+		};
 
+		// Apply immediately in case we missed focus or are just mounting
+		applyPrefilledData();
+
+		// Also apply after focus to ensure it's not wiped by ComposeStatusProvider's clear action
+		const unsubscribe = navigation.addListener('focus', () => {
+			setTimeout(() => {
+				applyPrefilledData();
+			}, 50);
+		});
+
+		return unsubscribe;
+	}, [navigation, composeParams, composeDispatch, setSelectedAudience]);
+
+	useEffect(() => {
 		if (composeParams.type === 'schedule' && composeParams.scheduledStatus) {
 			const updateComposePayload = getComposeUpdatePayload({
 				type: 'schedule',
@@ -128,8 +150,8 @@ const ComposeContent = ({ composeParams }: Props) => {
 		}
 	}, [
 		composeParams?.type,
-		composeParams.type === 'create'
-			? composeParams.prefilledAudience
+		composeParams?.type === 'schedule'
+			? composeParams.scheduledStatus
 			: undefined,
 	]);
 

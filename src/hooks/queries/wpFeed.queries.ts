@@ -10,6 +10,7 @@ import {
 	getWordpressPostById,
 	getWordpressPostsByAuthorIdPaginated,
 	getWordpressFeed,
+	getWordpressCategories,
 } from '@/services/wpFeed.service';
 import { SearchUsersQueryKey } from '@/types/queries/conversations.type';
 import { WordpressPostsByCategoryIdQueryKey } from '@/types/queries/wordpressFeed.type';
@@ -50,6 +51,13 @@ export const useGetWordpressPostsByCategoryId = ({
 	});
 };
 
+export const useGetWordpressCategories = () => {
+	return useQuery({
+		queryKey: ['wordpressCategories'],
+		queryFn: getWordpressCategories,
+	});
+};
+
 export const useGetWordpressPostById = (postId: number, enabled: boolean) => {
 	return useQuery({
 		queryKey: ['wordpressPost', postId],
@@ -58,11 +66,14 @@ export const useGetWordpressPostById = (postId: number, enabled: boolean) => {
 	});
 };
 
-export const useWordpressFeed = (order: 'asc' | 'desc' = 'desc') => {
+export const useWordpressFeed = (
+	order: 'asc' | 'desc' = 'desc',
+	categories?: string | number,
+) => {
 	return useInfiniteQuery({
-		queryKey: ['wordpressFeed', order],
+		queryKey: ['wordpressFeed', order, categories],
 		queryFn: ({ pageParam = 1 }) =>
-			getWordpressFeed({ page: pageParam, order }),
+			getWordpressFeed({ page: pageParam, order, categories }),
 		getNextPageParam: (lastPage, allPages) => {
 			const nextPage = allPages.length + 1;
 			return nextPage > lastPage.totalPages ? undefined : nextPage;

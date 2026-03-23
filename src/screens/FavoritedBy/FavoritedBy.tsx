@@ -41,7 +41,7 @@ const FavoritedBy = ({ route }: HomeStackScreenProps<'FavoritedBy'>) => {
 
 	const renderMissingNotice = () => (
 		<>
-			<ThemeText className="text-center text-xs text-patchwork-grey-400 mt-2">
+			<ThemeText className="text-center text-xs text-patchwork-grey-400 my-3">
 				{t('timeline.missingUsers')}
 			</ThemeText>
 			{instanceName !== defaultInstance && (

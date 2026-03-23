@@ -135,7 +135,7 @@ const LiveVideoFeedFilterBar = ({
 			<View className="flex-row gap-2">
 				<Pressable
 					onPress={() => onViewModeChange('grid')}
-					className={`p-5 justify-center items-center w-[35px] h-[35px] rounded-md ${
+					className={`p-5 justify-center items-center w-[18px] h-[18px] rounded-md ${
 						viewMode === 'grid'
 							? 'bg-patchwork-primary'
 							: 'bg-white border border-gray-200 dark:bg-black dark:border-neutral-700'
@@ -147,14 +147,14 @@ const LiveVideoFeedFilterBar = ({
 						color={viewMode === 'grid' ? 'white' : isDark ? 'white' : 'black'}
 					/> */}
 					<GridIcon
-						width={20}
-						height={20}
+						width={18}
+						height={18}
 						fill={viewMode === 'grid' ? 'white' : isDark ? 'white' : 'black'}
 					/>
 				</Pressable>
 				<Pressable
 					onPress={() => onViewModeChange('list')}
-					className={`p-5 justify-center items-center w-[35px] h-[35px] rounded-md ${
+					className={`p-5 justify-center items-center w-[18px] h-[18px] rounded-md ${
 						viewMode === 'list'
 							? 'bg-patchwork-primary'
 							: 'bg-white border border-gray-200 dark:bg-black dark:border-neutral-700'
@@ -162,7 +162,7 @@ const LiveVideoFeedFilterBar = ({
 				>
 					<FontAwesomeIcon
 						icon={faList}
-						size={20}
+						size={18}
 						color={viewMode === 'list' ? 'white' : isDark ? 'white' : 'black'}
 					/>
 				</Pressable>

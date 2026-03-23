@@ -99,14 +99,7 @@ export const useComposeLogic = (
 		{ domain_name, remote: false, only_media: false },
 	];
 
-	const homeFeedQueryKey = [
-		'home-timeline',
-		{
-			domain_name: userOriginInstance,
-			remote: false,
-			only_media: false,
-		},
-	];
+	const homeFeedQueryKey = ['for-you-timeline'];
 
 	const channelPostsQueryKey = route.params?.channelId
 		? [
@@ -212,6 +205,7 @@ export const useComposeLogic = (
 						queryKey: accountDetailFeedQueryKey,
 					});
 					queryClient.invalidateQueries({ queryKey: channelFeedQueryKey });
+					queryClient.invalidateQueries({ queryKey: homeFeedQueryKey });
 					if (channelPostsQueryKey) {
 						queryClient.invalidateQueries({ queryKey: channelPostsQueryKey });
 					}

@@ -35,7 +35,7 @@ const HomeDefaultTab = () => {
 	const { colorScheme } = useColorScheme();
 	const [isRefreshing, setIsRefreshing] = useState(false);
 	const [currentIndex, setCurrentIndex] = useState(0);
-	const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+	const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
 	const [filter, setFilter] = useState('Most recent');
 	const [selectedCategoryId, setSelectedCategoryId] = useState<
 		number | string | undefined

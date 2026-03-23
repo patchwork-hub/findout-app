@@ -1,20 +1,15 @@
 import AvatarLoading from '@/components/atoms/loading/AvatarLoading';
 import ChannelLoading from '@/components/atoms/loading/ChannelLoading';
 import HashtagLoading from '@/components/atoms/loading/HashtagLoading';
-import StarterPackSection from '@/components/molecules/channel/StarterPackSection/StarterPackSection';
 import { HashtagsFollowingSection } from '@/components/molecules/home/HashtagsFollowingSection/HashtagsFollowingSection';
 import { HorizontalChannelSection } from '@/components/molecules/home/HorizontalChannelSection/HorizontalChannelSection';
 import { MyListsSection } from '@/components/molecules/home/MyListsSection/MyListsSection';
 import { NewsmastCollectionSection } from '@/components/molecules/home/NewsmastCollectionSection/NewsmastCollectionSection';
 import { PeopleFollowingSection } from '@/components/molecules/home/PeopleFollowingSection/PeopleFollowingSection';
-import { useActiveAccountId } from '@/hooks/custom/useActiveAccountId';
-import { useSearchServerInstance } from '@/hooks/queries/auth.queries';
 import {
 	useCollectionChannelList,
-	useDetailCollectionChannelList,
 	useGetCatchUpChannelList,
 	useGetSpeakOutChannelList,
-	useGetChannelFeedListQuery,
 	useGetForYouChannelList,
 	useNewsmastCollectionList,
 } from '@/hooks/queries/channel.queries';
@@ -22,19 +17,11 @@ import { useGetHashtagsFollowing } from '@/hooks/queries/hashtag.queries';
 import { useListsQueries } from '@/hooks/queries/lists.queries';
 import { useFollowingAccountsQuery } from '@/hooks/queries/profile.queries';
 import { useAuthStore } from '@/store/auth/authStore';
-import {
-	useActiveDomainAction,
-	useActiveDomainStore,
-} from '@/store/feed/activeDomain';
-import { usePushNoticationStore } from '@/store/pushNoti/pushNotiStore';
+import { useActiveDomainStore } from '@/store/feed/activeDomain';
 import { HomeStackParamList } from '@/types/navigation';
 import { CHANNEL_INSTANCE } from '@/util/constant';
 import customColor from '@/util/constant/color';
 import { defaultAppStoreTesterAcctHandle } from '@/util/constant/common';
-import {
-	ensureHttp,
-	isCurrentUserFromMainInstances,
-} from '@/util/helper/helper';
 import { isTablet } from '@/util/helper/isTablet';
 import { flattenPages } from '@/util/helper/timeline';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
@@ -63,13 +50,11 @@ const HomeChannelTab = () => {
 
 	const { t } = useTranslation();
 	const { colorScheme } = useColorScheme();
-	const { setDomain } = useActiveDomainAction();
 	const { userOriginInstance, userInfo } = useAuthStore();
 	const domain_name = useActiveDomainStore(state => state.domain_name);
 	const { actions } = useActiveDomainStore();
 	const navigation = useNavigation<StackNavigationProp<HomeStackParamList>>();
 	const loadingCardCount = isTablet ? 10 : 5;
-	const activeAccId = useActiveAccountId();
 
 	const {
 		data: forYouChannelList,
@@ -82,13 +67,6 @@ const HomeChannelTab = () => {
 
 	const { data: speakOutList, refetch: refetchSpeakOutList } =
 		useGetSpeakOutChannelList();
-
-	const { data: serverInfo, isFetching: isSearching } = useSearchServerInstance(
-		{
-			domain: userOriginInstance.replace(/^https:\/\//, ''),
-			enabled: userOriginInstance !== CHANNEL_INSTANCE,
-		},
-	);
 
 	const { data: collectionList, refetch: refetchCollectionList } =
 		useCollectionChannelList();
@@ -166,8 +144,6 @@ const HomeChannelTab = () => {
 	const onPressHashtagsFollowingAll = () =>
 		navigation.navigate('HashtagsFollowing');
 
-	const handleSubChannelClick = (item: Patchwork.ChannelList) => {};
-
 	return (
 		<>
 			{collectionList ? (
@@ -186,19 +162,6 @@ const HomeChannelTab = () => {
 					}
 					showsVerticalScrollIndicator={false}
 				>
-					{forYouChannelList && (
-						<HorizontalChannelSection
-							title={'Find out'}
-							data={forYouChannelList}
-							onPressItem={onPressMyNewsmastChannelItem}
-							onPressViewAll={() => {
-								navigation.navigate('ViewAllChannelScreen', {
-									title: 'Find out',
-									data: forYouChannelList,
-								});
-							}}
-						/>
-					)}
 					{catchUpList && (
 						<HorizontalChannelSection
 							title={'Catch up'}
@@ -221,6 +184,20 @@ const HomeChannelTab = () => {
 								navigation.navigate('ViewAllChannelScreen', {
 									title: 'Speak out',
 									data: speakOutList,
+								});
+							}}
+						/>
+					)}
+
+					{forYouChannelList && (
+						<HorizontalChannelSection
+							title={'Find out'}
+							data={forYouChannelList}
+							onPressItem={onPressMyNewsmastChannelItem}
+							onPressViewAll={() => {
+								navigation.navigate('ViewAllChannelScreen', {
+									title: 'Find out',
+									data: forYouChannelList,
 								});
 							}}
 						/>
@@ -264,9 +241,9 @@ const HomeChannelTab = () => {
 					}
 					showsVerticalScrollIndicator={false}
 				>
-					<ChannelLoading title="Find Out" cardCount={loadingCardCount} />
 					<ChannelLoading title="Catch up" cardCount={loadingCardCount} />
 					<ChannelLoading title="Speak out" cardCount={loadingCardCount} />
+					<ChannelLoading title="Find out" cardCount={loadingCardCount} />
 					<ChannelLoading
 						title="Starter Packs"
 						cardCount={loadingCardCount}

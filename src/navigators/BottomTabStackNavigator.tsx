@@ -91,7 +91,8 @@ export default function BottomTabs() {
 					backgroundColor:
 						colorScheme === 'dark' ? customColor['patchwork-dark-100'] : '#fff',
 					paddingTop: 10,
-					height: Platform.OS === 'ios' ? 60 + insets.bottom : 90,
+					height: (Platform.OS === 'ios' ? 60 : 75) + insets.bottom,
+					paddingBottom: insets.bottom,
 					width: '100%',
 					paddingHorizontal: isTablet ? 200 : 0,
 				},
@@ -174,14 +175,23 @@ export default function BottomTabs() {
 				options={({ navigation }) => {
 					const state = navigation.getState();
 					const activeTab = state.routes[state.index]?.name;
+					const isNewsmastChannelTimeline = state.routes.some(route => {
+						if (route.name !== 'Home' && route.name !== 'Search') {
+							return false;
+						}
+
+						const focusedRouteName = getFocusedRouteNameFromRoute(route);
+						return focusedRouteName === 'NewsmastChannelTimeline';
+					});
 					const isConversationTab = activeTab === 'Conversations';
+					const shouldDisableCompose =
+						isConversationTab || isNewsmastChannelTimeline;
 					return {
 						tabBarStyle: { display: 'none' },
 						tabBarButton: props => (
 							<Pressable
 								{...(props as PressableProps)}
-								disabled={isConversationTab}
-								// style={[props.style, { opacity: isConversationTab ? 0.4 : 1 }]}
+								disabled={shouldDisableCompose}
 							/>
 						),
 						tabBarIcon: ({ focused }) => (
@@ -190,7 +200,7 @@ export default function BottomTabs() {
 									padding: 10,
 									backgroundColor: colorScheme === 'dark' ? '#444A4F' : '#333',
 									borderRadius: 10,
-									opacity: isConversationTab ? 0.4 : 1,
+									opacity: shouldDisableCompose ? 0.4 : 1,
 								}}
 							>
 								<ComposeTabIcon

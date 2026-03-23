@@ -286,6 +286,7 @@ const ChangeEmailVerification: React.FC<
 							components={{
 								resend: (
 									<ThemeText
+										key={'resend'}
 										onPress={handleResendCode}
 										className="active:opacity-80 underline"
 									/>

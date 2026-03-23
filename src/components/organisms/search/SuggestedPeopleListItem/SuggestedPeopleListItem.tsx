@@ -71,15 +71,19 @@ const SuggestedPeopleListItem = ({
 		});
 	}, [mutate, item.account.id, relationship]);
 
-	const displayRelationshipText = useMemo(
-		() =>
-			relationship?.following
-				? t('timeline.unfollow')
-				: relationship?.requested
-				? t('timeline.requested')
-				: t('timeline.follow'),
-		[relationship],
-	);
+	const displayRelationshipText = useMemo(() => {
+		if (relationship?.following) return t('timeline.unfollow');
+		if (relationship?.requested && item.account.locked)
+			return t('timeline.cancel_request');
+		if (relationship?.requested) return t('timeline.requested');
+		if (item.account.locked) return t('timeline.request_follow');
+		return t('timeline.follow');
+	}, [
+		relationship?.following,
+		relationship?.requested,
+		item.account.locked,
+		t,
+	]);
 
 	return (
 		<View>

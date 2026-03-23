@@ -50,6 +50,8 @@ const SearchPeoplePostsResult = ({
 				return item.id;
 			}}
 			showsVerticalScrollIndicator={false}
+			keyboardDismissMode="on-drag"
+			keyboardShouldPersistTaps="handled"
 		/>
 	);
 };

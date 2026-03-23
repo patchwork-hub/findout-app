@@ -1,7 +1,11 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
+import * as en_GB from './translations/en-GB';
 import * as en from './translations/en';
+import * as fi from './translations/fi';
+import * as da from './translations/da';
+import * as pt_PT from './translations/pt-PT';
 import * as ja from './translations/ja';
 import * as cy from './translations/cy';
 import * as de from './translations/de';
@@ -26,6 +30,10 @@ void i18n.use(initReactI18next).init({
 	defaultNS,
 	resources: {
 		en,
+		'en-GB': en_GB,
+		fi,
+		da,
+		'pt-PT': pt_PT,
 		ja,
 		cy,
 		de,

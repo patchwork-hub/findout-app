@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useWindowDimensions } from 'react-native';
-import { TabBarItem, TabView } from 'react-native-tab-view';
+import { TabView } from 'react-native-tab-view';
 import { useColorScheme } from 'nativewind';
 import { useTranslation } from 'react-i18next';
 import BackButton from '@/components/atoms/common/BackButton/BackButton';
@@ -28,7 +28,7 @@ const Notification = ({ route }: { route: NotificationScreenRouteProp }) => {
 	const layout = useWindowDimensions();
 	const [index, setIndex] = useState(tabIndex);
 	const { colorScheme } = useColorScheme();
-	const { userOriginInstance } = useAuthStore();
+	const { userOriginInstance, userInfo } = useAuthStore();
 	const { t } = useTranslation();
 
 	const { data: serverInfo } = useSearchServerInstance({
@@ -40,14 +40,21 @@ const Notification = ({ route }: { route: NotificationScreenRouteProp }) => {
 	const isGroupedNoti =
 		userOriginInstance === process.env.API_URL ? true : isSupportNotiV2;
 
-	const routes = React.useMemo<TabViewRoute[]>(
-		() => [
+	const routes = React.useMemo<TabViewRoute[]>(() => {
+		const baseRoutes = [
 			{ key: 'all', title: t('notifications.tabs.all') },
 			{ key: 'mentions', title: t('notifications.tabs.mentions') },
-			{ key: 'follow_request', title: t('notifications.tabs.follow_requests') },
-		],
-		[t],
-	);
+		];
+
+		if (userInfo?.locked) {
+			baseRoutes.push({
+				key: 'follow_request',
+				title: t('notifications.tabs.follow_requests'),
+			});
+		}
+
+		return baseRoutes;
+	}, [t, userInfo?.locked]);
 
 	const renderScene = ({ route }: { route: TabViewRoute }) => {
 		switch (route.key) {
@@ -84,20 +91,12 @@ const Notification = ({ route }: { route: NotificationScreenRouteProp }) => {
 							height: 2,
 						}}
 						tabStyle={{
-							width: (layout.width - 32) / 3,
+							width: (layout.width - 32) / routes.length,
+							marginTop: -5,
 						}}
-						renderTabBarItem={tabBarItemProps => {
-							const { key, ...rest } = tabBarItemProps;
-							return (
-								<TabBarItem
-									key={key}
-									{...rest}
-									label={({ route, focused }) => (
-										<NotiTabBarItemLabel {...{ route, focused }} />
-									)}
-								/>
-							);
-						}}
+						renderLabel={({ route, focused }) => (
+							<NotiTabBarItemLabel {...{ route, focused }} />
+						)}
 					/>
 				)}
 			/>

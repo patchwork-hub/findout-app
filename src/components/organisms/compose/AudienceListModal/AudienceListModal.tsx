@@ -16,6 +16,7 @@ import { useComposeStatus } from '@/context/composeStatusContext/composeStatus.c
 import { useColorScheme } from 'nativewind';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { AppIcons } from '@/util/icons/icon.common';
+import { useTranslation } from 'react-i18next';
 
 const screenHeight = Dimensions.get('window').height;
 const modalHeight = screenHeight * 0.6;
@@ -26,6 +27,7 @@ type Props = {
 };
 
 export const AudienceListModal = ({ composeType, onClose }: Props) => {
+	const { t } = useTranslation();
 	const { composeState, composeDispatch } = useComposeStatus();
 	const { colorScheme } = useColorScheme();
 	const { selectedAudience, setSelectedAudience } = useCreateAudienceStore();
@@ -77,7 +79,7 @@ export const AudienceListModal = ({ composeType, onClose }: Props) => {
 	return (
 		<ThemeModal
 			type="simple"
-			title="Choose audience"
+			title={t('setting.choose_audience')}
 			position="bottom"
 			visible={true}
 			onClose={onClose}

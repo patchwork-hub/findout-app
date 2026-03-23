@@ -42,6 +42,10 @@ import {
 } from './util/storage';
 import { useAccounts } from './hooks/custom/useAccounts';
 import SplashAnimation from './components/organisms/SplashAnimation/SplashAnimation';
+import { SystemBars } from 'react-native-edge-to-edge';
+import Sound from 'react-native-sound';
+
+Sound.setCategory('Ambient', true);
 
 Sentry.init({
 	dsn: isDevelopment() ? undefined : process.env.DEFAULT_SENTRY_DSN,
@@ -60,7 +64,7 @@ const toastConfig = {
 };
 
 function App() {
-	const { setColorScheme } = useColorScheme();
+	const { colorScheme, setColorScheme } = useColorScheme();
 	const { i18n } = useTranslation();
 	const { language, setLanguage, setDefaultGuestLanguage } = useLanguageStore();
 	const { setSelectedLanguage } = useLanguageSelectionActions();
@@ -203,9 +207,7 @@ function App() {
 
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
-			<StatusBar
-				barStyle={resolvedTheme === 'dark' ? 'light-content' : 'dark-content'}
-			/>
+			<SystemBars style={colorScheme === 'dark' ? 'light' : 'dark'} />
 			<BottomSheetModalProvider>
 				<View className="flex-1 bg-white dark:bg-patchwork-dark-100">
 					<QueryClientProvider client={queryClient}>

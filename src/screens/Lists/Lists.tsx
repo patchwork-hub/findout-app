@@ -80,7 +80,10 @@ const Lists = ({ navigation }: ListsStackScreenProps<'Lists'>) => {
 			)}
 			<FloatingAddButton
 				onPress={() => navigation.navigate('UpsertList', { type: 'create' })}
-				className="bottom-10 right-7"
+				className="right-7"
+				style={{
+					bottom: bottom + 15,
+				}}
 			/>
 		</SafeScreen>
 	);

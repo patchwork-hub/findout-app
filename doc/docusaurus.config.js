@@ -8,16 +8,16 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
 	title: 'FindOut Media',
 	tagline: 'Developer Documentation',
-	url: 'https://yemyatthu-binlab.github.io',
-	baseUrl: '/findout-temp/',
+	url: 'https://patchwork-hub.github.io',
+	baseUrl: '/findout-app/',
 	onBrokenLinks: 'throw',
 	onBrokenMarkdownLinks: 'warn',
 	favicon: 'img/favicon.ico',
 
 	// GitHub pages deployment config.
 	// If you aren't using GitHub pages, you don't need these.
-	organizationName: 'yemyatthu-binlab', // Usually your GitHub org/user name.
-	projectName: 'findout-temp', // Usually your repo name.
+	organizationName: 'patchwork-hub', // Usually your GitHub org/user name.
+	projectName: 'findout-app', // Usually your repo name.
 	trailingSlash: false,
 
 	presets: [

@@ -6,7 +6,10 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { AppIcons } from '../icons/icon.common';
 import customColor from './color';
-import { QuotePlaceholderIcon } from '../svg/icon.status_actions';
+import {
+	QuotePlaceholderIcon,
+	StatusRepostIcon,
+} from '../svg/icon.status_actions';
 
 export const notificationMessages: Record<Patchwork.NotificationTypes, string> =
 	{
@@ -62,10 +65,8 @@ export const getNotificationIcons = (colorScheme: 'light' | 'dark') =>
 			/>
 		),
 		reblog: (
-			<FontAwesomeIcon
-				icon={AppIcons.share}
-				size={18}
-				color={
+			<StatusRepostIcon
+				fill={
 					colorScheme === 'dark'
 						? customColor['patchwork-grey-400']
 						: customColor['patchwork-grey-100']

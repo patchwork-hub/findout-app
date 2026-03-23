@@ -2,6 +2,7 @@ import customColor from '@/util/constant/color';
 import { useColorScheme } from 'nativewind';
 import React from 'react';
 import { View, ActivityIndicator, Text, Modal } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface LoadingModalProps {
 	isVisible: boolean;
@@ -10,6 +11,8 @@ interface LoadingModalProps {
 
 const LoadingModal: React.FC<LoadingModalProps> = ({ isVisible, message }) => {
 	const { colorScheme } = useColorScheme();
+	const { bottom } = useSafeAreaInsets();
+
 	return (
 		<Modal
 			transparent
@@ -18,7 +21,10 @@ const LoadingModal: React.FC<LoadingModalProps> = ({ isVisible, message }) => {
 			statusBarTranslucent
 			navigationBarTranslucent
 		>
-			<View className="flex-1 bg-black/50 justify-center items-center">
+			<View
+				className="flex-1 bg-black/50 justify-center items-center"
+				style={{ paddingBottom: bottom }}
+			>
 				<View className=" px-6 py-4 rounded-lg items-center">
 					<ActivityIndicator
 						size="large"

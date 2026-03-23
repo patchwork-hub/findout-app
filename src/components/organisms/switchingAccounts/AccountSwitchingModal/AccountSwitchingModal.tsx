@@ -28,7 +28,6 @@ import Toast from 'react-native-toast-message';
 import CustomAlert from '@/components/atoms/common/CustomAlert/CustomAlert';
 import { Button } from '@/components/atoms/common/Button/Button';
 import AccountSwitchingListItem from '@/components/molecules/switchingAccounts/AccountSwitchingListItem/AccountSwitchingListItem';
-import { useSwitchAccounts } from '@/hooks/custom/useSwitchAccounts';
 import AccountAvatarRow from '@/components/molecules/switchingAccounts/AccountAvatarRow/AccountAvatarRow';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -41,6 +40,8 @@ import { usePushNotiRevokeTokenMutation } from '@/hooks/mutations/pushNoti.mutat
 import { DEFAULT_INSTANCE } from '@/util/constant';
 import { useAccountsStore } from '@/store/auth/accountsStore';
 import { useAccounts } from '@/hooks/custom/useAccounts';
+import customColor from '@/util/constant/color';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Props = {
 	isWelcome?: boolean;
@@ -49,6 +50,7 @@ type Props = {
 const AccountSwitchingModal = ({ isWelcome = false }: Props) => {
 	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 	const snapPoints = useMemo(() => ['75%'], []);
+	const { bottom } = useSafeAreaInsets();
 	const { i18n, t } = useTranslation();
 	const { colorScheme, setColorScheme } = useColorScheme();
 	const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -79,6 +81,9 @@ const AccountSwitchingModal = ({ isWelcome = false }: Props) => {
 		mastodon,
 		isHydrating,
 	} = useAuthStore();
+
+	const { setOpenAccSwitcher } = useAccountsStore();
+
 	const currentAccessToken = mastodon.token;
 
 	const { mutateAsync: revokePushNotiToken } = usePushNotiRevokeTokenMutation(
@@ -118,6 +123,20 @@ const AccountSwitchingModal = ({ isWelcome = false }: Props) => {
 			addOrUpdateAccount(updatedAuthState, true).then(() => fetchAccounts());
 		}
 	}, [currentUserInfo, currentUserInstance, currentUserTheme, accounts]);
+
+	useEffect(() => {
+		const openModalFn = () => {
+			if (bottomSheetModalRef.current) {
+				bottomSheetModalRef.current.present();
+			}
+		};
+
+		setOpenAccSwitcher(openModalFn);
+
+		return () => {
+			setOpenAccSwitcher(null);
+		};
+	}, [setOpenAccSwitcher]);
 
 	const retrieveToken = async (newAcc: AuthState) => {
 		const { access_token, domain } = newAcc;
@@ -316,15 +335,31 @@ const AccountSwitchingModal = ({ isWelcome = false }: Props) => {
 				/>
 			) : (
 				<Pressable
-					className="ml-12 mr-2 flex-row items-center justify-between active:opacity-80"
+					className="py-2.5 pt-3 px-2 pl-3 my-1 flex-row items-center justify-between active:opacity-80"
 					onPress={handlePresentModalPress}
 				>
-					<ThemeText>{t('setting.switch_account.title')}</ThemeText>
+					<View className="flex-row items-center">
+						<View className="w-8 items-center mr-1.5">
+							<FontAwesomeIcon
+								icon={AppIcons.users}
+								size={20}
+								color={
+									colorScheme === 'dark'
+										? customColor['patchwork-light-50']
+										: customColor['patchwork-dark-50']
+								}
+							/>
+						</View>
+						<ThemeText size={'sm_14'}>
+							{t('setting.switch_account.title')}
+						</ThemeText>
+					</View>
+
 					<Image
 						uri={currentUserInfo?.avatar}
 						resizeMode={'cover'}
-						className="w-[32] h-[32] bg-patchwork-dark-50 rounded-full"
-						iconSize={32}
+						className="w-[30] h-[30] bg-patchwork-dark-50 rounded-full mr-1"
+						iconSize={30}
 					/>
 				</Pressable>
 			)}
@@ -360,7 +395,7 @@ const AccountSwitchingModal = ({ isWelcome = false }: Props) => {
 					)}
 					contentContainerStyle={{
 						paddingHorizontal: 16,
-						paddingBottom: 30,
+						paddingBottom: (bottom || 20) + 80,
 					}}
 					ListHeaderComponent={
 						<View className="flex-row justify-between items-center my-2 pb-3 mx-3">

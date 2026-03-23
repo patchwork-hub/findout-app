@@ -25,6 +25,7 @@ import { useColorScheme } from 'nativewind';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/util/helper/twutil';
 import UserRole from '../../profile/UserRole/UserRole';
+import StatusMenu from '../StatusMenu/StatusMenu';
 
 dayjs.extend(relativeTime);
 
@@ -36,6 +37,7 @@ type Props = {
 	relationships?: Patchwork.RelationShip[];
 	isFromNoti?: boolean;
 	isFromQuoteCompose?: boolean;
+	isQuoteView?: boolean;
 } & ViewProps;
 
 const StatusHeader = ({
@@ -46,6 +48,7 @@ const StatusHeader = ({
 	relationships,
 	isFromNoti,
 	isFromQuoteCompose = false,
+	isQuoteView = false,
 	...props
 }: Props) => {
 	const { t } = useTranslation();
@@ -62,6 +65,9 @@ const StatusHeader = ({
 	const isAuthor = useMemo(() => {
 		return userInfo?.id === status?.account?.id;
 	}, [status?.account?.id, userInfo?.id]);
+
+	const isQuotedStatus = !!status.quote?.quoted_status;
+	const isMyStatusQuoted = !!isAuthor && !!isQuotedStatus;
 
 	const { mutate, isPending } = useUserRelationshipMutation({
 		onSuccess: (newRelationship, { accountId }) => {
@@ -120,7 +126,7 @@ const StatusHeader = ({
 									isFromNoti: isFromNoti,
 							  });
 					}}
-					className="flex-row items-center active:opacity-80"
+					className="flex-row items-center active:opacity-80 flex-shrink"
 				>
 					{showAvatarIcon === true && (
 						<Image
@@ -158,7 +164,7 @@ const StatusHeader = ({
 								className="ml-0 mt-[2]"
 								size="xs_12"
 							>
-								{timelineDateFormatter(moment(status.created_at))}
+								{timelineDateFormatter(moment(status.created_at), t)}
 							</ThemeText>
 							<ThemeText
 								variant="textGrey"
@@ -189,6 +195,9 @@ const StatusHeader = ({
 						</View>
 					</View>
 				</Pressable>
+				{!isFromQuoteCompose &&
+					!isQuoteView &&
+					(!isFromNoti || isMyStatusQuoted) && <StatusMenu status={status} />}
 				<View className="flex-1" />
 				{showFollowIcon && (
 					<Button

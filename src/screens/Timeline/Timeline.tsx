@@ -88,7 +88,7 @@ const Timeline = () => {
 				{isLoadingUserSetting ? (
 					<View className="flex-1 items-center justify-center mt-5">
 						<Flow
-							size={20}
+							size={25}
 							color={
 								colorScheme === 'dark'
 									? customColor['patchwork-primary-dark']
@@ -104,7 +104,7 @@ const Timeline = () => {
 								key={option.key}
 								onPress={() => handleOnSelect(option.key)}
 								className={cn(
-									'h-12 flex-1 py-2 items-center justify-center border border-patchwork-primary',
+									'h-12 flex-1 py-2 items-center justify-center border border-slate-200 dark:border-gray-600',
 									idx !== 0 && 'border-l-0',
 									selectedTimeline === option.key
 										? colorScheme == 'dark'

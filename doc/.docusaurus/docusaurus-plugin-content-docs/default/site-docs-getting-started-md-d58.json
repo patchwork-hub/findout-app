@@ -1,26 +1,26 @@
 {
-  "unversionedId": "getting-started",
-  "id": "getting-started",
-  "title": "Getting Started",
-  "description": "Setup",
-  "source": "@site/docs/getting-started.md",
-  "sourceDirName": ".",
-  "slug": "/getting-started",
-  "permalink": "/findout-temp/docs/getting-started",
-  "draft": false,
-  "tags": [],
-  "version": "current",
-  "sidebarPosition": 2,
-  "frontMatter": {
-    "sidebar_position": 2
-  },
-  "sidebar": "docs",
-  "previous": {
-    "title": "Introduction",
-    "permalink": "/findout-temp/docs/intro"
-  },
-  "next": {
-    "title": "Project Architecture",
-    "permalink": "/findout-temp/docs/project-architecture"
-  }
+	"unversionedId": "getting-started",
+	"id": "getting-started",
+	"title": "Getting Started",
+	"description": "Setup",
+	"source": "@site/docs/getting-started.md",
+	"sourceDirName": ".",
+	"slug": "/getting-started",
+	"permalink": "/findout-app/docs/getting-started",
+	"draft": false,
+	"tags": [],
+	"version": "current",
+	"sidebarPosition": 2,
+	"frontMatter": {
+		"sidebar_position": 2
+	},
+	"sidebar": "docs",
+	"previous": {
+		"title": "Introduction",
+		"permalink": "/findout-app/docs/intro"
+	},
+	"next": {
+		"title": "Project Architecture",
+		"permalink": "/findout-app/docs/project-architecture"
+	}
 }

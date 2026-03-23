@@ -56,9 +56,10 @@ const TabBar = (props: Props) => {
 			pressColor="#82868922"
 			renderTabBarItem={
 				renderLabel
-					? props => (
+					? ({ key, ...itemProps }) => (
 							<TabBarItem
-								{...props}
+								key={key}
+								{...itemProps}
 								label={({ route, focused, color }) =>
 									renderLabel({ route, focused, color })
 								}

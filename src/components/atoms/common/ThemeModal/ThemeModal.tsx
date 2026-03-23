@@ -63,7 +63,7 @@ const ThemeModal: React.FC<ThemeModalProps> = ({
 	const { t } = useTranslation();
 	const { colorScheme } = useColorScheme();
 	const { height: screenHeight } = Dimensions.get('window');
-	const { top } = useSafeAreaInsets();
+	const { top, bottom } = useSafeAreaInsets();
 
 	const modalStyle =
 		position === 'bottom'
@@ -72,7 +72,7 @@ const ThemeModal: React.FC<ThemeModalProps> = ({
 					height:
 						Platform.OS === 'ios'
 							? screenHeight - top
-							: screenHeight - top - 30,
+							: screenHeight - top - 80,
 			  };
 
 	return (
@@ -97,6 +97,7 @@ const ThemeModal: React.FC<ThemeModalProps> = ({
 							colorScheme === 'dark'
 								? customColor['patchwork-dark-100']
 								: customColor['patchwork-light-900'],
+						paddingBottom: bottom,
 					},
 					type === 'custom' ? customModalContainterStyle : modalStyle,
 				]}

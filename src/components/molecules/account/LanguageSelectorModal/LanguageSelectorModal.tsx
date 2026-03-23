@@ -13,10 +13,13 @@ import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
 import { RadioButtonIcon } from '@/util/svg/icon.common';
 import { GlobeIcon } from '@/util/svg/icon.profile';
 import colors from 'tailwindcss/colors';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const LanguageSelectorModal = () => {
 	const { colorScheme } = useColorScheme();
 	const { t, i18n } = useTranslation();
+	const { bottom } = useSafeAreaInsets();
+
 	const { language, setLanguage } = useLanguageStore();
 
 	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -100,6 +103,7 @@ const LanguageSelectorModal = () => {
 					}
 					contentContainerStyle={{
 						paddingHorizontal: 16,
+						paddingBottom: bottom || 20,
 					}}
 				/>
 			</BottomSheetModal>

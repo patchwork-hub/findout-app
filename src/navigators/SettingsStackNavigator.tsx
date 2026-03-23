@@ -15,6 +15,8 @@ import {
 	FollowerAccounts,
 	Compose,
 	LoginAnotherAccount,
+	Verification,
+	MastodonSignInWebView,
 } from '@/screens';
 import ProfileOther from '@/screens/ProfileOther/ProfileOther';
 import { SettingStackParamList } from '@/types/navigation';
@@ -30,6 +32,12 @@ import ScheduledPostList from '@/screens/ScheduledPostList/ScheduledPostList';
 import LanguageScreen from '@/screens/Language/Language';
 import ArticleDetail from '@/screens/ArticleDetail/ArticleDetail';
 import Timeline from '@/screens/Timeline/Timeline';
+import AccountSettingsScreen from '@/screens/AccountSettings/AccountSettingsScreen';
+import NotificationSettingsScreen from '@/screens/NotificationSettings/NotificationSettingsScreen';
+import FeedSettingsScreen from '@/screens/FeedSettings/FeedSettingsScreen';
+import PrivacySettingsScreen from '@/screens/PrivacySettings/PrivacySettingsScreen';
+import PersonalizationSettingsScreen from '@/screens/PersonalizationSettings/PersonalizationSettingsScreen';
+import AccountManagementScreen from '@/screens/AccountManagement/AccountManagementScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator<SettingStackParamList>();
@@ -38,6 +46,23 @@ const SettingStack = () => {
 	return (
 		<Stack.Navigator screenOptions={{ headerShown: false }}>
 			<Stack.Screen name="Settings" component={Settings} />
+			<Stack.Screen name="AccountSettings" component={AccountSettingsScreen} />
+			<Stack.Screen
+				name="NotificationSettings"
+				component={NotificationSettingsScreen}
+				options={{ presentation: 'modal', headerShown: false }}
+			/>
+			<Stack.Screen name="FeedSettings" component={FeedSettingsScreen} />
+			<Stack.Screen name="PrivacySettings" component={PrivacySettingsScreen} />
+			<Stack.Screen
+				name="PersonalizationSettings"
+				component={PersonalizationSettingsScreen}
+				options={{ presentation: 'modal', headerShown: false }}
+			/>
+			<Stack.Screen
+				name="AccountManagement"
+				component={AccountManagementScreen}
+			/>
 			<Stack.Screen name="UpdatePassword" component={UpdatePassword} />
 			<Stack.Screen name="MuteAndBlockList" component={MuteAndBlockList} />
 			<Stack.Screen name="MyInformation" component={MyInformation} />
@@ -84,6 +109,11 @@ const SettingStack = () => {
 				name="LoginAnotherAccount"
 				component={LoginAnotherAccount}
 				options={{ presentation: 'modal', headerShown: false }}
+			/>
+			<Stack.Screen name="Verification" component={Verification} />
+			<Stack.Screen
+				name="MastodonSignInWebView"
+				component={MastodonSignInWebView}
 			/>
 		</Stack.Navigator>
 	);

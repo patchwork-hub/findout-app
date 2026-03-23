@@ -15,6 +15,7 @@ import { Flow } from 'react-native-animated-spinkit';
 import { isTablet } from '@/util/helper/isTablet';
 import { useColorScheme } from 'nativewind';
 import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
@@ -33,6 +34,9 @@ export type MenuProp = {
 	type: 'error' | 'success' | 'info';
 	onPressBackdrop?: () => void;
 	isPendingConfirm?: boolean;
+	alertType?: 'link-extended' | 'default';
+	linkText?: string;
+	onLinkPress?: () => void;
 };
 
 const CustomAlert = ({
@@ -50,9 +54,13 @@ const CustomAlert = ({
 	type,
 	onPressBackdrop,
 	isPendingConfirm,
+	alertType = 'default',
+	linkText,
+	onLinkPress,
 }: MenuProp) => {
 	const { t } = useTranslation();
 	const { colorScheme } = useColorScheme();
+	const { top, bottom } = useSafeAreaInsets();
 	return (
 		<Modal
 			onRequestClose={onPressBackdrop || handleCancel}
@@ -62,11 +70,14 @@ const CustomAlert = ({
 			statusBarTranslucent
 			navigationBarTranslucent
 		>
-			<View style={styles.centeredView}>
+			<View style={[styles.centeredView, { paddingBottom: bottom }]}>
 				<TouchableOpacity
 					style={styles.backdrop}
 					onPress={onPressBackdrop || handleCancel}
 					activeOpacity={1}
+					accessible={false}
+					accessibilityElementsHidden
+					importantForAccessibility="no-hide-descendants"
 				/>
 				<View
 					style={[
@@ -95,42 +106,51 @@ const CustomAlert = ({
 						)}
 						<ThemeText className="text-center" size={'md_16'}>
 							{message}
+							{alertType === 'link-extended' && linkText && (
+								<ThemeText
+									className="text-blue-500"
+									onPress={onLinkPress}
+									size={'md_16'}
+								>
+									{' ' + linkText}
+								</ThemeText>
+							)}
 						</ThemeText>
 					</View>
 					<Underline />
-					<View className="flex-row items-center justify-around my-1">
+					<View className="flex-row items-center justify-around my-1 h-12 p-0">
 						{hasCancel && (
-							<Pressable
-								className="w-1/2 active:opacity-80"
-								onPress={handleCancel}
-							>
-								<ThemeText
-									className={cn('text-center py-2', extraCancelBtnStyle)}
-									size={'sm_14'}
+							<>
+								<Pressable
+									className="w-1/2 h-14 active:bg-slate-100 dark:active:bg-[#101016] justify-center items-center rounded-bl-2xl"
+									onPress={handleCancel}
 								>
-									{cancelBtnText || t('common.cancel')}
-								</ThemeText>
-							</Pressable>
+									<ThemeText
+										className={cn('text-center', extraCancelBtnStyle)}
+										size={'sm_14'}
+									>
+										{cancelBtnText || t('common.cancel')}
+									</ThemeText>
+								</Pressable>
+								<View className="w-[1px] h-14 bg-slate-200 dark:bg-patchwork-grey-70" />
+							</>
 						)}
+
 						{isPendingConfirm ? (
 							<View className="w-1/2 items-center">
-								<Flow
-									size={30}
-									color={
-										colorScheme === 'dark'
-											? customColor['patchwork-primary-dark']
-											: customColor['patchwork-primary']
-									}
-								/>
+								<Flow size={30} color={customColor['patchwork-primary']} />
 							</View>
 						) : (
 							<Pressable
-								className="w-1/2 active:opacity-80"
+								className={cn(
+									'h-14 active:bg-slate-100 dark:active:bg-[#101016] justify-center items-center rounded-br-2xl',
+									hasCancel ? 'w-1/2 ' : 'w-full',
+								)}
 								onPress={handleOk}
 								hitSlop={{ top: 3, bottom: 3, left: 0, right: 0 }}
 							>
 								<ThemeText
-									className={cn('text-center py-2', extraOkBtnStyle)}
+									className={cn('text-center', extraOkBtnStyle)}
 									size={'sm_14'}
 									variant={'textPrimary'}
 								>
@@ -161,7 +181,7 @@ const styles = StyleSheet.create({
 		width: screenWidth * (isTablet ? 0.5 : 0.8),
 		maxWidth: screenWidth * (isTablet ? 0.5 : 0.8),
 		borderRadius: 12,
-		shadowColor: '#000',
+		shadowColor: customColor['patchwork-dark-900'],
 		shadowOffset: { width: 0, height: 4 },
 		shadowOpacity: 0.3,
 		shadowRadius: 6,

@@ -206,7 +206,7 @@ const StatusImage = ({
 	};
 
 	return (
-		<View className="flex-1 rounded-xl overflow-hidden mt-1 border border-slate-200 dark:border-patchwork-dark-400">
+		<View className="flex-1 rounded-xl overflow-hidden mt-1 mb-2 border border-slate-200 dark:border-patchwork-dark-400">
 			{length === 3 ? (
 				<View className="flex-1 flex-row space-x-1">
 					{renderImage(

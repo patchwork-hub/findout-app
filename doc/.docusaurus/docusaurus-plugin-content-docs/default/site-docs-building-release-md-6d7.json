@@ -1,26 +1,26 @@
 {
-  "unversionedId": "building-release",
-  "id": "building-release",
-  "title": "Building for Release",
-  "description": "Android",
-  "source": "@site/docs/building-release.md",
-  "sourceDirName": ".",
-  "slug": "/building-release",
-  "permalink": "/findout-temp/docs/building-release",
-  "draft": false,
-  "tags": [],
-  "version": "current",
-  "sidebarPosition": 5,
-  "frontMatter": {
-    "sidebar_position": 5
-  },
-  "sidebar": "docs",
-  "previous": {
-    "title": "Development Guide",
-    "permalink": "/findout-temp/docs/development-guide"
-  },
-  "next": {
-    "title": "Services Integration",
-    "permalink": "/findout-temp/docs/services-integration"
-  }
+	"unversionedId": "building-release",
+	"id": "building-release",
+	"title": "Building for Release",
+	"description": "Android",
+	"source": "@site/docs/building-release.md",
+	"sourceDirName": ".",
+	"slug": "/building-release",
+	"permalink": "/findout-app/docs/building-release",
+	"draft": false,
+	"tags": [],
+	"version": "current",
+	"sidebarPosition": 5,
+	"frontMatter": {
+		"sidebar_position": 5
+	},
+	"sidebar": "docs",
+	"previous": {
+		"title": "Development Guide",
+		"permalink": "/findout-app/docs/development-guide"
+	},
+	"next": {
+		"title": "Services Integration",
+		"permalink": "/findout-app/docs/services-integration"
+	}
 }

@@ -40,41 +40,32 @@ export const shouldRenderHashtag = (
 	node: ChildNode,
 	documentChildren: ChildNode[],
 	continuedTagNames: string[] = [],
+	cachedParagraphNodes: ChildNode[] = [],
+	isEntireDocTags: boolean = false,
 ): boolean => {
-	const tagName = tagNameRaw?.toLowerCase();
-	const continuedTagsLower = continuedTagNames.map(t => t.toLowerCase());
-
-	// Get all top-level paragraph nodes from the parsed HTML document
-	const paragraphNodes =
-		documentChildren?.filter(
-			child => child.type === ElementType.Tag && child.name === 'p',
-		) || [];
-
-	// Find the index of the current hashtag's parent paragraph
-	const parentIndex = paragraphNodes.findIndex(p => p === node.parent);
-
 	// Check if this is the last paragraph
 	const isLastParagraph =
-		parentIndex !== -1 && parentIndex === paragraphNodes.length - 1;
+		node.parent === cachedParagraphNodes[cachedParagraphNodes.length - 1];
 
 	// Check if the paragraph contains only hashtags (and whitespace)
 	// We need to cast parent to any or Element because ChildNode.parent is generalized as ParentNode in domhandler types
-	const parent = node.parent as any;
 	const isOnlyHashtagParagraph =
-		parent &&
-		parent.name === 'p' &&
-		parent.children &&
-		parent.children.every(
-			(n: any) =>
+		node.parent &&
+		'name' in node.parent &&
+		node.parent.name === 'p' &&
+		node.parent.children.every(
+			n =>
 				(n.type === ElementType.Tag &&
 					n.name === 'a' &&
 					n.attribs?.class?.includes('hashtag')) ||
 				(n.type === ElementType.Text && !n.data.trim()),
 		);
 
+	const tagsToHide = continuedTagNames?.map(t => t.toLowerCase()) || [];
+
 	if (
-		(tagName && continuedTagsLower.includes(tagName)) ||
-		(isLastParagraph && isOnlyHashtagParagraph)
+		(tagNameRaw && tagsToHide.includes(tagNameRaw)) ||
+		(isLastParagraph && isOnlyHashtagParagraph && !isEntireDocTags)
 	) {
 		return false;
 	}

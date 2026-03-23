@@ -1,30 +1,44 @@
-import { StatusBar, View, ViewProps } from 'react-native';
-import type { PropsWithChildren } from 'react';
+import { Platform, StatusBar, View, ViewProps } from 'react-native';
+import { useContext, type PropsWithChildren } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BottomTabBarHeightContext } from '@react-navigation/bottom-tabs';
 
 import { useColorScheme } from 'nativewind';
 import useAppropiateColorHash from '@/hooks/custom/useAppropiateColorHash';
 import { cn } from '@/util/helper/twutil';
 import styles from './SafeScreen.style';
 
+type SafeScreenProps = PropsWithChildren &
+	ViewProps & {
+		isBottomSafe?: boolean;
+		isTopSafe?: boolean;
+	};
+
 function SafeScreen({
 	children,
 	className: extraClassName,
+	isBottomSafe,
+	isTopSafe = true,
+	style,
 	...props
-}: PropsWithChildren & ViewProps) {
+}: SafeScreenProps) {
 	const insets = useSafeAreaInsets();
+	const tabBarHeight = useContext(BottomTabBarHeightContext);
 	const { colorScheme } = useColorScheme();
 	const barColor = useAppropiateColorHash('patchwork-dark-100');
+
+	const shouldAddBottomPadding = isBottomSafe ?? tabBarHeight === undefined;
 
 	return (
 		<View
 			style={[
 				{
-					paddingTop: insets.top,
-					// paddingBottom: insets.bottom,
+					paddingTop: isTopSafe ? insets.top : 0,
+					paddingBottom: shouldAddBottomPadding ? insets.bottom : 0,
 					paddingLeft: insets.left,
 					paddingRight: insets.right,
 				},
+				style,
 			]}
 			className={cn(styles.layoutContainer, extraClassName)}
 			{...props}

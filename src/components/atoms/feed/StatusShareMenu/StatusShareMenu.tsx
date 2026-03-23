@@ -9,6 +9,7 @@ import { AppIcons } from '@/util/icons/icon.common';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import customColor from '@/util/constant/color';
 import { FALLBACK_PREVIEW_IMAGE_URL } from '@/util/constant';
+import { StatusCopyIcon } from '@/util/svg/icon.status_actions';
 
 type Props = {
 	status: Patchwork.Status;
@@ -65,12 +66,11 @@ const StatusShareMenu: React.FC<Props> = ({ status }: Props) => {
 			className={cn(
 				'flex flex-row items-center gap-1 active:opacity-80 mb-0.5',
 			)}
+			hitSlop={{ top: 10, bottom: 10, left: 3, right: 10 }}
 			onPress={onSocialShare}
 		>
-			<FontAwesomeIcon
-				icon={AppIcons.share}
-				size={16}
-				color={
+			<StatusCopyIcon
+				stroke={
 					colorScheme == 'dark'
 						? customColor['patchwork-grey-400']
 						: customColor['patchwork-grey-100']

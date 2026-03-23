@@ -170,7 +170,11 @@ const QuotePlaceholder = ({
 					<View className="ml-2 flex-1">
 						{status && (
 							<>
-								<StatusHeader status={status} isFromNoti={isFromNoti} />
+								<StatusHeader
+									status={status}
+									isFromNoti={isFromNoti}
+									isFromQuoteCompose={isFromCompose}
+								/>
 								<View className={`${isFeedDetail ? '-ml-8' : ''}`}>
 									<StatusContent status={status} />
 								</View>
@@ -186,7 +190,9 @@ const QuotePlaceholder = ({
 								<StatusHeader
 									status={status.quote.quoted_status}
 									isFromNoti={isFromNoti}
+									isFromQuoteCompose={isFromCompose}
 									showAvatarIcon
+									isQuoteView
 								/>
 								<StatusContent status={status.quote.quoted_status} />
 
@@ -272,7 +278,7 @@ const QuotePlaceholder = ({
 					</View>
 				) : status?.quote && shouldHidePost.includes(status.quote.state) ? (
 					<View className={`${isFeedDetail ? 'mx-1 mt-2' : 'ml-8 mt-3'}`}>
-						<View className="flex-row items-center bg-patchwork-primary/10 px-3 py-2 rounded-lg">
+						<View className="flex-row items-center bg-patchwork-primary/10 px-3 py-2 ml-3 rounded-lg">
 							{state === 'deleted' ? (
 								<RemoveCrossIcon
 									width={22}

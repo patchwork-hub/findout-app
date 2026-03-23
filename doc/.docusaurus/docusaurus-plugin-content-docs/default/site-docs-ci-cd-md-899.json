@@ -1,26 +1,26 @@
 {
-  "unversionedId": "ci-cd",
-  "id": "ci-cd",
-  "title": "CI/CD",
-  "description": "Overview",
-  "source": "@site/docs/ci-cd.md",
-  "sourceDirName": ".",
-  "slug": "/ci-cd",
-  "permalink": "/findout-temp/docs/ci-cd",
-  "draft": false,
-  "tags": [],
-  "version": "current",
-  "sidebarPosition": 7,
-  "frontMatter": {
-    "sidebar_position": 7
-  },
-  "sidebar": "docs",
-  "previous": {
-    "title": "Services Integration",
-    "permalink": "/findout-temp/docs/services-integration"
-  },
-  "next": {
-    "title": "Troubleshooting",
-    "permalink": "/findout-temp/docs/troubleshooting"
-  }
+	"unversionedId": "ci-cd",
+	"id": "ci-cd",
+	"title": "CI/CD",
+	"description": "Overview",
+	"source": "@site/docs/ci-cd.md",
+	"sourceDirName": ".",
+	"slug": "/ci-cd",
+	"permalink": "/findout-app/docs/ci-cd",
+	"draft": false,
+	"tags": [],
+	"version": "current",
+	"sidebarPosition": 7,
+	"frontMatter": {
+		"sidebar_position": 7
+	},
+	"sidebar": "docs",
+	"previous": {
+		"title": "Services Integration",
+		"permalink": "/findout-app/docs/services-integration"
+	},
+	"next": {
+		"title": "Troubleshooting",
+		"permalink": "/findout-app/docs/troubleshooting"
+	}
 }

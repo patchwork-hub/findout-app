@@ -114,9 +114,12 @@ const FFAccountListItem = ({
 
 	const displayRelationshipText = useMemo(() => {
 		if (relationship?.following) return t('timeline.following');
+		if (relationship?.requested && item.locked)
+			return t('timeline.cancel_request');
 		if (relationship?.requested) return t('timeline.requested');
+		if (item.locked) return t('timeline.request_follow');
 		return t('timeline.follow');
-	}, [relationship]);
+	}, [relationship?.following, relationship?.requested, item.locked, t]);
 
 	return (
 		<View>

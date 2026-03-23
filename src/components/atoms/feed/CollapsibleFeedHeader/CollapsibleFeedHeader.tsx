@@ -13,6 +13,7 @@ import UserStats from '@/components/molecules/profile/UserStats/UserStats';
 import Underline from '../../common/Underline/Underline';
 import { useNavigation } from '@react-navigation/native';
 import {
+	useFollowRequestsMutation,
 	useUpdateAccNoti,
 	useUserRelationshipMutation,
 } from '@/hooks/mutations/profile.mutation';
@@ -62,6 +63,8 @@ import { useTranslation } from 'react-i18next';
 import { EnableNotiBellIcon } from '@/util/svg/icon.status_actions';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { AppIcons } from '@/util/icons/icon.common';
+import SocialSection from '@/components/molecules/profile/SocialSection/SocialSection';
+import { FollowRequestQueryKey } from '@/services/notification.service';
 
 type ChannelProps = {
 	type: 'Channel';
@@ -81,19 +84,13 @@ type ChannelProps = {
 type ProfileProps = {
 	type: 'Profile';
 	profile: Patchwork.Account;
-	onPressPlusIcon?: () => void;
-	onPressEditIcon?: () => void;
 	is_my_account?: boolean;
-	relationships?: Patchwork.RelationShip[];
+	relationships?: Patchwork.RelationShip[] | undefined;
 	myAcctId?: string;
 	specifyServerAccId?: string;
 	otherUserId?: string;
 	isFromNoti?: boolean;
 	isOwnChannelFeed?: boolean;
-	onPressLinkByOtherInstanceUser?: (linkInfo: {
-		label: string;
-		content: string;
-	}) => void;
 };
 
 const CollapsibleFeedHeader = (props: ChannelProps | ProfileProps) => {
@@ -339,6 +336,37 @@ const CollapsibleFeedHeader = (props: ChannelProps | ProfileProps) => {
 			},
 		});
 
+	const { mutate: handleFollowRequest, isPending: isFollowRequestPending } =
+		useFollowRequestsMutation({
+			onSuccess: (newRelationship, { accountId }) => {
+				const relationshipQueryKey = createRelationshipQueryKey([accountId]);
+				const followRequestNotQueryKey: FollowRequestQueryKey = [
+					'follow-request-query-key',
+				];
+
+				queryClient.setQueryData<Patchwork.RelationShip[]>(
+					relationshipQueryKey,
+					old => {
+						if (!old) return [newRelationship];
+						return old.map(rel =>
+							rel.id === accountId ? { ...rel, ...newRelationship } : rel,
+						);
+					},
+				);
+
+				queryClient.invalidateQueries({ queryKey: followRequestNotQueryKey });
+
+				const acctInfoQueryKey: AccountInfoQueryKey = [
+					'get_account_info',
+					{
+						id: acctId as string,
+						domain_name: domain_name,
+					},
+				];
+				queryClient.invalidateQueries({ queryKey: acctInfoQueryKey });
+			},
+		});
+
 	const onToggleBlock = () => {
 		if (isProfile && props.specifyServerAccId) {
 			toggleBlock({
@@ -359,6 +387,11 @@ const CollapsibleFeedHeader = (props: ChannelProps | ProfileProps) => {
 		}
 	};
 
+	const isCancelableRequest = useMemo(() => {
+		if (props.type !== 'Profile') return false;
+		return !!(props.profile?.locked && props?.relationships?.[0]?.requested);
+	}, [props]);
+
 	const displayFollowActionText = () => {
 		if (isProfile) {
 			if (props.relationships && props.relationships[0]?.blocking) {
@@ -366,9 +399,17 @@ const CollapsibleFeedHeader = (props: ChannelProps | ProfileProps) => {
 			} else if (props.relationships && props.relationships[0]?.muting) {
 				return t('common.unmute');
 			} else if (props.relationships && props.relationships[0]?.following) {
-				return t('timeline.following');
+				return t('timeline.unfollow');
+			} else if (
+				props.relationships &&
+				props.relationships[0]?.requested &&
+				props.profile?.locked
+			) {
+				return t('timeline.cancel_request');
 			} else if (props.relationships && props.relationships[0]?.requested) {
 				return t('timeline.requested');
+			} else if (props.profile?.locked) {
+				return t('timeline.request_follow');
 			}
 			return t('timeline.follow');
 		}
@@ -489,7 +530,11 @@ const CollapsibleFeedHeader = (props: ChannelProps | ProfileProps) => {
 						<Button
 							variant="default"
 							size="sm"
-							className="bg-gray-200 dark:bg-white rounded-3xl px-6 mt-5"
+							className={` ${
+								isCancelableRequest
+									? 'border-[0.5px] border-red-500 dark:border-red-400 bg-transparent'
+									: 'bg-gray-200 dark:bg-white'
+							} rounded-3xl px-6 mt-5`}
 							onPress={() => {
 								if (props.relationships && props.relationships[0]?.blocking) {
 									return onToggleBlock();
@@ -506,7 +551,14 @@ const CollapsibleFeedHeader = (props: ChannelProps | ProfileProps) => {
 							!props.relationships ? (
 								<Flow size={25} color={customColor['patchwork-dark-900']} />
 							) : (
-								<ThemeText className="text-black" size={'fs_13'}>
+								<ThemeText
+									className={
+										isCancelableRequest
+											? 'text-red-500 dark:text-red-400'
+											: 'text-black'
+									}
+									size={'fs_13'}
+								>
 									{displayFollowActionText()}
 								</ThemeText>
 							)}
@@ -561,19 +613,73 @@ const CollapsibleFeedHeader = (props: ChannelProps | ProfileProps) => {
 		}
 	};
 
-	const isAccVerified = useMemo(() => {
-		if (props?.type == 'Profile' && props.profile) {
-			return checkIsAccountVerified(props.profile.fields);
-		}
-		return false;
-		//@ts-expect-error
-	}, [props?.type, props?.profile?.fields]);
+	const isAccVerified =
+		props?.type === 'Profile' && props.profile
+			? checkIsAccountVerified(props.profile.fields)
+			: false;
 
 	return (
 		<View
 			className="bg-white dark:bg-patchwork-dark-100"
 			pointerEvents="box-none"
 		>
+			{isProfile && props.relationships?.[0]?.requested_by && (
+				<View
+					className="px-4 py-4
+				absolute top-0 left-0 right-0 z-10 mt-3"
+				>
+					<ThemeText className="text-center mb-3" size={'md_16'}>
+						{props.profile?.display_name || props.profile?.username}{' '}
+						{t('timeline.requested_to_follow_you')}
+					</ThemeText>
+					<View className="flex-row gap-3">
+						<Button
+							variant="default"
+							size="sm"
+							className="flex-1 bg-green-600 dark:bg-green-600 rounded-full px-4 py-3 min-h-[46px] "
+							onPress={() => {
+								if (props.specifyServerAccId) {
+									handleFollowRequest({
+										accountId: props.specifyServerAccId,
+										requestType: 'authorize',
+									});
+								}
+							}}
+							disabled={isFollowRequestPending}
+						>
+							{isFollowRequestPending ? (
+								<Flow size={22} color="#ffffff" />
+							) : (
+								<ThemeText className="text-white">
+									✓ {t('common.accept')}
+								</ThemeText>
+							)}
+						</Button>
+						<Button
+							variant="outline"
+							size="sm"
+							className="flex-1 border-2 border-red-500 dark:border-red-400 bg-transparent rounded-full px-4 py-3 min-h-[46px]"
+							onPress={() => {
+								if (props.specifyServerAccId) {
+									handleFollowRequest({
+										accountId: props.specifyServerAccId,
+										requestType: 'reject',
+									});
+								}
+							}}
+							disabled={isFollowRequestPending}
+						>
+							{isFollowRequestPending ? (
+								<Flow size={22} color="#ef4444" />
+							) : (
+								<ThemeText className="text-red-500 dark:text-red-400">
+									✕ {t('common.reject')}
+								</ThemeText>
+							)}
+						</Button>
+					</View>
+				</View>
+			)}
 			<Pressable
 				pointerEvents="auto"
 				onPress={() =>
@@ -646,16 +752,12 @@ const CollapsibleFeedHeader = (props: ChannelProps | ProfileProps) => {
 						joinedDate={dayjs(props.profile?.created_at).format('MMM YYYY')}
 						userBio={props.profile?.note}
 						emojis={props.profile.emojis}
+						locked={props.profile?.locked}
 					/>
-					{/* <SocialSection
+					<SocialSection
 						isMyAccount={props.is_my_account}
 						accountInfo={props?.profile}
-						onPressEditIcon={props.onPressEditIcon}
-						onPressPlusIcon={props.onPressPlusIcon}
-						onPressLinkByOtherInstanceUser={
-							props.onPressLinkByOtherInstanceUser
-						}
-					/> */}
+					/>
 					<UserStats
 						posts={props.profile.statuses_count}
 						following={props.profile?.following_count}

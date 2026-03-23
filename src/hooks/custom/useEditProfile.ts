@@ -11,21 +11,28 @@ import {
 } from '@/types/queries/profile.type';
 import { useProfileMediaStore } from '@/store/profile/useProfileMediaStore';
 import { cleanText } from '@/util/helper/cleanText';
+import { DEFAULT_INSTANCE } from '@/util/constant';
 import Toast from 'react-native-toast-message';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import { BottomBarHeight, useGradualAnimation } from './useGradualAnimation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAnimatedStyle } from 'react-native-reanimated';
 import { Platform } from 'react-native';
 import { DefaultBioTextForChannel } from '@/util/constant/socialMediaLinks';
 import { useTranslation } from 'react-i18next';
+import { extractPlainText } from '@/util/helper/helper';
+import { screen } from '@testing-library/react-native';
+import { InfiniteData } from '@tanstack/react-query';
+import { PagedResponse } from '@/util/helper/timeline';
+import { updateAccountInStatus } from '@/util/cache/profile/profileCache';
 
-type ProfileType = {
+export type ProfileType = {
 	display_name?: string;
 	bio?: string;
+	metadata: { name: string; value: string }[];
 };
 
-export const useEditProfile = () => {
+export const useEditProfile = (fromVerification?: boolean) => {
 	const { t } = useTranslation();
 	const navigation = useNavigation();
 	const {
@@ -43,9 +50,18 @@ export const useEditProfile = () => {
 
 	useEffect(() => {
 		if (userInfo) {
+			const metadata = [];
+			const fields = Array.isArray(userInfo.fields) ? userInfo.fields : [];
+			for (let i = 0; i < 4; i++) {
+				metadata.push({
+					name: extractPlainText(fields[i]?.name ?? ''),
+					value: extractPlainText(fields[i]?.value ?? ''),
+				});
+			}
 			setProfile({
 				display_name: userInfo.display_name,
 				bio: cleanText(userInfo?.note) || '',
+				metadata,
 			});
 			actions.onSelectMedia(
 				'avatar',
@@ -58,17 +74,16 @@ export const useEditProfile = () => {
 		}
 	}, [userInfo]);
 
-	// Const
 	const acctInfoQueryKey: AccountInfoQueryKey = [
 		'get_account_info',
-		{ id: userInfo?.id!, domain_name: process.env.API_URL ?? '' },
+		{ id: userInfo?.id!, domain_name: process.env.API_URL ?? DEFAULT_INSTANCE },
 	];
 
 	const timelineQueryKeys = [
 		[
 			'channel-feed',
 			{
-				domain_name: process.env.API_URL ?? '',
+				domain_name: DEFAULT_INSTANCE,
 				only_media: false,
 				remote: false,
 				local: true,
@@ -77,7 +92,7 @@ export const useEditProfile = () => {
 		[
 			'account-detail-feed',
 			{
-				domain_name: process.env.API_URL ?? '',
+				domain_name: process.env.API_URL ?? DEFAULT_INSTANCE,
 				account_id: userInfo?.id,
 				exclude_replies: true,
 				exclude_reblogs: true,
@@ -88,27 +103,53 @@ export const useEditProfile = () => {
 
 	// mutations
 	const { mutateAsync, isPending: isUpdatingProfile } = useProfileMutation({
-		onSuccess: response => {
-			queryClient.invalidateQueries({ queryKey: acctInfoQueryKey });
+		onSuccess: async response => {
+			setUserInfo(response);
+			await queryClient.invalidateQueries({ queryKey: acctInfoQueryKey });
 
-			timelineQueryKeys.forEach(key => {
-				queryClient.invalidateQueries({ queryKey: key });
+			await Promise.all(
+				timelineQueryKeys.map(key =>
+					queryClient.invalidateQueries({ queryKey: key }),
+				),
+			);
+
+			const updatedAccountData = {
+				fields: response.fields,
+				display_name: response.display_name,
+				avatar: response.avatar,
+				header: response.header,
+			};
+
+			queryClient.setQueriesData<
+				InfiniteData<PagedResponse<Patchwork.Status[]>>
+			>({ queryKey: ['account-detail-feed'] }, oldData => {
+				if (!oldData) return oldData;
+
+				return {
+					...oldData,
+					pages: oldData.pages.map(page => ({
+						...page,
+						data: page.data.map(status =>
+							updateAccountInStatus(status, userInfo?.id!, updatedAccountData),
+						),
+					})),
+				};
 			});
 
-			setUserInfo(response);
+			queryClient.setQueriesData<Patchwork.Status>(
+				{ queryKey: ['status'] },
+				oldData => {
+					if (!oldData) return oldData;
+					return updateAccountInStatus(
+						oldData,
+						userInfo?.id!,
+						updatedAccountData,
+					);
+				},
+			);
+
 			navigation.goBack();
-			// 	text1: 'Your profile has been updated successfully!',
-			// 	position: 'top',
-			// 	topOffset: Platform.OS == 'android' ? 25 : 50,
-			// 	visibilityTime: 1000,
-			// 	onHide: () =>
-			// 		navigation.navigate('Index', {
-			// 			screen: 'Home',
-			// 			params: {
-			// 				screen: 'HomeFeed',
-			// 			},
-			// 		}),
-			// });
+
 			Toast.show({
 				type: 'successToast',
 				text1: t('timeline.profile_update_success'),
@@ -165,14 +206,19 @@ export const useEditProfile = () => {
 			},
 		});
 
-	// handlers
 	const handleUpdateProfile = async () => {
+		const displayName = profile?.display_name ?? '';
+		const bio = profile?.bio ?? '';
+
 		let payload: UpdateProfilePayload = {
-			display_name: profile?.display_name,
+			display_name: displayName,
 			note: userInfo?.note?.includes(DefaultBioTextForChannel)
-				? profile?.bio + ' ' + DefaultBioTextForChannel
-				: profile?.bio,
+				? bio
+					? bio + ' ' + DefaultBioTextForChannel
+					: DefaultBioTextForChannel
+				: bio,
 		};
+
 		payload.avatar =
 			typeof avatar.selectedMedia === 'string'
 				? avatar.selectedMedia
@@ -181,6 +227,14 @@ export const useEditProfile = () => {
 			typeof header.selectedMedia === 'string'
 				? header.selectedMedia
 				: header.selectedMedia[0] || null;
+
+		const fields_attributes: { name: string; value: string }[] = [];
+		profile?.metadata?.forEach(meta => {
+			if (typeof meta.name === 'string' && typeof meta.value === 'string') {
+				fields_attributes.push({ name: meta.name, value: meta.value });
+			}
+		});
+		payload.fields_attributes = fields_attributes;
 		mutateAsync(payload);
 	};
 
@@ -192,7 +246,6 @@ export const useEditProfile = () => {
 		}
 	};
 
-	// styles
 	const virtualKeyboardContainerStyle = useAnimatedStyle(() => {
 		return {
 			height:

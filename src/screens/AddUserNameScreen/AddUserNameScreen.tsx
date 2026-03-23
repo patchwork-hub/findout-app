@@ -245,6 +245,7 @@ const AddUserNameScreen = () => {
 								components={{
 									tc: (
 										<ThemeText
+											key={'tc'}
 											onPress={() => {
 												navigation.navigate('WebViewer', {
 													url: 'https://thebristolcable.org/terms/',

@@ -21,9 +21,13 @@ import { isTablet } from '@/util/helper/isTablet';
 import { useTranslation } from 'react-i18next';
 import { addOrUpdateAccount, AuthState } from '@/util/storage';
 import { useAccounts } from '@/hooks/custom/useAccounts';
-import customColor from '@/util/constant/color';
+import { useMastodonAuth } from '@/hooks/custom/useMastodonAuth';
 
-const EmailLoginAnotherAccountForm = ({}: {}) => {
+const EmailLoginAnotherAccountForm = ({
+	openAccSwitcher,
+}: {
+	openAccSwitcher: () => void;
+}) => {
 	const { colorScheme } = useColorScheme();
 	const { t } = useTranslation();
 
@@ -34,7 +38,14 @@ const EmailLoginAnotherAccountForm = ({}: {}) => {
 	const [pwVisibility, setPwVissibility] = useState({
 		password: false,
 	});
-	const [alertState, setAlert] = useState({
+	const [alertState, setAlert] = useState<{
+		message: string;
+		isOpen: boolean;
+		isErrorAlert: boolean;
+		alertType?: 'link-extended' | 'default';
+		linkText?: string;
+		onLinkPress?: () => void;
+	}>({
 		message: '',
 		isOpen: false,
 		isErrorAlert: false,
@@ -46,6 +57,25 @@ const EmailLoginAnotherAccountForm = ({}: {}) => {
 		formState: { errors },
 	} = useForm({
 		resolver: yupResolver(getLoginSchema(t)),
+	});
+
+	const { startAuth, isLoading } = useMastodonAuth({
+		isAddAccount: true,
+		isFromSwitchAccount: true,
+		onError: error =>
+			setAlert({
+				message: error?.message || t('common.error'),
+				isErrorAlert: true,
+				isOpen: true,
+			}),
+		onSuccess: () => {
+			navigation.goBack();
+
+			setTimeout(() => {
+				fetchAccounts();
+				openAccSwitcher?.();
+			}, 300);
+		},
 	});
 
 	const { mutateAsync, isPending } = useMastodonLoginMutation({
@@ -75,9 +105,15 @@ const EmailLoginAnotherAccountForm = ({}: {}) => {
 			if (error.status == 400) {
 				if (error?.message == HTTP_ERROR_MESSAGE?.INVALID_GRANT) {
 					return setAlert({
-						message: 'Invalid login credentials',
+						message: t('login.two_factor_auth_error_message'),
 						isErrorAlert: true,
 						isOpen: true,
+						alertType: 'link-extended',
+						linkText: t('login.two_factor_auth_error_link'),
+						onLinkPress: () => {
+							setAlert(prev => ({ ...prev, isOpen: false }));
+							startAuth();
+						},
 					});
 				}
 			}
@@ -194,6 +230,9 @@ const EmailLoginAnotherAccountForm = ({}: {}) => {
 				extraOkBtnStyle={colorScheme == 'dark' ? 'text-white' : 'text-black'}
 				message={alertState.message}
 				title={alertState.isErrorAlert ? 'Error' : 'Success'}
+				alertType={alertState.alertType}
+				linkText={alertState.linkText}
+				onLinkPress={alertState.onLinkPress}
 				handleCancel={() =>
 					setAlert(prev => ({
 						...prev,

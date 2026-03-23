@@ -78,6 +78,7 @@
 		"select_five": "Dewiswch o leiaf 5"
 	},
 	"compose": {
+		"add_file": "Ychwanegu ffeil",
 		"delete_image": "Dileu'r ddelwedd",
 		"draft": {
 			"save": "Cadw drafft",
@@ -88,10 +89,6 @@
 			"message": "Os ewch yn ôl, bydd eich postiad yn cael ei golli. Hoffech chi ei gadw fel drafft?",
 			"create": "Creu drafft",
 			"discard": "Gwaredu",
-			"spoiler_placeholder": "Ysgrifennwch eich rhybudd yma...",
-			"spoiler_warning_title": "Rhybudd Sbwlio",
-			"spoiler_warning_message": "Mae’r post hwn yn cynnwys sbwlio ar {{spoiler_text}}",
-			"show_content": "Dangos Cynnwys",
 			"hide_post": "Cuddio Post",
 			"spoiler_hide": "Cuddio",
 			"no_drafts_desc": "Dim drafft ar gael. Dechreuwch greu eich postiadau!"
@@ -133,6 +130,10 @@
 		"take_a_photo": "Tynnu llun",
 		"select_language": "Dewis iaith",
 		"select_date": "Dewis dyddiad",
+		"show_content": "Dangos cynnwys",
+		"spoiler_placeholder": "Ysgrifennwch eich rhybudd yma...",
+		"spoiler_warning_message": "{{spoiler_text}}",
+		"spoiler_warning_title": "Rhybudd cynnwys",
 		"drafts": "Drafftiau"
 	},
 	"conversation": {
@@ -176,9 +177,29 @@
 	},
 	"create_new_list": "Creu rhestr newydd",
 	"delete_account": "Dileu'r cyfrif",
+	"delete_account_confirm": {
+		"title": "Ydych chi'n siŵr eich bod am ddileu eich cyfrif?",
+		"info_box": "Caiff eich cyfrif sy'n gysylltiedig â {{email}} ei ddileu o {{server}}.",
+		"main_info": "Trwy gyflwyno cais i Tŵt ddileu eich cyfrif, rydych yn deall ac yn cydnabod y canlynol. Cyn bwrw ymlaen, darllenwch y nodiadau hyn yn ofalus:",
+		"point_1": "Ni fyddwch yn gallu adfer na gweithredu eich cyfrif eto",
+		"point_2": "Ni fydd eich enw defnyddiwr ar gael",
+		"point_3": "Bydd eich postiadau a data eraill yn cael eu tynnu'n barhaol",
+		"point_4": "Gall cynnwys sydd wedi'i storio gan weinyddion eraill barhau",
+		"privacy_policy_intro": "Am fwy o fanylion, gweler y ",
+		"privacy_policy_text": "polisi preifatrwydd",
+		"confirm_step_title": "Cadarnhewch eich bod yn hapus i barhau",
+		"confirm_step_proceed": "Cadarnhau",
+		"password_step_warning": "Sylwch fod hyn yn barhaol ac na ellir ei ddad-wneud. I gadarnhau dileu eich cyfrif, rhowch eich cyfrinair isod:",
+		"password_intro": "Rhowch eich cyfrinair i ddileu'r cyfrif yn barhaol."
+	},
+	"account_deleted_successfully": "Mae eich cyfrif wedi'i ddileu yn llwyddiannus.",
 	"display_name": "Enw arddangos",
 	"edit": "Golygu",
 	"edit_account": "Golygu'r cyfrif",
+	"edit_profile": {
+		"content": "Cynnwys",
+		"label": "Label"
+	},
 	"filter_setting": "Gosodiadau hidlo",
 	"for_you": "I chi",
 	"hashtag": "Hasgnod",
@@ -235,6 +256,7 @@
 		"clear_cookies": "Clirio cwcis",
 		"confirm_password": "Cadarnhau'r cyfrinair",
 		"create_account": "Creu cyfrif",
+		"current_email_address": "Cyfeiriad e-bost cyfredol",
 		"current_password": "Cyfrinair presennol",
 		"email": "E-bost",
 		"email_address": "Cyfeiriad e-bost",
@@ -382,6 +404,7 @@
 		"bluesky_bridge": "Pont Bluesky",
 		"bookmarks": "Nodau tudalen",
 		"change_password": "Newid cyfrinair",
+		"choose_audience": "Dewis cynulleidfa",
 		"community_guidelines": "Canllawiau Cymunedol",
 		"delete_account": "Dileu'r cyfrif",
 		"delete_confirmation": "Cewch eich ailgyfeirio i wefan swyddogol mo-me.social, lle gallwch ddilyn y camau i ddileu eich cyfrif yn barhaol. Bydd hyn yn dileu eich cyfrif a'r holl ddata cysylltiedig yn barhaol.",
@@ -392,6 +415,7 @@
 		"privacy_policy": "Polisi Preifatrwydd",
 		"receive_email_notification": "Derbyn hysbysiadau e-bost",
 		"receive_push_notification": "Derbyn hysbysiadau gwthio",
+		"require_follow_approval": "Angen cymeradwyaeth dilyn",
 		"enable_alt_text": "Galluogi testun ALT awtomatig",
 		"scheduled_posts": "Postiadau wedi'u hamserlennu",
 		"switch_account": {
@@ -498,7 +522,8 @@
 			"select_visibility": "Pwy all weld y post hwn?",
 			"select_quote": "Pwy all ddyfynnu’r post hwn?",
 			"followers_only": "Dim ond dilynwyr",
-			"just_me": "Dim ond fi"
+			"just_me": "Dim ond fi",
+			"local_only": "Lleol yn unig"
 		},
 		"welcome_back": "Croeso'n ôl"
 	},
@@ -645,5 +670,32 @@
 		"create_a_new_one": "Creu un newydd",
 		"user_blocked": "Mae {{user}} wedi’i rwystro",
 		"user_muted": "Mae {{user}} wedi’i dawelu"
+	},
+	"verification": {
+		"title": "Dilysu",
+		"add_website_to_profile": "Ychwanegu gwefan i'r proffil",
+		"copy": "Copïo",
+		"description": "Mae dilysu eich hunaniaeth ar Mastodon ar gyfer pawb. Yn seiliedig ar safonau gwe agored, yn rhad ac am ddim nawr ac am byth. Y cyfan sydd ei angen arnoch yw gwefan bersonol y mae pobl yn eich adnabod wrth ei bodd. Pan fyddwch chi'n cysylltu â'r wefan hon o'ch proffil, byddwn yn gwirio bod y wefan yn cysylltu yn ôl i'ch proffil ac yn dangos dangosydd gweledol arno.",
+		"heres_how": "DYMA SUT",
+		"instructions": "Copïwch a gludwch y cod isod i mewn i HTML eich gwefan. Yna ychwanegwch gyfeiriad eich gwefan i un o'r meysydd ychwanegol ar eich proffil o'r tab \"Golygu proffil\" a chadwch y newidiadau.",
+		"loading": "Wrthi'n llwytho...",
+		"tip_label": "Awgrym: ",
+		"tip_part_1": "Gall y ddolen ar eich gwefan fod yn anweledig. Y rhan bwysig yw ",
+		"tip_part_2": " sy'n atal herwgipio hunaniaeth ar wefannau gyda chynnwys a gynhyrchir gan ddefnyddwyr. Gallwch hyd yn oed ddefnyddio tag ",
+		"tip_part_3": "ym mhennyn y dudalen yn lle a, ond rhaid i'r HTML fod yn hygyrch heb weithredu JavaScript."
+	},
+	"website_verification": "Dilysu gwefan",
+	"handle_info": {
+		"title": "Beth sydd mewn trin?",
+		"account_handle": "Trin y cyfrif:",
+		"username": "Enw defnyddiwr",
+		"username_description": "Eu dynodwr unigryw ar eu gweinydd. Mae'n bosibl dod o hyd i ddefnyddwyr gyda'r un enw defnyddiwr ar wahanol weinyddion.",
+		"server": "Gweinydd",
+		"server_description": "Eu cartref digidol, lle mae eu holl bostiadau'n byw.",
+		"joined": "Ymunodd",
+		"footer_description": "Gan fod dolenni'n dweud pwy yw rhywun a lle maen nhw, gallwch chi ryngweithio â phobl ar draws gwe gymdeithasol ",
+		"activitypub_platforms": "Llwyfannau wedi'u pweru gan ActivityPub",
+		"activitypub_header": "Mae ActivityPub fel yr iaith y mae Mastodon yn ei siarad â rhwydweithiau cymdeithasol eraill.",
+		"activitypub_description": "Mae'n gadael i chi gysylltu a rhyngweithio â phobl nid yn unig ar Mastodon, ond ar draws gwahanol apiau cymdeithasol hefyd."
 	}
 }

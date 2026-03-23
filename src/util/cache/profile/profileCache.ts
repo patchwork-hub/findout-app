@@ -50,3 +50,33 @@ export const addSocialLink = (
 		};
 	});
 };
+
+export const updateAccountInStatus = (
+	status: Patchwork.Status,
+	userId: string,
+	updatedAccount: Partial<Patchwork.Account>,
+): Patchwork.Status => {
+	let updatedStatus = { ...status };
+
+	if (status.account?.id === userId) {
+		updatedStatus.account = {
+			...status.account,
+			...updatedAccount,
+		};
+	}
+
+	if (status.reblog && status.reblog.account?.id === userId) {
+		updatedStatus = {
+			...updatedStatus,
+			reblog: {
+				...status.reblog,
+				account: {
+					...status.reblog.account,
+					...updatedAccount,
+				},
+			},
+		};
+	}
+
+	return updatedStatus;
+};

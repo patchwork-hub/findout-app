@@ -58,6 +58,10 @@ export const HorizontalChannelSection = ({
 		);
 	};
 
+	if (data?.length === 0) {
+		return null;
+	}
+
 	return (
 		<View>
 			<View className="flex-row items-center px-4">

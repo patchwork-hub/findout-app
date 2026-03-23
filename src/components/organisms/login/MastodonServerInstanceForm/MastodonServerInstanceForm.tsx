@@ -73,7 +73,7 @@ export const MastodonServerInstanceForm = () => {
 				client_id: res.client_id,
 				client_secret: res.client_secret,
 				response_type: 'code',
-				redirect_uri: 'patchwork://',
+				redirect_uri: 'FindOutMedia://',
 				scope: 'write read follow push',
 			});
 			const url = `https://${finalKeyword}/oauth/authorize?${queryParams.toString()}`;
@@ -144,7 +144,7 @@ export const MastodonServerInstanceForm = () => {
 		client_secret: string,
 	) => {
 		InAppBrowser.close();
-		const result = await InAppBrowser.openAuth(url, 'patchwork://', {
+		const result = await InAppBrowser.openAuth(url, 'FindOutMedia://', {
 			ephemeralWebSession: false,
 			showTitle: false,
 			enableUrlBarHiding: true,
@@ -165,7 +165,7 @@ export const MastodonServerInstanceForm = () => {
 					domain: finalKeyword,
 					client_id,
 					client_secret,
-					redirect_uri: 'patchwork://',
+					redirect_uri: 'FindOutMedia://',
 					grant_type: 'authorization_code',
 				});
 			}

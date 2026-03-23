@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { View, ScrollView } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import ComposeActionsBar from '@/components/molecules/compose/ComposeActionsBar/ComposeActionsBar';
@@ -44,6 +44,8 @@ import QuotePostContent from '@/components/molecules/compose/QuotePostContent/Qu
 import { SelectAudienceBtn } from '@/components/molecules/compose/SelectAudienceBtn/SelectAudienceBtn';
 import { AudienceListModal } from '../AudienceListModal/AudienceListModal';
 import { SelectedAudience } from '@/components/molecules/compose/SelectedAudience/SelectedAudience';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BottomTabBarHeightContext } from '@react-navigation/bottom-tabs';
 
 type Props = {
 	composeParams:
@@ -86,15 +88,15 @@ const ComposeContent = ({ composeParams }: Props) => {
 	const { t } = useTranslation();
 	const { clearQuotedStatus } = useQuoteStore();
 
-	const { setSelectedAudience } = useCreateAudienceStore();
+	const { setSelectedAudience, clearAudience } = useCreateAudienceStore();
+
+	const insets = useSafeAreaInsets();
+	const tabBarHeight = useContext(BottomTabBarHeightContext);
+	const hasTabBar = tabBarHeight !== undefined;
 
 	useEffect(() => {
 		if (composeParams.type === 'create') {
 			if (composeParams.prefilledAudience) {
-				console.log(
-					'composeParams.prefilledAudience::',
-					composeParams.prefilledAudience,
-				);
 				setSelectedAudience([composeParams.prefilledAudience]);
 				composeDispatch({ type: 'visibility_change', payload: 'local' });
 			}
@@ -121,12 +123,27 @@ const ComposeContent = ({ composeParams }: Props) => {
 		}
 	}, [
 		composeParams?.type,
-		composeParams.type === 'create' ? composeParams.prefilledAudience : undefined,
+		composeParams.type === 'create'
+			? composeParams.prefilledAudience
+			: undefined,
 	]);
 
 	const toolbarAnimatedViewStyle = useAnimatedStyle(() => {
+		const keyboardHeight = Math.abs(height.value);
+
+		if (hasTabBar) {
+			// SafeScreen adds 0 padding.
+			// Spacer provides bottom safe area when keyboard closed.
+			// Spacer provides full keyboard height when open.
+			return {
+				height: Math.max(keyboardHeight, insets.bottom),
+			};
+		}
+
+		// SafeScreen adds insets.bottom padding.
+		// Spacer provides remaining height needed to clear keyboard.
 		return {
-			height: Math.abs(height.value),
+			height: Math.max(0, keyboardHeight - insets.bottom),
 		};
 	});
 
@@ -150,6 +167,7 @@ const ComposeContent = ({ composeParams }: Props) => {
 		if (composeParams.type === 'schedule') {
 			setShowDraftAlert(false);
 			composeDispatch({ type: 'clear' });
+			clearAudience();
 			navigation.goBack();
 			return true;
 		}
@@ -167,6 +185,7 @@ const ComposeContent = ({ composeParams }: Props) => {
 		} else {
 			setSelectedDraftId(null);
 			clearEditSelectedAudience();
+			clearAudience();
 			navigation.goBack();
 		}
 		return true;

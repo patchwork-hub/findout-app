@@ -87,6 +87,7 @@ export const useSignUpMutation = (
 			agreement: boolean;
 			locale: string;
 			access_token: string;
+			date_of_birth?: string;
 		}
 	>,
 ) => {
@@ -262,7 +263,13 @@ export const useChangeNewsmastEmailVerificationMutation = (
 };
 
 export const useDeleteAccMutation = (
-	options: UseMutationOptions<{ message: string }, AxiosError>,
+	options: UseMutationOptions<
+		{ message: string },
+		AxiosError,
+		{
+			password: string;
+		}
+	>,
 ) => {
 	return useMutation({
 		mutationFn: deleteAccount,

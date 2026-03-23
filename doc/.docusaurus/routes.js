@@ -2,102 +2,132 @@ import React from 'react';
 import ComponentCreator from '@docusaurus/ComponentCreator';
 
 export default [
-  {
-    path: '/findout-temp/__docusaurus/debug',
-    component: ComponentCreator('/findout-temp/__docusaurus/debug', '440'),
-    exact: true
-  },
-  {
-    path: '/findout-temp/__docusaurus/debug/config',
-    component: ComponentCreator('/findout-temp/__docusaurus/debug/config', '8de'),
-    exact: true
-  },
-  {
-    path: '/findout-temp/__docusaurus/debug/content',
-    component: ComponentCreator('/findout-temp/__docusaurus/debug/content', '8d1'),
-    exact: true
-  },
-  {
-    path: '/findout-temp/__docusaurus/debug/globalData',
-    component: ComponentCreator('/findout-temp/__docusaurus/debug/globalData', '807'),
-    exact: true
-  },
-  {
-    path: '/findout-temp/__docusaurus/debug/metadata',
-    component: ComponentCreator('/findout-temp/__docusaurus/debug/metadata', 'fd4'),
-    exact: true
-  },
-  {
-    path: '/findout-temp/__docusaurus/debug/registry',
-    component: ComponentCreator('/findout-temp/__docusaurus/debug/registry', '814'),
-    exact: true
-  },
-  {
-    path: '/findout-temp/__docusaurus/debug/routes',
-    component: ComponentCreator('/findout-temp/__docusaurus/debug/routes', 'fb7'),
-    exact: true
-  },
-  {
-    path: '/findout-temp/docs',
-    component: ComponentCreator('/findout-temp/docs', 'c08'),
-    routes: [
-      {
-        path: '/findout-temp/docs/building-release',
-        component: ComponentCreator('/findout-temp/docs/building-release', '3cf'),
-        exact: true,
-        sidebar: "docs"
-      },
-      {
-        path: '/findout-temp/docs/ci-cd',
-        component: ComponentCreator('/findout-temp/docs/ci-cd', '11a'),
-        exact: true,
-        sidebar: "docs"
-      },
-      {
-        path: '/findout-temp/docs/development-guide',
-        component: ComponentCreator('/findout-temp/docs/development-guide', '02b'),
-        exact: true,
-        sidebar: "docs"
-      },
-      {
-        path: '/findout-temp/docs/getting-started',
-        component: ComponentCreator('/findout-temp/docs/getting-started', '095'),
-        exact: true,
-        sidebar: "docs"
-      },
-      {
-        path: '/findout-temp/docs/intro',
-        component: ComponentCreator('/findout-temp/docs/intro', '285'),
-        exact: true,
-        sidebar: "docs"
-      },
-      {
-        path: '/findout-temp/docs/project-architecture',
-        component: ComponentCreator('/findout-temp/docs/project-architecture', '38a'),
-        exact: true,
-        sidebar: "docs"
-      },
-      {
-        path: '/findout-temp/docs/services-integration',
-        component: ComponentCreator('/findout-temp/docs/services-integration', 'ffd'),
-        exact: true,
-        sidebar: "docs"
-      },
-      {
-        path: '/findout-temp/docs/troubleshooting',
-        component: ComponentCreator('/findout-temp/docs/troubleshooting', '63c'),
-        exact: true,
-        sidebar: "docs"
-      }
-    ]
-  },
-  {
-    path: '/findout-temp/',
-    component: ComponentCreator('/findout-temp/', '0b0'),
-    exact: true
-  },
-  {
-    path: '*',
-    component: ComponentCreator('*'),
-  },
+	{
+		path: '/findout-app/__docusaurus/debug',
+		component: ComponentCreator('/findout-app/__docusaurus/debug', 'b25'),
+		exact: true,
+	},
+	{
+		path: '/findout-app/__docusaurus/debug/config',
+		component: ComponentCreator(
+			'/findout-app/__docusaurus/debug/config',
+			'aa6',
+		),
+		exact: true,
+	},
+	{
+		path: '/findout-app/__docusaurus/debug/content',
+		component: ComponentCreator(
+			'/findout-app/__docusaurus/debug/content',
+			'6c4',
+		),
+		exact: true,
+	},
+	{
+		path: '/findout-app/__docusaurus/debug/globalData',
+		component: ComponentCreator(
+			'/findout-app/__docusaurus/debug/globalData',
+			'cf3',
+		),
+		exact: true,
+	},
+	{
+		path: '/findout-app/__docusaurus/debug/metadata',
+		component: ComponentCreator(
+			'/findout-app/__docusaurus/debug/metadata',
+			'5de',
+		),
+		exact: true,
+	},
+	{
+		path: '/findout-app/__docusaurus/debug/registry',
+		component: ComponentCreator(
+			'/findout-app/__docusaurus/debug/registry',
+			'23b',
+		),
+		exact: true,
+	},
+	{
+		path: '/findout-app/__docusaurus/debug/routes',
+		component: ComponentCreator(
+			'/findout-app/__docusaurus/debug/routes',
+			'9e0',
+		),
+		exact: true,
+	},
+	{
+		path: '/findout-app/docs',
+		component: ComponentCreator('/findout-app/docs', 'd22'),
+		routes: [
+			{
+				path: '/findout-app/docs/building-release',
+				component: ComponentCreator(
+					'/findout-app/docs/building-release',
+					'd9a',
+				),
+				exact: true,
+				sidebar: 'docs',
+			},
+			{
+				path: '/findout-app/docs/ci-cd',
+				component: ComponentCreator('/findout-app/docs/ci-cd', '4b6'),
+				exact: true,
+				sidebar: 'docs',
+			},
+			{
+				path: '/findout-app/docs/development-guide',
+				component: ComponentCreator(
+					'/findout-app/docs/development-guide',
+					'a28',
+				),
+				exact: true,
+				sidebar: 'docs',
+			},
+			{
+				path: '/findout-app/docs/getting-started',
+				component: ComponentCreator('/findout-app/docs/getting-started', '9cc'),
+				exact: true,
+				sidebar: 'docs',
+			},
+			{
+				path: '/findout-app/docs/intro',
+				component: ComponentCreator('/findout-app/docs/intro', 'f23'),
+				exact: true,
+				sidebar: 'docs',
+			},
+			{
+				path: '/findout-app/docs/project-architecture',
+				component: ComponentCreator(
+					'/findout-app/docs/project-architecture',
+					'f94',
+				),
+				exact: true,
+				sidebar: 'docs',
+			},
+			{
+				path: '/findout-app/docs/services-integration',
+				component: ComponentCreator(
+					'/findout-app/docs/services-integration',
+					'039',
+				),
+				exact: true,
+				sidebar: 'docs',
+			},
+			{
+				path: '/findout-app/docs/troubleshooting',
+				component: ComponentCreator('/findout-app/docs/troubleshooting', 'ef6'),
+				exact: true,
+				sidebar: 'docs',
+			},
+		],
+	},
+	{
+		path: '/findout-app/',
+		component: ComponentCreator('/findout-app/', 'aa6'),
+		exact: true,
+	},
+	{
+		path: '*',
+		component: ComponentCreator('*'),
+	},
 ];

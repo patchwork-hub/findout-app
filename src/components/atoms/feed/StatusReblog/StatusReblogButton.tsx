@@ -24,6 +24,7 @@ import {
 } from 'react-native-popup-menu';
 import Underline from '../../common/Underline/Underline';
 import { cn } from '@/util/helper/twutil';
+import { StatusRepostIcon } from '@/util/svg/icon.status_actions';
 
 type Props = {
 	count: number;
@@ -55,10 +56,8 @@ const StatusReblogButton = ({ count, status, onBoost, ...props }: Props) => {
 					className="flex-row items-center gap-1"
 					{...props}
 				>
-					<FontAwesomeIcon
-						icon={AppIcons.repost}
-						size={18}
-						color={
+					<StatusRepostIcon
+						fill={
 							(status?.reblogged || status.reblog?.reblogged) &&
 							colorScheme == 'dark'
 								? customColor['patchwork-soft-primary']
@@ -96,16 +95,16 @@ const StatusReblogButton = ({ count, status, onBoost, ...props }: Props) => {
 						style={{ paddingRight: 15 }}
 					>
 						<View className="flex flex-row items-center gap-2 px-3 py-2">
-							<FontAwesomeIcon
-								icon={AppIcons.repost}
-								size={18}
-								color={
-									status?.reblogged || status.reblog?.reblogged
-										? colorScheme === 'dark'
-											? customColor['patchwork-soft-primary']
-											: customColor['patchwork-primary']
-										: colorScheme === 'dark'
-										? '#fff'
+							<StatusRepostIcon
+								fill={
+									(status?.reblogged || status.reblog?.reblogged) &&
+									colorScheme == 'dark'
+										? customColor['patchwork-soft-primary']
+										: (status?.reblogged || status.reblog?.reblogged) &&
+										  colorScheme == 'light'
+										? customColor['patchwork-primary']
+										: colorScheme == 'dark'
+										? customColor['patchwork-grey-400']
 										: customColor['patchwork-grey-100']
 								}
 							/>

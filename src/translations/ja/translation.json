@@ -78,6 +78,7 @@
 		"select_five": "5つ以上選択してください"
 	},
 	"compose": {
+		"add_file": "ファイルを追加",
 		"delete_image": "画像を削除",
 		"draft": {
 			"save": "下書きを保存",
@@ -127,6 +128,10 @@
 		"take_a_photo": "写真を撮る",
 		"select_language": "言語を選択",
 		"select_date": "日付を選択",
+		"show_content": "内容を表示",
+		"spoiler_placeholder": "ここに警告を書いてください...",
+		"spoiler_warning_message": "{{spoiler_text}}",
+		"spoiler_warning_title": "閲覧注意",
 		"drafts": "下書き"
 	},
 	"conversation": {
@@ -170,9 +175,29 @@
 	},
 	"create_new_list": "新しいリストを作成",
 	"delete_account": "アカウントを削除",
+	"delete_account_confirm": {
+		"title": "アカウントを削除してもよろしいですか？",
+		"info_box": "{{email}} に関連付けられたアカウントは {{server}} から削除されます。",
+		"main_info": "Find Out Media にアカウントの削除をリクエストすることにより、以下の事項を理解し、承認したものとみなされます。続行する前に、これらの注意書きをよくお読みください。",
+		"point_1": "アカウントを復元または再アクティブ化することはできません",
+		"point_2": "ユーザー名は利用できないままになります",
+		"point_3": "投稿やその他のデータは永久に削除されます",
+		"point_4": "他のサーバーによってキャッシュされたコンテンツは残る可能性があります",
+		"privacy_policy_intro": "詳細は、",
+		"privacy_policy_text": "プライバシーポリシー",
+		"confirm_step_proceed": "確認",
+		"confirm_step_title": "続行することを確認してください",
+		"password_step_warning": "これは永続的なものであり、元に戻すことはできません。アカウントの削除を確認するには、以下にパスワードを入力してください。",
+		"password_intro": "アカウントを永久に削除するためにパスワードを入力してください。"
+	},
+	"account_deleted_successfully": "アカウントが正常に削除されました。",
 	"display_name": "表示名",
 	"edit": "編集",
 	"edit_account": "アカウントを編集",
+	"edit_profile": {
+		"content": "コンテンツ",
+		"label": "ラベル"
+	},
 	"filter_setting": "フィルター設定",
 	"for_you": "おすすめ",
 	"hashtag": "ハッシュタグ",
@@ -229,6 +254,7 @@
 		"clear_cookies": "クッキーを消去",
 		"confirm_password": "パスワード（確認用）",
 		"create_account": "アカウントを作成",
+		"current_email_address": "現在のメールアドレス",
 		"current_password": "現在のパスワード",
 		"email": "メールアドレス",
 		"email_address": "メールアドレス",
@@ -376,6 +402,7 @@
 		"bluesky_bridge": "Bluesky ブリッジ",
 		"bookmarks": "ブックマーク",
 		"change_password": "パスワードの変更",
+		"choose_audience": "公開範囲を選択",
 		"community_guidelines": "コミュニティガイドライン",
 		"delete_account": "アカウントを削除",
 		"delete_confirmation": "公式patchwork.ioウェブサイトにリダイレクトされます。そこで手順に従ってアカウントを完全に削除できます。これにより、アカウントと関連するすべてのデータが永久に削除されます。",
@@ -386,6 +413,7 @@
 		"privacy_policy": "プライバシーポリシー",
 		"receive_email_notification": "メール通知を受け取る",
 		"receive_push_notification": "プッシュ通知を受け取る",
+		"require_follow_approval": "フォロー承認を必要とする",
 		"enable_alt_text": "自動ALTテキストを有効にする",
 		"scheduled_posts": "予約投稿",
 		"switch_account": {
@@ -480,6 +508,11 @@
 		"type_your_reply": "リプライを入力",
 		"unfollow": "フォロー解除",
 		"visibility": {
+			"followers_only": "フォロワー限定",
+			"just_me": "自分のみ",
+			"local_only": "ローカルのみ",
+			"select_quote": "誰がこの投稿を引用できますか？",
+			"select_visibility": "誰がこの投稿を見ることができますか？",
 			"public": "公開",
 			"unlisted": "未収載",
 			"private": "フォロワー限定",
@@ -631,5 +664,32 @@
 		"create_a_new_one": "新しいものを作成する",
 		"user_blocked": "{{user}} をブロックしました",
 		"user_muted": "{{user}} をミュートしました"
+	},
+	"verification": {
+		"title": "認証",
+		"add_website_to_profile": "プロフィールにウェブサイトを追加",
+		"copy": "コピー",
+		"description": "Mastodonでの本人確認は誰でも可能です。オープンなウェブ標準に基づいており、現在もこれからも無料です。必要なのは、人々があなたを認識する個人のウェブサイトだけです。プロフィールからこのウェブサイトにリンクすると、ウェブサイトがプロフィールに再リンクしていることを確認し、プロフィールにビジュアルインジケーターを表示します。",
+		"heres_how": "手順はこちら",
+		"instructions": "以下のコードをコピーして、ウェブサイトのHTMLに貼り付けます。次に、「プロフィールを編集」タブからプロフィールの追加フィールドの一つにウェブサイトのアドレスを追加し、変更を保存します。",
+		"loading": "読み込み中...",
+		"tip_label": "ヒント: ",
+		"tip_part_1": "ウェブサイト上のリンクは不可視にすることもできます。重要なのは ",
+		"tip_part_2": " で、これによりユーザー生成コンテンツのあるウェブサイトでのなりすましを防ぐことができます。aタグの代わりにページのヘッダーに ",
+		"tip_part_3": "タグを使用することもできますが、HTMLはJavaScriptを実行せずにアクセス可能である必要があります。"
+	},
+	"website_verification": "ウェブサイトの確認",
+	"handle_info": {
+		"title": "ハンドルとは何ですか？",
+		"account_handle": "アカウントハンドル:",
+		"username": "ユーザー名",
+		"username_description": "サーバー上の固有の識別子。異なるサーバーで同じユーザー名のユーザーを見つけることができます。",
+		"server": "サーバー",
+		"server_description": "すべての投稿が保存されているデジタルな拠点です。",
+		"joined": "参加日",
+		"footer_description": "ハンドルは誰がどこにいるかを示すため、ActivityPubに対応したソーシャルウェブ全体で人々と交流することができます：",
+		"activitypub_platforms": "ActivityPubを利用したプラットフォーム",
+		"activitypub_header": "ActivityPubは、Mastodonが他のソーシャルネットワークと話すための共通言語のようなものです。",
+		"activitypub_description": "Mastodonだけでなく、さまざまなソーシャルアプリの人々とつながり、交流することができます。"
 	}
 }

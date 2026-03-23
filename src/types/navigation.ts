@@ -33,7 +33,7 @@ export type RootStackParamList = {
 		id: Patchwork.Attachment['id'];
 	};
 	QuotePost: { statusId: string };
-	EditProfile: undefined;
+	EditProfile: { fromVerification?: boolean } | undefined;
 	LocalImageViewer: {
 		imageUrl: {
 			url: string;
@@ -307,6 +307,8 @@ export type GuestStackParamList = {
 		domain: string;
 		client_id: string;
 		client_secret: string;
+		isAddAccount?: boolean;
+		isFromSwitchAccount?: boolean;
 	};
 	WebViewer: { url: string; customTitle?: string; hideHeader?: boolean };
 	SignUp: undefined;
@@ -321,6 +323,12 @@ export type GuestStackParamList = {
 
 export type SettingStackParamList = {
 	Settings: undefined;
+	AccountSettings: undefined;
+	NotificationSettings: undefined;
+	FeedSettings: undefined;
+	PrivacySettings: undefined;
+	PersonalizationSettings: undefined;
+	AccountManagement: undefined;
 	UpdatePassword: undefined;
 	MuteAndBlockList: undefined;
 	MyInformation: undefined;
@@ -399,6 +407,15 @@ export type SettingStackParamList = {
 		  };
 	Timeline: undefined;
 	LoginAnotherAccount: undefined;
+	Verification: undefined;
+	MastodonSignInWebView: {
+		url: string;
+		domain: string;
+		client_id: string;
+		client_secret: string;
+		isAddAccount?: boolean;
+		isFromSwitchAccount?: boolean;
+	};
 };
 
 export type ListsStackParamList = {

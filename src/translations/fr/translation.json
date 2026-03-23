@@ -78,6 +78,7 @@
 		"select_five": "Sélectionnez-en au moins 5"
 	},
 	"compose": {
+		"add_file": "Ajouter un fichier",
 		"delete_image": "Supprimer l'image",
 		"draft": {
 			"save": "Enregistrer le brouillon",
@@ -127,6 +128,10 @@
 		"take_a_photo": "Prendre une photo",
 		"select_language": "Sélectionner la langue",
 		"select_date": "Sélectionner la date",
+		"show_content": "Afficher le contenu",
+		"spoiler_placeholder": "Écrivez votre avertissement ici...",
+		"spoiler_warning_message": "{{spoiler_text}}",
+		"spoiler_warning_title": "Avertissement de contenu",
 		"drafts": "Brouillons"
 	},
 	"conversation": {
@@ -170,9 +175,29 @@
 	},
 	"create_new_list": "Créer une nouvelle liste",
 	"delete_account": "Supprimer le compte",
+	"delete_account_confirm": {
+		"title": "Êtes-vous sûr de vouloir supprimer votre compte ?",
+		"info_box": "Votre compte associé à {{email}} sera supprimé de {{server}}.",
+		"main_info": "En soumettant une demande de suppression de votre compte à Find Out Media, vous comprenez et reconnaissez ce qui suit. Avant de continuer, veuillez lire attentivement ces notes :",
+		"point_1": "Vous ne pourrez pas restaurer ou réactiver votre compte",
+		"point_2": "Vos noms d'utilisateur resteront indisponibles",
+		"point_3": "Vos publications et autres données seront définitivement supprimées",
+		"point_4": "Le contenu qui a été mis en cache par d'autres serveurs peut persister",
+		"privacy_policy_intro": "Pour plus de détails, consultez la ",
+		"privacy_policy_text": "politique de confidentialité",
+		"confirm_step_proceed": "Confirmer",
+		"confirm_step_title": "Confirmez que vous souhaitez continuer",
+		"password_step_warning": "Veuillez noter que ceci est permanent et ne peut être annulé. Pour confirmer la suppression de votre compte, veuillez saisir votre mot de passe ci-dessous :",
+		"password_intro": "Fournissez votre mot de passe pour supprimer définitivement le compte."
+	},
+	"account_deleted_successfully": "Votre compte a été supprimé avec succès.",
 	"display_name": "Nom d'affichage",
 	"edit": "Modifier",
 	"edit_account": "Modifier le compte",
+	"edit_profile": {
+		"content": "Contenu",
+		"label": "Étiquette"
+	},
 	"filter_setting": "Paramètres de filtre",
 	"for_you": "Pour vous",
 	"hashtag": "Hashtag",
@@ -229,6 +254,7 @@
 		"clear_cookies": "Effacer les cookies",
 		"confirm_password": "Confirmer le mot de passe",
 		"create_account": "Créer un compte",
+		"current_email_address": "Adresse e-mail actuelle",
 		"current_password": "Mot de passe actuel",
 		"email": "E-mail",
 		"email_address": "Adresse e-mail",
@@ -376,6 +402,7 @@
 		"bluesky_bridge": "Passerelle Bluesky",
 		"bookmarks": "Signets",
 		"change_password": "Changer le mot de passe",
+		"choose_audience": "Choisir l'audience",
 		"community_guidelines": "Directives de la communauté",
 		"delete_account": "Supprimer le compte",
 		"delete_confirmation": "Vous serez redirigé vers le site officiel mo-me.social, où vous pourrez suivre les étapes pour supprimer définitivement votre compte. Cela supprimera définitivement votre compte et toutes les données associées.",
@@ -386,6 +413,7 @@
 		"privacy_policy": "Politique de confidentialité",
 		"receive_email_notification": "Recevoir des notifications par e-mail",
 		"receive_push_notification": "Recevoir des notifications push",
+		"require_follow_approval": "Approbation de suivi requise",
 		"enable_alt_text": "Activer le texte ALT automatique",
 		"scheduled_posts": "Publications planifiées",
 		"switch_account": {
@@ -480,6 +508,11 @@
 		"type_your_reply": "Écrivez votre réponse",
 		"unfollow": "Ne plus suivre",
 		"visibility": {
+			"followers_only": "Abonnés uniquement",
+			"just_me": "Seulement moi",
+			"local_only": "Local uniquement",
+			"select_quote": "Qui peut citer ce message ?",
+			"select_visibility": "Qui peut voir ce message ?",
 			"public": "Tout le monde",
 			"unlisted": "Tout le monde, mais non listé dans les chronologies",
 			"private": "Abonnés uniquement",
@@ -632,5 +665,32 @@
 		"create_a_new_one": "Créer un nouveau",
 		"user_blocked": "{{user}} a été bloqué",
 		"user_muted": "{{user}} a été mis en sourdine"
+	},
+	"verification": {
+		"title": "Vérification",
+		"add_website_to_profile": "Ajouter un site web au profil",
+		"copy": "Copier",
+		"description": "La vérification de votre identité sur Mastodon est accessible à tous. Basé sur des standards web ouverts, gratuit dès maintenant et pour toujours. Tout ce dont vous avez besoin est un site web personnel par lequel on vous reconnaît. Lorsque vous liez ce site web depuis votre profil, nous vérifierons que le site web renvoie vers votre profil et nous afficherons un indicateur visuel dessus.",
+		"heres_how": "VOICI COMMENT",
+		"instructions": "Copiez et collez le code ci-dessous dans le code HTML de votre site web. Ajoutez ensuite l'adresse de votre site web dans l'un des champs supplémentaires de votre profil à partir de l'onglet \"Modifier le profil\" et enregistrez les modifications.",
+		"loading": "Chargement...",
+		"tip_label": "Conseil : ",
+		"tip_part_1": "Le lien sur votre site web peut être invisible. L'élément important est ",
+		"tip_part_2": " qui empêche l'usurpation d'identité sur les sites web comportant du contenu généré par les utilisateurs. Vous pouvez même utiliser une balise ",
+		"tip_part_3": "dans l'en-tête de la page au lieu de a, mais le code HTML doit être accessible sans exécuter de JavaScript."
+	},
+	"website_verification": "Vérification du site web",
+	"handle_info": {
+		"title": "Qu'est-ce qu'un identifiant ?",
+		"account_handle": "Identifiant du compte :",
+		"username": "Nom d'utilisateur",
+		"username_description": "Leur identifiant unique sur leur serveur. Il est possible de trouver des utilisateurs avec le même nom d'utilisateur sur différents serveurs.",
+		"server": "Serveur",
+		"server_description": "Leur domicile numérique, où vivent toutes leurs publications.",
+		"joined": "Inscrit",
+		"footer_description": "Comme les identifiants indiquent qui est quelqu'un et où il se trouve, vous pouvez interagir avec des personnes sur tout le web social de ",
+		"activitypub_platforms": "Plateformes propulsées par ActivityPub",
+		"activitypub_header": "ActivityPub est comme la langue que Mastodon parle avec d'autres réseaux sociaux.",
+		"activitypub_description": "Il vous permet de vous connecter et d'interagir avec des personnes non seulement sur Mastodon, mais aussi à travers différentes applications sociales."
 	}
 }

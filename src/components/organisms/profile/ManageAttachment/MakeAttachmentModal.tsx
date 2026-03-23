@@ -115,7 +115,7 @@ const ManageAttachmentModal = ({
 	};
 
 	return (
-		<View className={Platform.OS === 'ios' ? 'pb-6' : 'pb-0'}>
+		<View>
 			<View className="flex-row items-center justify-between mb-3">
 				<View className="w-1/2 gap-2">
 					<Button

@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { AppIcons } from '@/util/icons/icon.common';
 import customColor from '@/util/constant/color';
+import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
 
 const BlockMenuOption = ({
 	status,
@@ -80,30 +81,33 @@ const BlockMenuOption = ({
 			disableTouchable={blockMenuDisabled}
 		>
 			<View className="flex-row items-center">
-				<MenuOptionIcon
-					icon={
-						<FontAwesomeIcon
-							icon={AppIcons.block}
-							size={18}
-							color={
-								colorScheme == 'dark'
-									? '#fff'
-									: customColor['patchwork-grey-100']
-							}
-						/>
-					}
-					name={isPending ? '' : t('timeline.block')}
-					disabled={blockMenuDisabled}
-				/>
-				{isPending && (
+				<View className="w-9 h-9 items-center justify-center mr-1">
+					<FontAwesomeIcon
+						icon={AppIcons.block}
+						size={18}
+						color={
+							colorScheme == 'dark' ? '#fff' : customColor['patchwork-grey-100']
+						}
+					/>
+				</View>
+				{isPending ? (
 					<Flow
-						size={20}
+						size={25}
 						color={
 							colorScheme == 'dark'
 								? 'white'
 								: customColor['patchwork-grey-100']
 						}
 					/>
+				) : (
+					<ThemeText
+						size={'sm_14'}
+						variant={blockMenuDisabled ? 'textGrey' : 'default'}
+						className="font-Inter_Regular text-black dark:text-white flex-1 flex-shrink"
+						numberOfLines={2}
+					>
+						{t('timeline.block')}
+					</ThemeText>
 				)}
 			</View>
 		</MenuOption>

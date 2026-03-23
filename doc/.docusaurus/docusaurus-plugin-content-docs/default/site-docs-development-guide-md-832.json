@@ -1,26 +1,26 @@
 {
-  "unversionedId": "development-guide",
-  "id": "development-guide",
-  "title": "Development Guide",
-  "description": "Useful Scripts",
-  "source": "@site/docs/development-guide.md",
-  "sourceDirName": ".",
-  "slug": "/development-guide",
-  "permalink": "/findout-temp/docs/development-guide",
-  "draft": false,
-  "tags": [],
-  "version": "current",
-  "sidebarPosition": 4,
-  "frontMatter": {
-    "sidebar_position": 4
-  },
-  "sidebar": "docs",
-  "previous": {
-    "title": "Project Architecture",
-    "permalink": "/findout-temp/docs/project-architecture"
-  },
-  "next": {
-    "title": "Building for Release",
-    "permalink": "/findout-temp/docs/building-release"
-  }
+	"unversionedId": "development-guide",
+	"id": "development-guide",
+	"title": "Development Guide",
+	"description": "Useful Scripts",
+	"source": "@site/docs/development-guide.md",
+	"sourceDirName": ".",
+	"slug": "/development-guide",
+	"permalink": "/findout-app/docs/development-guide",
+	"draft": false,
+	"tags": [],
+	"version": "current",
+	"sidebarPosition": 4,
+	"frontMatter": {
+		"sidebar_position": 4
+	},
+	"sidebar": "docs",
+	"previous": {
+		"title": "Project Architecture",
+		"permalink": "/findout-app/docs/project-architecture"
+	},
+	"next": {
+		"title": "Building for Release",
+		"permalink": "/findout-app/docs/building-release"
+	}
 }

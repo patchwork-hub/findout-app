@@ -13,6 +13,9 @@ const LoginAnotherAccount = ({
 }: SettingStackScreenProps<'LoginAnotherAccount'>) => {
 	const { colorScheme } = useColorScheme();
 
+	const openAccSwitcher =
+		useAccountsStore(state => state.openAccSwitcher) ?? (() => {});
+
 	return (
 		<SafeScreen
 			style={{
@@ -34,7 +37,7 @@ const LoginAnotherAccount = ({
 					<CloseIcon stroke={colorScheme === 'dark' ? '#fff' : '#000'} />
 				</Pressable>
 			</View>
-			<EmailRoute />
+			<EmailRoute openAccSwitcher={openAccSwitcher} />
 		</SafeScreen>
 	);
 };

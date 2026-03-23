@@ -62,7 +62,7 @@ export const useComposeLogic = (
 	const { resetEditPhotoMeta } = useEditPhotoMetaActions();
 	const { selectedDraftId } = useDraftPostsStore();
 	const { setDraftType, setSelectedDraftId } = useDraftPostsActions();
-	const { selectedAudience } = useCreateAudienceStore();
+	const { selectedAudience, clearAudience } = useCreateAudienceStore();
 	const { editSelectedAudience, clearEditSelectedAudience } =
 		useEditAudienceStore();
 
@@ -133,6 +133,8 @@ export const useComposeLogic = (
 			composeDispatch({ type: 'clear' });
 			resetAttachmentStore();
 			resetEditPhotoMeta();
+			clearAudience();
+			clearEditSelectedAudience();
 
 			if (composeType === 'schedule') {
 				await queryClient.invalidateQueries({ queryKey: ['schedule-list'] });
@@ -196,6 +198,7 @@ export const useComposeLogic = (
 				composeDispatch({ type: 'clear' });
 				resetAttachmentStore();
 				resetEditPhotoMeta();
+				clearAudience();
 				clearEditSelectedAudience();
 				navigation.goBack();
 			},
@@ -223,6 +226,7 @@ export const useComposeLogic = (
 
 				queryClient.invalidateQueries({ queryKey: ['schedule-list'] });
 				composeDispatch({ type: 'clear' });
+				clearAudience();
 				clearEditSelectedAudience();
 				resetAttachmentStore();
 				resetEditPhotoMeta();

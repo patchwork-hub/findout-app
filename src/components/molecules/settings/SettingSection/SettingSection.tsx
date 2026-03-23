@@ -2,9 +2,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { Pressable, View } from 'react-native';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
-import customColor from '@/util/constant/color';
 import { cn } from '@/util/helper/twutil';
 import { ChevronRightIcon } from '@/util/svg/icon.common';
+import customColor from '@/util/constant/color';
+import colors from 'tailwindcss/colors';
 
 interface SettingSectionProps {
 	title: string;
@@ -13,8 +14,7 @@ interface SettingSectionProps {
 	iconSize?: number;
 	mt?: string;
 	sectionKey: string;
-	isOpen: boolean;
-	onToggle: (section: string) => void;
+	onPress: () => void;
 }
 
 export const SettingSection: React.FC<SettingSectionProps> = ({
@@ -23,20 +23,22 @@ export const SettingSection: React.FC<SettingSectionProps> = ({
 	colorScheme,
 	iconSize = 20,
 	mt = 'mt-4',
-	sectionKey,
-	isOpen,
-	onToggle,
+	onPress,
 }) => {
-	const iconColor = colorScheme === 'dark' ? '#fff' : '#000';
+	const iconColor =
+		colorScheme === 'dark'
+			? customColor['patchwork-light-50']
+			: customColor['patchwork-dark-50'];
 
 	return (
 		<Pressable
-			onPress={() => onToggle(sectionKey)}
+			onPress={onPress}
 			android_ripple={{ color: '#00000010' }}
+			className="active:opacity-80"
 		>
 			<View
 				className={cn(
-					'flex-row justify-between items-center py-2 px-3 my-1 rounded-lg',
+					'flex-row justify-between items-center pb-4 px-3 my-1 rounded-lg',
 					mt,
 				)}
 			>
@@ -44,22 +46,9 @@ export const SettingSection: React.FC<SettingSectionProps> = ({
 					<View className="ml-1 mr-3">
 						<FontAwesomeIcon icon={icon} size={iconSize} color={iconColor} />
 					</View>
-					<ThemeText className="font-Montserrat_SemiBold text-base">
-						{title}
-					</ThemeText>
+					<ThemeText size={'sm_14'}>{title}</ThemeText>
 				</View>
-				<ChevronRightIcon
-					width={12}
-					height={12}
-					style={{
-						transform: [
-							{
-								rotate: isOpen ? '90deg' : '0deg',
-							},
-						],
-					}}
-					{...{ colorScheme }}
-				/>
+				<ChevronRightIcon width={12} height={12} colorScheme={colorScheme} />
 			</View>
 		</Pressable>
 	);

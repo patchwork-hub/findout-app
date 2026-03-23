@@ -18,8 +18,11 @@ import { useFeedRepliesQuery } from '@/hooks/queries/feed.queries';
 import { useSelectedDomain } from '@/store/feed/activeDomain';
 import { Flow } from 'react-native-animated-spinkit';
 import customColor from '@/util/constant/color';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import Animated, {
+	useAnimatedStyle,
+	useSharedValue,
+} from 'react-native-reanimated';
 import {
 	BottomBarHeight,
 	useGradualAnimation,
@@ -39,11 +42,15 @@ import StatusWrapper from '@/components/organisms/feed/StatusWrapper/StatusWrapp
 import { useActiveFeedStore } from '@/store/feed/activeFeed';
 import { RemoveCrossIcon } from '@/util/svg/icon.status_actions';
 import { useIsFocused } from '@react-navigation/native';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import {
+	BottomTabBarHeightContext,
+	useBottomTabBarHeight,
+} from '@react-navigation/bottom-tabs';
 import { useColorScheme } from 'nativewind';
 import { cn } from '@/util/helper/twutil';
 import { useTranslation } from 'react-i18next';
 import { ChevornCollapse, ChevronExpand } from '@/util/svg/icon.common';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const FeedDetail = ({
 	navigation,
@@ -63,11 +70,15 @@ const FeedDetail = ({
 
 	const listRef = useRef<FlashListRef<Patchwork.Status>>(null);
 	const [showAncenstor, setShowAncenstor] = useState(unrollThread || false);
-	const tabBarHeight = useRef(BottomBarHeight);
 	const isFocused = useIsFocused();
 	const { colorScheme } = useColorScheme();
 	const { t } = useTranslation();
 	const [listReady, setListReady] = useState(false);
+
+	const insets = useSafeAreaInsets();
+	const tabBarHeightContext = useContext(BottomTabBarHeightContext);
+	const tabBarHeight = useSharedValue(tabBarHeightContext ?? BottomBarHeight);
+	const hasTabBarRef = useSharedValue(tabBarHeightContext !== undefined);
 
 	const inputBarActiveBgColor = useAppropiateColorHash(
 		'patchwork-dark-900',
@@ -78,16 +89,11 @@ const FeedDetail = ({
 		'patchwork-light-900',
 	);
 
-	try {
-		const actualBarHeight = useBottomTabBarHeight();
-		if (actualBarHeight !== tabBarHeight.current) {
-			tabBarHeight.current = actualBarHeight;
-		}
-	} catch (error) {
-		if (tabBarHeight.current !== 0) {
-			tabBarHeight.current = 0;
-		}
-	}
+	// Sync refs
+	useEffect(() => {
+		tabBarHeight.value = tabBarHeightContext ?? 0;
+		hasTabBarRef.value = tabBarHeightContext !== undefined;
+	}, [tabBarHeightContext]);
 
 	useEffect(() => {
 		if (isFocused) {
@@ -98,11 +104,16 @@ const FeedDetail = ({
 	}, [isFocused]);
 
 	const virtualKeyboardContainerStyle = useAnimatedStyle(() => {
+		if (hasTabBarRef.value) {
+			return {
+				height:
+					height.value > tabBarHeight.value
+						? height.value - tabBarHeight.value
+						: 0,
+			};
+		}
 		return {
-			height:
-				height.value > tabBarHeight.current
-					? height.value - tabBarHeight.current
-					: 0,
+			height: height.value > insets.bottom ? height.value - insets.bottom : 0,
 		};
 	});
 
@@ -385,7 +396,7 @@ const FeedDetail = ({
 								<ThemeText
 									size={'xs_12'}
 									variant="textSecondary"
-									className="mb-2 ml-1"
+									className="mb-2 ml-1 text-patchwork-primary dark:text-patchwork-primary-dark"
 								>
 									@{currentFocusStatus?.account?.acct}
 								</ThemeText>

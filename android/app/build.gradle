@@ -127,6 +127,8 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    // Optional: Adds Kotlin sugar for Activity APIs (useful for Android 15+ safe area logic)
+    implementation("androidx.activity:activity-ktx:1.9.0")
     implementation("androidx.browser:browser:1.6.0")
 
     if (hermesEnabled.toBoolean()) {

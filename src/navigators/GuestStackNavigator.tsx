@@ -15,7 +15,7 @@ import WebViewer from '@/screens/WebViewer/WebViewer';
 import AddUserNameScreen from '@/screens/AddUserNameScreen/AddUserNameScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-const Stack = createNativeStackNavigator<GuestStackParamList>();
+const Stack = createStackNavigator<GuestStackParamList>();
 
 const Guest = () => {
 	return (

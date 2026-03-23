@@ -540,9 +540,9 @@ Steps:
   <dict>
     <!-- ...other configs... -->
     <key>StallionProjectId</key>
-    <string>66ed03380eb95c9c316256d3</string>
+    <string>YOUR_STALLION_PROJECT_ID</string>
     <key>StallionAppToken</key>
-    <string>spb_FTLx5umZgKLTEyiMNf9-81BgANTOvx7pNhA-gFXbg9</string>
+    <string>YOUR_STALLION_APP_TOKEN</string>
     <!-- ...other configs... -->
   </dict>
 </plist>
@@ -554,8 +554,8 @@ Steps:
 <resources>
   <string name="app_name">my_app</string>
   <!-- make sure app token starts with spb_... and is 46 characters long -->
-  <string name="StallionProjectId">66ed03380eb95c9c316256d3</string>
-  <string name="StallionAppToken">spb_FTLx5umZgKLTEyiMNf9-81BgANTOvx7pNhA-gFXbg9</string>
+  <string name="StallionProjectId">YOUR_STALLION_PROJECT_ID</string>
+  <string name="StallionAppToken">YOUR_STALLION_APP_TOKEN</string>
 </resources>
 ```
 

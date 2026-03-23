@@ -186,7 +186,7 @@ const MessageImage = ({
 			)}
 		>
 			{length === 3 ? (
-				<View className="flex-row w-10/12 space-x-1 rounded-xl overflow-hidden">
+				<View className="flex-row w-10/12 space-x-1 rounded-xl overflow-hidden border-[0.5px] border-patchwork-grey-100">
 					{renderImage(
 						message.media_attachments[0],
 						cn('flex-1', statusImageFullHeight),
@@ -206,7 +206,7 @@ const MessageImage = ({
 					</View>
 				</View>
 			) : length === 4 ? (
-				<View className="flex-row w-10/12 space-x-1 rounded-xl overflow-hidden">
+				<View className="flex-row w-10/12 space-x-1 rounded-xl overflow-hidden border-[0.5px] border-patchwork-grey-100">
 					<View className="flex-1 space-y-1">
 						{renderImage(
 							message.media_attachments[0],
@@ -233,11 +233,11 @@ const MessageImage = ({
 					</View>
 				</View>
 			) : length === 1 ? (
-				<View className="w-10/12 flex-row flex-wrap rounded-xl overflow-hidden">
+				<View className="w-10/12 flex-row flex-wrap rounded-xl overflow-hidden border-[0.5px] border-patchwork-grey-100">
 					{renderImage(message.media_attachments[0], 'w-full', 0)}
 				</View>
 			) : (
-				<View className="flex-row w-10/12 space-x-1 rounded-xl overflow-hidden">
+				<View className="flex-row w-10/12 space-x-1 rounded-xl overflow-hidden border-[0.5px] border-patchwork-grey-100">
 					{message.media_attachments.map((item, idx) => (
 						<View key={item.id || idx} style={{ flex: 1 }}>
 							{renderImage(item, cn('flex-1', portraitImageClassName), idx)}

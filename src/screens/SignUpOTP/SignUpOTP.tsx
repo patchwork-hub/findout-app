@@ -149,6 +149,11 @@ const SignUpOTP: React.FC<GuestStackScreenProps<'SignUpOTP'>> = ({
 		resendCode({ token: currentSecretToken });
 	};
 
+	const handleCodeChange = (text: string) => {
+		const cleaned = text.replace(/[^0-9]/g, '').slice(0, 4);
+		setCode(cleaned);
+	};
+
 	return (
 		<SafeScreen>
 			<Header
@@ -170,7 +175,7 @@ const SignUpOTP: React.FC<GuestStackScreenProps<'SignUpOTP'>> = ({
 					ref={ref}
 					{...props}
 					value={code}
-					onChangeText={setCode}
+					onChangeText={handleCodeChange}
 					cellCount={4}
 					rootStyle={styles.otpRoot}
 					keyboardType="number-pad"
@@ -209,6 +214,7 @@ const SignUpOTP: React.FC<GuestStackScreenProps<'SignUpOTP'>> = ({
 								components={{
 									resend: (
 										<ThemeText
+											key={'resend'}
 											onPress={handleResendCode}
 											className="active:opacity-80 underline"
 										/>

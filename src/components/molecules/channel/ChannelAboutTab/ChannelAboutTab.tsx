@@ -124,7 +124,9 @@ const ChannelAboutTab: React.FC<ChannelAboutTabProps> = ({
 							i18nKey="channel.follow_bot_instruction"
 							values={{ botAccount: adminUsername }}
 							components={{
-								orangeText: <ThemeText variant="textPrimary" />,
+								orangeText: (
+									<ThemeText key={'orangeText'} variant="textPrimary" />
+								),
 							}}
 						/>
 					</ThemeText>

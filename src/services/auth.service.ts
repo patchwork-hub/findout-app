@@ -146,6 +146,7 @@ export const signUp = async (params: {
 	agreement: boolean;
 	locale: string;
 	access_token: string;
+	date_of_birth?: string;
 }) => {
 	try {
 		const { access_token, ...payload } = params;
@@ -326,7 +327,7 @@ export const requestInstance = async ({ domain }: { domain: string }) => {
 		const body = {
 			client_name: domain,
 			website: DEFAULT_API_URL,
-			redirect_uris: 'patchwork://',
+			redirect_uris: 'FindOutMedia://',
 			scopes: `write read follow push`,
 		};
 
@@ -441,15 +442,12 @@ export const changeNewsmastEmailVerification = async (params: {
 	}
 };
 
-export const deleteAccount = async () => {
+export const deleteAccount = async (params: { password: string }) => {
 	try {
 		const resp: AxiosResponse<{ message: string }> = await instance.post(
-			appendApiVersion('community_admins/modify_account_status', 'v1'),
+			appendApiVersion('delete_account', 'v1'),
 			{
-				account_status: 2, //active: 0, suspended: 1, deleted: 2
-			},
-			{
-				baseURL: process.env.DASHBOARD_API_URL || DEFAULT_DASHBOARD_API_URL,
+				password: params.password,
 			},
 		);
 		return resp.data;

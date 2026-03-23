@@ -60,13 +60,13 @@ const StatusTags = ({
 	};
 
 	return (
-		<View className="flex-row flex-wrap mt-2">
+		<View className="flex-row flex-wrap">
 			{visibleTags.map(tag => (
 				<Pressable
 					disabled={isFromQuoteCompose}
 					onPress={() => handleHashTagPress(tag)}
 					key={tag}
-					className="bg-gray-100 dark:bg-patchwork-grey-70 rounded-md px-1.5 py-0.5 mr-1 mb-1 active:opacity-80"
+					className="bg-gray-100 dark:bg-gray-800 rounded-md px-1.5 py-0.5 mr-1 mb-1 active:opacity-80"
 				>
 					<ThemeText size={'xs_12'} className="text-gray-600 dark:text-white">
 						#{tag}

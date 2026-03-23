@@ -1,26 +1,26 @@
 {
-  "unversionedId": "project-architecture",
-  "id": "project-architecture",
-  "title": "Project Architecture",
-  "description": "High-Level Overview",
-  "source": "@site/docs/project-architecture.md",
-  "sourceDirName": ".",
-  "slug": "/project-architecture",
-  "permalink": "/findout-temp/docs/project-architecture",
-  "draft": false,
-  "tags": [],
-  "version": "current",
-  "sidebarPosition": 3,
-  "frontMatter": {
-    "sidebar_position": 3
-  },
-  "sidebar": "docs",
-  "previous": {
-    "title": "Getting Started",
-    "permalink": "/findout-temp/docs/getting-started"
-  },
-  "next": {
-    "title": "Development Guide",
-    "permalink": "/findout-temp/docs/development-guide"
-  }
+	"unversionedId": "project-architecture",
+	"id": "project-architecture",
+	"title": "Project Architecture",
+	"description": "High-Level Overview",
+	"source": "@site/docs/project-architecture.md",
+	"sourceDirName": ".",
+	"slug": "/project-architecture",
+	"permalink": "/findout-app/docs/project-architecture",
+	"draft": false,
+	"tags": [],
+	"version": "current",
+	"sidebarPosition": 3,
+	"frontMatter": {
+		"sidebar_position": 3
+	},
+	"sidebar": "docs",
+	"previous": {
+		"title": "Getting Started",
+		"permalink": "/findout-app/docs/getting-started"
+	},
+	"next": {
+		"title": "Development Guide",
+		"permalink": "/findout-app/docs/development-guide"
+	}
 }

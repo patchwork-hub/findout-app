@@ -85,6 +85,7 @@ const NotificationStatus: React.FC<NotificationStatusProps> = ({ status }) => {
 							<StatusHeader
 								status={status.quote.quoted_status}
 								showAvatarIcon
+								isQuoteView
 							/>
 							<StatusContent status={status.quote.quoted_status} isReposting />
 							{acct && (

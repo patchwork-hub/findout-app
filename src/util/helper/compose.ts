@@ -68,6 +68,7 @@ export const prepareComposePayload: CPPayloadCreatorType = state => {
 		quote_approval_policy: state?.quote_approval_policy,
 		media_ids: state.media_ids.length > 0 ? state.media_ids : [],
 		poll: state.poll,
+		local_only: state.visibility === 'local',
 		max_length: state.maxCount,
 		...(state.schedule
 			? {

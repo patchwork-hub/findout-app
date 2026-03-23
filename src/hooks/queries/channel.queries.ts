@@ -495,11 +495,37 @@ export const useGetNewsmastCommunityPeopleToFollow = ({
 
 export const useGetForYouChannelList = () => {
 	const queryKey: GetForYouChannelListQueryKey = ['for-you-channel-list'];
+
 	return useQuery({
 		queryKey,
 		queryFn: getForYouChannelList,
 		staleTime: Infinity,
 		gcTime: Infinity,
+		select: data => {
+			if (data.length > 1 && data[1].attributes.slug === 'government') {
+				const channels = data[1].attributes.channels.data;
+				return channels.map(channel => {
+					const admin = channel.attributes.community_admin;
+
+					return {
+						...channel,
+						attributes: {
+							...channel.attributes,
+							community_admin: admin
+								? {
+										...admin,
+										username: admin.username.replace(
+											'@channel.org',
+											'@findout.media',
+										),
+								  }
+								: admin,
+						},
+					};
+				});
+			}
+			return data;
+		},
 	});
 };
 

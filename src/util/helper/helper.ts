@@ -669,9 +669,10 @@ export const getAuthorList = (
 };
 
 export const extractYouTubeId = (url: string): string | null => {
+	const content = url.replace(/\\/g, ''); // Fix for escaped slashes in JSON
 	const regex =
 		/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/;
-	const match = url.match(regex);
+	const match = content.match(regex);
 	return match ? match[1] : null;
 };
 
@@ -734,15 +735,14 @@ export const getInitialVideoOrientation = (post?: Patchwork.WPStory | null) => {
 
 export const extractYoutubeId = (htmlContent: string) => {
 	if (!htmlContent) return null;
-	const embedMatch = htmlContent.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/);
+	const content = htmlContent.replace(/\\/g, ''); // Fix for escaped slashes in JSON
+	const embedMatch = content.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/);
 	if (embedMatch && embedMatch[1]) return embedMatch[1];
 
-	const watchMatch = htmlContent.match(
-		/youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/,
-	);
+	const watchMatch = content.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/);
 	if (watchMatch && watchMatch[1]) return watchMatch[1];
 
-	const shortMatch = htmlContent.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
+	const shortMatch = content.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
 	if (shortMatch && shortMatch[1]) return shortMatch[1];
 
 	return null;

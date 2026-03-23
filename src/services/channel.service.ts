@@ -45,6 +45,7 @@ import {
 	NEWSMAST_INSTANCE_V1,
 	DEFAULT_INSTANCE,
 	PATCHWORK_CHANNEL_API_URL,
+	DEFAULT_FINDOUT_DASHBOARD_API_URL,
 } from '@/util/constant';
 import { useAuthStore } from '@/store/auth/authStore';
 
@@ -886,18 +887,18 @@ export const getNewsmastCommunityPeopleToFollow = async (
 
 export const getForYouChannelList = async () => {
 	const state = useAuthStore.getState();
-	const resp: AxiosResponse<{ data: Patchwork.ChannelList[] }> =
-		await instance.get(appendApiVersion('channels/find_out_channels', 'v1'), {
-			params: {
-				domain_name: process.env.DASHBOARD_API_URL || DEFAULT_DASHBOARD_API_URL,
-				isDynamicDomain: true,
-				...(state.userOriginInstance !== CHANNEL_INSTANCE
-					? { instance_domain: 'findout.channel.org' }
-					: {}),
+	const resp: AxiosResponse<{ data: Patchwork.CollectionList[] }> =
+		await instance.get(
+			appendApiVersion('collections/channel_feed_collections', 'v1'),
+			{
+				params: {
+					domain_name: DEFAULT_FINDOUT_DASHBOARD_API_URL,
+					isDynamicDomain: true,
+				},
 			},
-		});
+		);
 
-	return (resp.data?.data as Patchwork.ChannelList[]) || [];
+	return (resp.data?.data as Patchwork.CollectionList[]) || [];
 };
 
 export const getCatchUpChannelList = async () => {

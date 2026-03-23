@@ -17,7 +17,6 @@ import {
 	requestResendSignUpOTP,
 	wordpressLogin,
 	mastodonLogin,
-	exchangeCodeForWordpressToken,
 	getWordpressUserProfile,
 	loginToMastodonWithWordpress,
 	bristolCableSignIn,

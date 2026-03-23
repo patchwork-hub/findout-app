@@ -29,6 +29,8 @@ export function composeReducer(
 	state: ComposeState,
 	action: ComposeAction,
 ): ComposeState {
+	console.log('Action dispatched:', action);
+
 	switch (action.type) {
 		case 'text': {
 			return { ...state, text: action.payload };

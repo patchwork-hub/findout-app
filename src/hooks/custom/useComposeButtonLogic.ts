@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import { useTranslation } from 'react-i18next';
 import {
@@ -51,6 +51,8 @@ export const useComposeLogic = (
 	const { t } = useTranslation();
 	const { composeState, composeDispatch } = useComposeStatus();
 	const navigation = useNavigation();
+	const route =
+		useRoute<RouteProp<Record<string, { channelId?: string }>, string>>();
 	const domain_name = useSelectedDomain();
 	const { userInfo, userOriginInstance } = useAuthStore();
 
@@ -106,6 +108,18 @@ export const useComposeLogic = (
 		},
 	];
 
+	const channelPostsQueryKey = route.params?.channelId
+		? [
+				'account-detail-feed',
+				{
+					account_id: route.params.channelId,
+					exclude_reblogs: false,
+					exclude_replies: true,
+					exclude_original_statuses: false,
+				},
+		  ]
+		: null;
+
 	const { mutate, isPending } = useComposeMutation({
 		onSuccess: async (status: Patchwork.Status) => {
 			const isScheduledStatus = 'scheduled_at' in status;
@@ -113,10 +127,14 @@ export const useComposeLogic = (
 			if (statusId) {
 				editStatusCache(status);
 			} else if (!isScheduledStatus) {
-				addStatusToFeedCacheHelper(
-					[homeFeedQueryKey, accountDetailFeedQueryKey],
-					status,
-				);
+				const queryKeysToUpdate: any[] = [
+					homeFeedQueryKey,
+					accountDetailFeedQueryKey,
+				];
+				if (channelPostsQueryKey) {
+					queryKeysToUpdate.push(channelPostsQueryKey);
+				}
+				addStatusToFeedCacheHelper(queryKeysToUpdate, status);
 			}
 
 			Toast.show({
@@ -194,6 +212,9 @@ export const useComposeLogic = (
 						queryKey: accountDetailFeedQueryKey,
 					});
 					queryClient.invalidateQueries({ queryKey: channelFeedQueryKey });
+					if (channelPostsQueryKey) {
+						queryClient.invalidateQueries({ queryKey: channelPostsQueryKey });
+					}
 				}
 				composeDispatch({ type: 'clear' });
 				resetAttachmentStore();
@@ -202,7 +223,7 @@ export const useComposeLogic = (
 				clearEditSelectedAudience();
 				navigation.goBack();
 			},
-			onError: (e: any) => {
+			onError: (e: Error) => {
 				resetEditPhotoMeta();
 				Toast.show({
 					type: 'errorToast',

@@ -53,6 +53,8 @@ type Props = {
 				type: 'create';
 				prefilledHashtags?: Patchwork.PatchworkCommunityHashtag[]; // allow this
 				prefilledAudience?: Patchwork.ChannelAttributes;
+				channelType?: 'local' | 'public';
+				channelId?: string;
 		  }
 		| {
 				type: 'repost' | 'edit';
@@ -98,7 +100,10 @@ const ComposeContent = ({ composeParams }: Props) => {
 		if (composeParams.type === 'create') {
 			if (composeParams.prefilledAudience) {
 				setSelectedAudience([composeParams.prefilledAudience]);
-				composeDispatch({ type: 'visibility_change', payload: 'local' });
+				composeDispatch({
+					type: 'visibility_change',
+					payload: composeParams.channelType === 'public' ? 'public' : 'local',
+				});
 			}
 		}
 

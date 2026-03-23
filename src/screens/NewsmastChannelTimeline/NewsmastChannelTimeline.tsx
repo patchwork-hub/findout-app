@@ -207,12 +207,21 @@ const NewsmastChannelTimeline: React.FC<
 				<AnimatedFabWrapper isVisible={!isTimelineLoading}>
 					<FloatingAddButton
 						onPress={() => {
+							console.log(
+								'channelType:::',
+								accountHandle.endsWith('findout.media') ? 'local' : 'public',
+							);
+
 							navigation.navigate('Compose' as any, {
 								type: 'create',
 								prefilledHashtags:
 									newsmastCommunityDetailBio?.attributes
 										?.patchwork_community_hashtags,
 								prefilledAudience: newsmastCommunityDetailBio?.attributes,
+								channelType: accountHandle.endsWith('findout.media')
+									? 'local'
+									: 'public',
+								channelId: newsmastChannelDetail?.id,
 							});
 						}}
 					/>

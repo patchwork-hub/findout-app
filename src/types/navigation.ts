@@ -57,6 +57,8 @@ export type BottomStackParamList = {
 				type: 'create';
 				prefilledHashtags?: Patchwork.PatchworkCommunityHashtag[];
 				prefilledAudience?: Patchwork.ChannelAttributes;
+				channelType?: 'local' | 'public';
+				channelId?: string;
 		  }
 		| {
 				type: 'repost' | 'edit';

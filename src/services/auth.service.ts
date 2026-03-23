@@ -13,6 +13,7 @@ import {
 	DEFAULT_DASHBOARD_API_URL,
 	CHANNEL_INSTANCE,
 	DEFAULT_BRISTOL_DASHBOARD_API_URL,
+	DEFAULT_FINDOUT_DASHBOARD_API_URL,
 } from '@/util/constant';
 import { platform } from 'os';
 import { getActiveAuthState } from '@/util/storage';
@@ -489,7 +490,7 @@ export const checkIsCurrentChannelAppDepracated = async ({
 					current_app_version,
 					os_type,
 					isDynamicDomain: true,
-					domain_name: DEFAULT_BRISTOL_DASHBOARD_API_URL,
+					domain_name: DEFAULT_FINDOUT_DASHBOARD_API_URL,
 					removeBearerToken: true,
 				},
 				headers: {

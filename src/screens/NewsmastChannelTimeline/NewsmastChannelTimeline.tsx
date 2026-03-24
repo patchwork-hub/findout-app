@@ -78,7 +78,7 @@ const NewsmastChannelTimeline: React.FC<
 		return windowWidth > 768 ? 80 : 100;
 	};
 
-	const isHeaderReady = newsmastChannelDetail;
+	const isHeaderReady = newsmastChannelDetail && newsmastCommunityDetailBio;
 
 	return (
 		<ScrollProvider>

@@ -65,14 +65,14 @@ export const AudienceListModal = ({ composeType, onClose }: Props) => {
 	};
 
 	const handleSelectLocal = () => {
-		setAudience([]);
 		composeDispatch({ type: 'visibility_change', payload: 'local' });
+		setAudience([]);
 		onClose();
 	};
 
 	const handleSelectPublic = () => {
-		setAudience([]);
 		composeDispatch({ type: 'visibility_change', payload: 'public' });
+		setAudience([]);
 		onClose();
 	};
 
@@ -111,10 +111,7 @@ export const AudienceListModal = ({ composeType, onClose }: Props) => {
 						)}
 						ListFooterComponent={() => (
 							<Checkbox
-								isChecked={
-									audienceSource.length === 0 &&
-									composeState.visibility === 'public'
-								}
+								isChecked={composeState.visibility === 'public'}
 								handleOnCheck={handleSelectPublic}
 							>
 								<View className="flex-row items-center px-3 py-3 space-x-3">

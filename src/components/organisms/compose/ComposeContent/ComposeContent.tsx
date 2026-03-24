@@ -249,6 +249,11 @@ const ComposeContent = ({ composeParams }: Props) => {
 					{composeParams.type !== 'quote' && (
 						<SelectAudienceBtn
 							composeType={composeParams.type}
+							prefilledChannelType={
+								composeParams.type === 'create'
+									? composeParams.channelType
+									: undefined
+							}
 							onPress={() => setShowAudienceModal(true)}
 						/>
 					)}

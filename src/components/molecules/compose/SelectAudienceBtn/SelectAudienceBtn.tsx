@@ -9,13 +9,20 @@ import { CHANNEL_INSTANCE, DEFAULT_INSTANCE } from '@/util/constant';
 import { PollDropperIcon } from '@/util/svg/icon.compose';
 import { useColorScheme } from 'nativewind';
 import { Pressable } from 'react-native';
+import { useEffect, useCallback, useRef, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 
 type Props = {
 	composeType: 'create' | 'edit' | 'repost' | 'schedule' | 'quote';
 	onPress: () => void;
+	prefilledChannelType?: 'local' | 'public';
 };
 
-export const SelectAudienceBtn = ({ composeType, onPress }: Props) => {
+export const SelectAudienceBtn = ({
+	composeType,
+	onPress,
+	prefilledChannelType,
+}: Props) => {
 	const { composeState } = useComposeStatus();
 	const { userOriginInstance } = useAuthStore();
 	const { selectedAudience } = useCreateAudienceStore();
@@ -36,7 +43,22 @@ export const SelectAudienceBtn = ({ composeType, onPress }: Props) => {
 		!!composeState.schedule?.schedule_detail_id &&
 		userOriginInstance !== DEFAULT_INSTANCE;
 
+	const [isInitializing, setIsInitializing] = useState(true);
+
+	// noted: to change to public immediately when navigated from newsmast communities
+	useFocusEffect(
+		useCallback(() => {
+			setIsInitializing(true);
+			const timeout = setTimeout(() => setIsInitializing(false), 200);
+			return () => clearTimeout(timeout);
+		}, []),
+	);
+
 	const getAudienceName = () => {
+		if (isInitializing && prefilledChannelType === 'public') return 'Public';
+
+		if (composeState.visibility === 'public') return 'Public';
+
 		if (audienceSource && audienceSource.length > 0) {
 			const isValidAudience = newsmastChannels?.some(
 				channel => channel.attributes?.id === audienceSource[0].id,
@@ -48,7 +70,6 @@ export const SelectAudienceBtn = ({ composeType, onPress }: Props) => {
 			}
 		}
 		if (composeState.visibility === 'local') return 'Local';
-		if (composeState.visibility === 'public') return 'Public';
 		if (composeState.visibility) {
 			return (
 				composeState.visibility.charAt(0).toUpperCase() +

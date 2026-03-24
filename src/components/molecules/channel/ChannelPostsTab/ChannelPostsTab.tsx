@@ -53,6 +53,23 @@ const ChannelPostsTab: React.FC<ChannelPostsTabProps> = ({
 
 	const feed = useMemo(() => flattenPages(timeline), [timeline]);
 
+	useEffect(() => {
+		if (
+			timeline?.pages?.length === 1 &&
+			hasNextPage &&
+			!isFetching &&
+			!isLoading
+		) {
+			fetchNextPage();
+		}
+	}, [
+		timeline?.pages?.length,
+		hasNextPage,
+		isFetching,
+		isLoading,
+		fetchNextPage,
+	]);
+
 	const onTimelineContentLoadMore = () => {
 		if (hasNextPage) {
 			return fetchNextPage();

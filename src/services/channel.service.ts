@@ -48,6 +48,7 @@ import {
 	DEFAULT_FINDOUT_DASHBOARD_API_URL,
 } from '@/util/constant';
 import { useAuthStore } from '@/store/auth/authStore';
+import { SearchServerInstanceQueryKey } from '@/types/queries/auth.type';
 
 export const getMyChannelList = async () => {
 	try {
@@ -167,13 +168,13 @@ export const getHomeTimeline = async (
 };
 
 export const getChannelAbout = async (
-	qfContext: QueryFunctionContext<GetChannelAboutQueryKey>,
+	qfContext: QueryFunctionContext<SearchServerInstanceQueryKey>,
 ) => {
-	const { domain_name } = qfContext.queryKey[1];
+	const { domain } = qfContext.queryKey[1];
 	const resp: AxiosResponse<Patchwork.ChannelAbout> = await instance.get(
 		appendApiVersion('instance', 'v2'),
 		{
-			params: { domain_name, isDynamicDomain: true },
+			params: { domain_name: domain, isDynamicDomain: true },
 		},
 	);
 	return resp.data;

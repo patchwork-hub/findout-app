@@ -64,7 +64,7 @@ const NewsmastChannelTimeline: React.FC<
 	const { data: newsmastCommunityDetailBio } = useGetNewsmastCommunityDetailBio(
 		{
 			id: originalSlug,
-			options: { enabled: !!newsmastChannelDetail },
+			// options: { enabled: !!newsmastChannelDetail },
 		},
 	);
 
@@ -75,8 +75,7 @@ const NewsmastChannelTimeline: React.FC<
 		return windowWidth > 768 ? 80 : 100;
 	};
 
-	const isHeaderReady =
-		channelAbout && newsmastChannelDetail && newsmastCommunityDetailBio;
+	const isHeaderReady = newsmastChannelDetail;
 
 	return (
 		<ScrollProvider>
@@ -95,9 +94,10 @@ const NewsmastChannelTimeline: React.FC<
 									<CollapsibleFeedHeader
 										type="Channel"
 										channel={{
-											...channelAbout,
+											...channelAbout!,
 											description:
-												newsmastCommunityDetailBio.attributes.description,
+												newsmastCommunityDetailBio?.attributes?.description ||
+												'',
 										}}
 										channelInfo={{
 											channel_name: channel_name,
@@ -166,26 +166,28 @@ const NewsmastChannelTimeline: React.FC<
 								/>
 							</Tabs.Tab>
 							<Tabs.Tab label={t('common.about')} name="About">
-								<ChannelAboutTab
-									note={newsmastChannelDetail?.note || ''}
-									adminUsername={
-										newsmastCommunityDetailBio?.attributes?.community_admin
-											?.username || ''
-									}
-									rules={channelAbout?.rules}
-									hashtags={
-										newsmastCommunityDetailBio?.attributes
-											?.patchwork_community_hashtags || []
-									}
-									channelId={newsmastCommunityDetailBio?.id || ''}
-									channelSlug={slug}
-								/>
+								{channelAbout && (
+									<ChannelAboutTab
+										note={newsmastChannelDetail?.note || ''}
+										adminUsername={
+											newsmastCommunityDetailBio?.attributes?.community_admin
+												?.username || ''
+										}
+										rules={channelAbout?.rules}
+										hashtags={
+											newsmastCommunityDetailBio?.attributes
+												?.patchwork_community_hashtags || []
+										}
+										channelId={newsmastCommunityDetailBio?.id || ''}
+										channelSlug={slug}
+									/>
+								)}
 							</Tabs.Tab>
 						</Tabs.Container>
 					</>
 				)}
 
-				{(!isHeaderReady || isTimelineLoading) && (
+				{isTimelineLoading && (
 					<View className="absolute w-full h-full bg-patchwork-light-900 dark:bg-patchwork-dark-100">
 						<View style={{ flex: 1 }}>
 							<ChannelBannerLoading />
@@ -207,11 +209,6 @@ const NewsmastChannelTimeline: React.FC<
 				<AnimatedFabWrapper isVisible={!isTimelineLoading}>
 					<FloatingAddButton
 						onPress={() => {
-							console.log(
-								'channelType:::',
-								accountHandle.endsWith('findout.media') ? 'local' : 'public',
-							);
-
 							navigation.navigate('Compose' as any, {
 								type: 'create',
 								prefilledHashtags:

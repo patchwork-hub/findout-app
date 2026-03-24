@@ -51,6 +51,7 @@ export const useSearchServerInstance = ({
 		queryFn: searchServerInstance,
 		enabled,
 		staleTime: Infinity,
+		gcTime: Infinity,
 		retry: false,
 	});
 };

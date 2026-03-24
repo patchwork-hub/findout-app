@@ -84,9 +84,6 @@ const HomeForYouTab = () => {
 					}}
 					keyExtractor={item => item.id.toString()}
 					renderItem={({ item }) => {
-						if (item?.in_reply_to_id) {
-							return <></>;
-						}
 						return (
 							<StatusWrapper
 								status={item}

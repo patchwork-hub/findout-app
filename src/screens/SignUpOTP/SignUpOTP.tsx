@@ -5,7 +5,7 @@ import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
 import { GuestStackScreenProps } from '@/types/navigation';
 import { useColorScheme } from 'nativewind';
 import { useEffect, useState } from 'react';
-import { Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import {
 	CodeField,
 	Cursor,
@@ -17,7 +17,6 @@ import {
 	useRequestResendSignUpOTP,
 } from '@/hooks/mutations/auth.mutation';
 import Toast from 'react-native-toast-message';
-import { saveAuthState } from '@/util/helper/helper';
 import { verifyAuthToken } from '@/services/auth.service';
 import { useAuthStoreAction } from '@/store/auth/authStore';
 import { DEFAULT_API_URL } from '@/util/constant';
@@ -26,6 +25,7 @@ import colors from 'tailwindcss/colors';
 import { getUserSetting } from '@/services/profile.service';
 import { addOrUpdateAccount, AuthState } from '@/util/storage';
 import { useUpdateAltTextSetting } from '@/hooks/mutations/feed.mutation';
+import LoadingModal from '@/components/atoms/common/LoadingModal/LoadingModal';
 
 const SignUpOTP: React.FC<GuestStackScreenProps<'SignUpOTP'>> = ({
 	navigation,
@@ -49,51 +49,37 @@ const SignUpOTP: React.FC<GuestStackScreenProps<'SignUpOTP'>> = ({
 
 	const { mutate: updateAltTextSetting } = useUpdateAltTextSetting({});
 
-	const { mutate } = useOTPVerificationMutation({
+	const { mutate, isPending } = useOTPVerificationMutation({
 		onSuccess: async ({ message: response }) => {
-			// await saveAuthState(
-			// 	'AUTH_STATE',
-			// 	JSON.stringify({
-			// 		wordpress: {
-			// 			token: '',
-			// 			domain: process.env.WORDPRESS_API_URL,
-			// 		},
-			// 		mastodon: {
-			// 			token: response.access_token,
-			// 			domain: process.env.API_URL ?? DEFAULT_API_URL,
-			// 		},
-			// 	}),
-			// );
-			// const userInfo = await verifyAuthToken();
-			const userInfo = await verifyAuthToken(
-				response.access_token,
-				process.env.API_URL ?? DEFAULT_API_URL,
-			);
+			const domain = process.env.API_URL ?? DEFAULT_API_URL;
+			const userInfo = await verifyAuthToken(response.access_token, domain);
 			setUserInfo(userInfo);
 
-			// noted: for account switching flow
 			const newAuthState: AuthState = {
 				access_token: response.access_token,
-				domain: process.env.API_URL ?? DEFAULT_API_URL,
+				domain,
 				userInfo: {
 					username: userInfo.username,
 					displayName: userInfo.display_name,
 					avatar: userInfo.avatar,
 				},
 			};
+
 			await addOrUpdateAccount(newAuthState);
-
-			const userSetting = await getUserSetting();
-			if (userSetting) {
-				setSelectedTimeline(userSetting.settings.user_timeline[0]);
-			}
-
-			setUserInfo(userInfo);
 
 			setAuthState({
 				wordpress: { token: '' },
 				mastodon: { token: response.access_token },
 			});
+
+			getUserSetting()
+				.then(userSetting => {
+					if (userSetting) {
+						setSelectedTimeline(userSetting.settings.user_timeline[0]);
+					}
+				})
+				.catch(console.error);
+
 			updateAltTextSetting({ enabled: true });
 		},
 		onError: e => {
@@ -225,6 +211,7 @@ const SignUpOTP: React.FC<GuestStackScreenProps<'SignUpOTP'>> = ({
 					</View>
 				)}
 			</View>
+			{isPending && <LoadingModal isVisible={isPending} />}
 		</SafeScreen>
 	);
 };

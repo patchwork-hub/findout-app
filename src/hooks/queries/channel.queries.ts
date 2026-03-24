@@ -74,6 +74,7 @@ import {
 	getStarterPackDetail,
 	getForYouTimeline,
 } from '@/services/channel.service';
+import { SearchServerInstanceQueryKey } from '@/types/queries/auth.type';
 import {
 	GetChannelAboutQueryKey,
 	GetChannelFeedQueryKey,
@@ -150,9 +151,18 @@ export const useGetForYouTimeline = () => {
 	});
 };
 
-export const useGetChannelAbout = (domain_name: string) => {
-	const queryKey: GetChannelAboutQueryKey = ['channel-about', { domain_name }];
-	return useQuery({ queryKey, queryFn: getChannelAbout });
+export const useGetChannelAbout = (domain: string) => {
+	const queryKey: SearchServerInstanceQueryKey = [
+		'search-server-instance',
+		{ domain },
+	];
+
+	return useQuery({
+		queryKey,
+		queryFn: getChannelAbout,
+		staleTime: Infinity,
+		gcTime: Infinity,
+	});
 };
 
 export const useGetChannelAdditionalInfo = (domain_name: string) => {

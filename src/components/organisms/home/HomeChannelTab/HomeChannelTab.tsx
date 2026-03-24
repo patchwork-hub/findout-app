@@ -162,6 +162,19 @@ const HomeChannelTab = () => {
 					}
 					showsVerticalScrollIndicator={false}
 				>
+					{forYouChannelList && (
+						<HorizontalChannelSection
+							title={'Find out'}
+							data={forYouChannelList}
+							onPressItem={onPressMyNewsmastChannelItem}
+							onPressViewAll={() => {
+								navigation.navigate('ViewAllChannelScreen', {
+									title: 'Find out',
+									data: forYouChannelList,
+								});
+							}}
+						/>
+					)}
 					{catchUpList && (
 						<HorizontalChannelSection
 							title={'Catch up'}
@@ -189,19 +202,6 @@ const HomeChannelTab = () => {
 						/>
 					)}
 
-					{forYouChannelList && (
-						<HorizontalChannelSection
-							title={'Find out'}
-							data={forYouChannelList}
-							onPressItem={onPressMyNewsmastChannelItem}
-							onPressViewAll={() => {
-								navigation.navigate('ViewAllChannelScreen', {
-									title: 'Find out',
-									data: forYouChannelList,
-								});
-							}}
-						/>
-					)}
 					{/* <StarterPackSection /> */}
 
 					{flattenPages(peopleFollowing).length > 0 && (
@@ -241,9 +241,9 @@ const HomeChannelTab = () => {
 					}
 					showsVerticalScrollIndicator={false}
 				>
+					<ChannelLoading title="Find out" cardCount={loadingCardCount} />
 					<ChannelLoading title="Catch up" cardCount={loadingCardCount} />
 					<ChannelLoading title="Speak out" cardCount={loadingCardCount} />
-					<ChannelLoading title="Find out" cardCount={loadingCardCount} />
 					<ChannelLoading
 						title="Starter Packs"
 						cardCount={loadingCardCount}

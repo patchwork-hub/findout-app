@@ -518,7 +518,7 @@ export const useGetForYouChannelList = () => {
 		select: data => {
 			if (data.length > 1 && data[1].attributes.slug === 'government') {
 				const channels = data[1].attributes.channels.data;
-				return channels.map(channel => {
+				const reorderedChannels = channels?.map(channel => {
 					const admin = channel.attributes.community_admin;
 
 					return {
@@ -537,6 +537,17 @@ export const useGetForYouChannelList = () => {
 						},
 					};
 				});
+
+				const podcastIndex = reorderedChannels.findIndex(
+					channel => channel?.attributes?.slug === 'findoutpodcast',
+				);
+
+				if (podcastIndex > 0) {
+					const [podcastChannel] = reorderedChannels.splice(podcastIndex, 1);
+					reorderedChannels.unshift(podcastChannel);
+				}
+
+				return reorderedChannels;
 			}
 			return data;
 		},

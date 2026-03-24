@@ -93,7 +93,7 @@ export const getAccountDetailFeed = async (
 					...(typeof exclude_original_statuses === 'boolean'
 						? { exclude_original_statuses }
 						: {}),
-					limit: max_id ? 15 : 2,
+					limit: max_id ? 15 : 3,
 					...(typeof only_reblogs === 'boolean' ? { only_reblogs } : {}),
 				},
 			},

@@ -441,14 +441,16 @@ export const useGetNewsmastCommunityDetailProfile = ({
 
 export const useGetNewsmastCommunityDetailBio = ({
 	id,
+	domain_name,
 	options,
 }: {
 	id: string;
+	domain_name?: string;
 	options?: { enabled: boolean };
 }) => {
 	const queryKey: GetNewsmastCommunityDetailBioQueryKey = [
 		'newsmast-community-detail-bio',
-		{ id },
+		{ id, domain_name },
 	];
 	return useQuery({
 		queryKey,
@@ -477,14 +479,16 @@ export const useGetNewsmastCommunityHashtags = ({
 
 export const useGetNewsmastCommunityPeopleToFollow = ({
 	id,
+	domain_name,
 	options,
 }: {
 	id: string;
+	domain_name?: string;
 	options?: { enabled: boolean };
 }) => {
 	const queryKey: GetNewsmastCommunityPeopleToFollowQueryKey = [
 		'newsmast-community-people-to-follow',
-		{ id },
+		{ id, domain_name },
 	];
 	return useQuery({
 		queryKey,

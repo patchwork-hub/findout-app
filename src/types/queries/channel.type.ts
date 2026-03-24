@@ -133,7 +133,7 @@ export type GetNewsmastCommunityDetailProfileQueryKey = [
 
 export type GetNewsmastCommunityDetailBioQueryKey = [
 	'newsmast-community-detail-bio',
-	{ id: string },
+	{ id: string; domain_name?: string },
 ];
 
 export type GetNewsmastCommunityHashtagQueryKey = [
@@ -143,7 +143,7 @@ export type GetNewsmastCommunityHashtagQueryKey = [
 
 export type GetNewsmastCommunityPeopleToFollowQueryKey = [
 	'newsmast-community-people-to-follow',
-	{ id: string },
+	{ id: string; domain_name?: string },
 ];
 
 export type GetForYouChannelListQueryKey = ['for-you-channel-list'];

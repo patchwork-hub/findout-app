@@ -12,6 +12,7 @@ import { HomeStackParamList } from '@/types/navigation';
 import { useActiveDomainStore } from '@/store/feed/activeDomain';
 import NewsmastPeopleToFollowItem from '@/components/atoms/channel/NewsmastPeopleToFollowItem/NewsmastPeopleToFollowItem';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { DEFAULT_FINDOUT_DASHBOARD_API_URL } from '@/util/constant';
 
 interface ChannelAboutTabProps {
 	note: string;
@@ -37,6 +38,9 @@ const ChannelAboutTab: React.FC<ChannelAboutTabProps> = ({
 	const { data: newsmastCommunityPeopleToFollow } =
 		useGetNewsmastCommunityPeopleToFollow({
 			id: channelId,
+			domain_name: adminUsername?.endsWith('findout.media')
+				? DEFAULT_FINDOUT_DASHBOARD_API_URL
+				: undefined,
 			options: {
 				enabled: !!channelId,
 			},
@@ -148,6 +152,7 @@ const ChannelAboutTab: React.FC<ChannelAboutTabProps> = ({
 									<Pressable
 										onPress={() => {
 											navigation.navigate('NMChannelAllContributorList', {
+												adminUsername,
 												id: channelId,
 											});
 										}}

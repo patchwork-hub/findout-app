@@ -1,21 +1,17 @@
 import NewsmastPeopleToFollowItem from '@/components/atoms/channel/NewsmastPeopleToFollowItem/NewsmastPeopleToFollowItem';
 import BackButton from '@/components/atoms/common/BackButton/BackButton';
 import Header from '@/components/atoms/common/Header/Header';
-import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
-import Underline from '@/components/atoms/common/Underline/Underline';
 import SafeScreen from '@/components/template/SafeScreen/SafeScreen';
 import { useGetNewsmastCommunityPeopleToFollow } from '@/hooks/queries/channel.queries';
 import { HomeStackScreenProps } from '@/types/navigation';
 import customColor from '@/util/constant/color';
-import { useRoute } from '@react-navigation/native';
-import { FlashList } from '@shopify/flash-list';
-import { debounce } from 'lodash';
 import { useColorScheme } from 'nativewind';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { CircleFade, Flow } from 'react-native-animated-spinkit';
 import { FlatList } from 'react-native-gesture-handler';
+import { DEFAULT_FINDOUT_DASHBOARD_API_URL } from '@/util/constant';
 
 const PAGE_SIZE = 15;
 
@@ -23,7 +19,7 @@ const NMChannelAllContributorList = ({
 	route,
 }: HomeStackScreenProps<'NMChannelAllContributorList'>) => {
 	const { t } = useTranslation();
-	const { id } = route.params;
+	const { id, adminUsername } = route.params;
 	const [isFetchingNextPage, setIsFetchingNextPage] = useState(false);
 
 	const { colorScheme } = useColorScheme();
@@ -31,6 +27,9 @@ const NMChannelAllContributorList = ({
 
 	const { data: allPeople, isLoading } = useGetNewsmastCommunityPeopleToFollow({
 		id,
+		domain_name: adminUsername?.endsWith('findout.media')
+			? DEFAULT_FINDOUT_DASHBOARD_API_URL
+			: undefined,
 	});
 
 	const [displayedPeople, setDisplayedPeople] = useState(() =>

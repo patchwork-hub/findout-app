@@ -20,12 +20,12 @@ import {
 } from 'react-native-collapsible-tab-view';
 import CollapsibleFeedHeader from '@/components/atoms/feed/CollapsibleFeedHeader/CollapsibleFeedHeader';
 import FeedTitleHeader from '@/components/atoms/feed/FeedTitleHeader/FeedTitleHeader';
-import {
-	ScrollProvider,
-	useSharedScrollY,
-} from '@/context/sharedScrollContext/sharedScroll.context';
+import { ScrollProvider } from '@/context/sharedScrollContext/sharedScroll.context';
 import customColor from '@/util/constant/color';
-import { NEWSMAST_INSTANCE_V1 } from '@/util/constant';
+import {
+	NEWSMAST_INSTANCE_V1,
+	DEFAULT_FINDOUT_DASHBOARD_API_URL,
+} from '@/util/constant';
 import { isTablet } from '@/util/helper/isTablet';
 import VerticalSwipeHelper from '@/components/atoms/feed/VerticalSwipeHelper/VerticalSwipeHelper';
 import { useTranslation } from 'react-i18next';
@@ -64,6 +64,9 @@ const NewsmastChannelTimeline: React.FC<
 	const { data: newsmastCommunityDetailBio } = useGetNewsmastCommunityDetailBio(
 		{
 			id: originalSlug,
+			domain_name: accountHandle?.endsWith('findout.media')
+				? DEFAULT_FINDOUT_DASHBOARD_API_URL
+				: undefined,
 			options: { enabled: !!newsmastChannelDetail },
 		},
 	);
@@ -169,8 +172,10 @@ const NewsmastChannelTimeline: React.FC<
 								<ChannelAboutTab
 									note={newsmastChannelDetail?.note || ''}
 									adminUsername={
-										newsmastCommunityDetailBio?.attributes?.community_admin
-											?.username || ''
+										accountHandle.endsWith('findout.media')
+											? accountHandle || ''
+											: newsmastCommunityDetailBio?.attributes?.community_admin
+													?.username || ''
 									}
 									rules={channelAbout?.rules}
 									hashtags={

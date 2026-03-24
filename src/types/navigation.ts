@@ -124,7 +124,7 @@ export type HomeStackParamList = {
 		banner_image_url: string;
 		channel_name: string;
 	};
-	NMChannelAllContributorList: { id: string };
+	NMChannelAllContributorList: { id: string; adminUsername?: string };
 	NMChannelAllHashtagList: { slug: string };
 	HashtagsFollowing: undefined;
 	NewsmastCollections: undefined;
@@ -192,7 +192,7 @@ export type SearchStackParamList = {
 		banner_image_url: string;
 		channel_name: string;
 	};
-	NMChannelAllContributorList: { id: string };
+	NMChannelAllContributorList: { id: string; adminUsername?: string };
 	NMChannelAllHashtagList: { slug: string };
 	NewsmastCollections: undefined;
 	NewsmastCollectionDetail: { slug: string; title: string; type: string };
@@ -370,7 +370,7 @@ export type SettingStackParamList = {
 		banner_image_url: string;
 		channel_name: string;
 	};
-	NMChannelAllContributorList: { id: string };
+	NMChannelAllContributorList: { id: string; adminUsername?: string };
 	NMChannelAllHashtagList: { slug: string };
 	FavoritedBy: { id: string; uri: string };
 	BoostedBy: { id: string; uri: string };

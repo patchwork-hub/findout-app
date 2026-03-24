@@ -822,7 +822,7 @@ export const getNewsmastCommunityDetailProfile = async (
 export const getNewsmastCommunityDetailBio = async (
 	qfContext: QueryFunctionContext<GetNewsmastCommunityDetailBioQueryKey>,
 ) => {
-	const { id } = qfContext.queryKey[1];
+	const { id, domain_name } = qfContext.queryKey[1];
 	const { userOriginInstance } = useAuthStore.getState();
 	const domain = removeHttps(userOriginInstance);
 	const resp: AxiosResponse<{ data: Patchwork.ChannelList }> =
@@ -830,7 +830,7 @@ export const getNewsmastCommunityDetailBio = async (
 			appendApiVersion(`channels/channel_detail?id=${id}`, 'v1'),
 			{
 				params: {
-					domain_name: DEFAULT_DASHBOARD_API_URL,
+					domain_name: domain_name || DEFAULT_DASHBOARD_API_URL,
 					isDynamicDomain: true,
 					instance_domain:
 						userOriginInstance !== CHANNEL_INSTANCE ? domain : undefined,
@@ -863,7 +863,7 @@ export const getNewsmastCommunityHashtags = async (
 export const getNewsmastCommunityPeopleToFollow = async (
 	qfContext: QueryFunctionContext<GetNewsmastCommunityPeopleToFollowQueryKey>,
 ) => {
-	const { id } = qfContext.queryKey[1];
+	const { id, domain_name } = qfContext.queryKey[1];
 	const { userOriginInstance } = useAuthStore.getState();
 	const domain = removeHttps(userOriginInstance);
 	const resp: AxiosResponse<{
@@ -875,7 +875,7 @@ export const getNewsmastCommunityPeopleToFollow = async (
 		),
 		{
 			params: {
-				domain_name: DEFAULT_DASHBOARD_API_URL,
+				domain_name: domain_name || DEFAULT_DASHBOARD_API_URL,
 				isDynamicDomain: true,
 				instance_domain:
 					userOriginInstance !== CHANNEL_INSTANCE ? domain : undefined,

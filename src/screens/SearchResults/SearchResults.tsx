@@ -181,8 +181,16 @@ const SearchResults = ({
 						onPress={() => Keyboard.dismiss()}
 					>
 						<Image
-							source={require('../../../assets/images/patchwork_logo.png')}
-							style={{ width: 180, height: 180 }}
+							source={
+								colorScheme === 'light'
+									? require('../../../assets/images/patchwork_color.png')
+									: require('../../../assets/images/patchwork_logo.png')
+							}
+							style={
+								colorScheme === 'dark'
+									? { width: 180, height: 180 }
+									: { width: 80, height: 80, marginBottom: 20 }
+							}
 						/>
 						<ThemeText className="font-NewsCycle_Bold tracking-wider">
 							{t('search.search_text_guide')}

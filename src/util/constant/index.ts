@@ -5,7 +5,7 @@ export const HTTP_ERROR_MESSAGE = {
 };
 
 export const FALLBACK_PREVIEW_IMAGE_URL =
-	'https://newsmast-assets.s3.eu-west-2.amazonaws.com/fom-fallback.png';
+	'https://patchwork-staging-bucket.s3.eu-west-2.amazonaws.com/default_fallback_resized.png';
 
 export const NEWSMAST_FALLBACK_PREVIEW_IMAGE_URL =
 	'https://newsmast-assets.s3.eu-west-2.amazonaws.com/default_fallback_newsmast_resized.png';

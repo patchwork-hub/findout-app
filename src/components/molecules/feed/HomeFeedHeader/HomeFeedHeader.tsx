@@ -69,8 +69,8 @@ const HomeFeedHeader = ({ account, showUnderLine = true }: Props) => {
 				style={animatedHeaderStyle}
 			>
 				<View className="flex-1 justify-center">
-					<ThemeText className="font-BBHSansBogle_Regular text-2xl mr-3">
-						Find Out Media
+					<ThemeText className="font-BBHSansBogle_Regular text-3xl mr-3">
+						Patchwork
 					</ThemeText>
 				</View>
 

@@ -9,12 +9,12 @@ sidebar_position: 6
 ### 1. Create Firebase Project
 
 1. Go to [Firebase Console](https://console.firebase.google.com).
-2. Create **FindOut Media Production** (disable Analytics unless needed).
+2. Create **Patchwork Production** (disable Analytics unless needed).
 
 ### 2. Android Setup
 
 1. Add Android app: **Project Settings → General**.
-2. Package name: `com.findoutmedia.social`.
+2. Package name: `com.patchwork.demo`.
 3. Download `google-services.json` and place in `android/app/google-services.json`.
 4. Rebuild Android app.
 

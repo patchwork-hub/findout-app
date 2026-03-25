@@ -178,7 +178,7 @@
 	"delete_account_confirm": {
 		"title": "Êtes-vous sûr de vouloir supprimer votre compte ?",
 		"info_box": "Votre compte associé à {{email}} sera supprimé de {{server}}.",
-		"main_info": "En soumettant une demande de suppression de votre compte à Find Out Media, vous comprenez et reconnaissez ce qui suit. Avant de continuer, veuillez lire attentivement ces notes :",
+		"main_info": "En soumettant une demande de suppression de votre compte à Patchwork, vous comprenez et reconnaissez ce qui suit. Avant de continuer, veuillez lire attentivement ces notes :",
 		"point_1": "Vous ne pourrez pas restaurer ou réactiver votre compte",
 		"point_2": "Vos noms d'utilisateur resteront indisponibles",
 		"point_3": "Vos publications et autres données seront définitivement supprimées",

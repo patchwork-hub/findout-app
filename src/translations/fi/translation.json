@@ -182,7 +182,7 @@
 	"delete_account_confirm": {
 		"title": "Oletko varma, että haluat poistaa tilisi?",
 		"info_box": "Tiliisi liittyvä sähköpostiosoite {{email}} poistetaan palvelimelta {{server}}.",
-		"main_info": "Lähettämällä pyynnön tilin poistamisesta Find Out Medialle ymmärrät ja hyväksyt seuraavat asiat. Ennen kuin jatkat, lue nämä huomautukset huolellisesti:",
+		"main_info": "Lähettämällä pyynnön tilin poistamisesta Patchworklle ymmärrät ja hyväksyt seuraavat asiat. Ennen kuin jatkat, lue nämä huomautukset huolellisesti:",
 		"point_1": "Et voi palauttaa tai aktivoida tiliäsi uudelleen",
 		"point_2": "Käyttäjätunnuksesi pysyvät poissa käytöstä",
 		"point_3": "Julkaisusi ja muut tietosi poistetaan pysyvästi",

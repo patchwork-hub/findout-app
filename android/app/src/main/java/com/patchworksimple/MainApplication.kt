@@ -1,4 +1,4 @@
-package com.findoutmedia.social
+package com.patchwork.demo
 
 import android.app.Application
 import com.facebook.react.PackageList

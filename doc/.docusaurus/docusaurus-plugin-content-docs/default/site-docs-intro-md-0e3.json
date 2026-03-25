@@ -2,7 +2,7 @@
 	"unversionedId": "intro",
 	"id": "intro",
 	"title": "Introduction",
-	"description": "FindOut Media is a React Native repo for the FindOut Media Mastodon instance, an ongoing project designed to rebuild the place for honest, real conversations.",
+	"description": "Patchwork is a React Native repo for the Patchwork Mastodon instance, an ongoing project designed to rebuild the place for honest, real conversations.",
 	"source": "@site/docs/intro.md",
 	"sourceDirName": ".",
 	"slug": "/intro",

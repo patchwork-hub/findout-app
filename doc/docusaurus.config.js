@@ -6,7 +6,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-	title: 'FindOut Media',
+	title: 'Patchwork',
 	tagline: 'Developer Documentation',
 	url: 'https://patchwork-hub.github.io',
 	baseUrl: '/findout-app/',
@@ -39,7 +39,7 @@ const config = {
 		/** @type {import('@docusaurus/preset-classic').ThemeConfig} */
 		({
 			navbar: {
-				title: 'FindOut Media',
+				title: 'Patchwork',
 				items: [
 					{
 						type: 'doc',
@@ -51,7 +51,7 @@ const config = {
 			},
 			footer: {
 				style: 'dark',
-				copyright: `Copyright © ${new Date().getFullYear()} FindOut Media. Built with Docusaurus.`,
+				copyright: `Copyright © ${new Date().getFullYear()} Patchwork. Built with Docusaurus.`,
 			},
 			prism: {
 				theme: lightCodeTheme,

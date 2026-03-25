@@ -1,5 +1,5 @@
 Command line invocation:
-    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -workspace FindOutMedia.xcworkspace -scheme FindOutMedia -configuration Debug -sdk iphonesimulator -destination "name=iPhone 15" build
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -workspace Patchwork.xcworkspace -scheme Patchwork -configuration Debug -sdk iphonesimulator -destination "name=iPhone 15" build
 
 Build settings from command line:
     SDKROOT = iphonesimulator26.4
@@ -10,7 +10,7 @@ xcodebuild: error: Unable to find a device matching the provided destination spe
 
 	The requested device could not be found because no available devices matched the request.
 
-	Available destinations for the "FindOutMedia" scheme:
+	Available destinations for the "Patchwork" scheme:
 		{ platform:macOS, arch:arm64, variant:Designed for [iPad,iPhone], id:00006000-001444AA3C23401E, name:My Mac }
 		{ platform:iOS, arch:arm64, id:00008030-0018252214F2802E, name:Sev }
 		{ platform:iOS, id:dvtdevice-DVTiPhonePlaceholder-iphoneos:placeholder, name:Any iOS Device }

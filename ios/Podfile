@@ -19,7 +19,7 @@ end
 
 
 
-target 'FindOutMedia' do
+target 'Patchwork' do
   config = use_native_modules!
 
   use_react_native!(

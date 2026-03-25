@@ -182,7 +182,7 @@
 	"delete_account_confirm": {
 		"title": "Are you sure you want to delete your account?",
 		"info_box": "Your account associated with {{email}} will be deleted from {{server}}.",
-		"main_info": "By submitting a request for Find Out Media to delete your account, you understand and acknowledge the followings. Before proceeding, please read these notes carefully:",
+		"main_info": "By submitting a request for Patchwork to delete your account, you understand and acknowledge the followings. Before proceeding, please read these notes carefully:",
 		"point_1": "You will not be able to restore or reactivate your account",
 		"point_2": "Your usernames will remain unavailable",
 		"point_3": "Your posts and other data will be permanently removed",

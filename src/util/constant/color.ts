@@ -1,5 +1,5 @@
 const customColor = {
-	'patchwork-dark-50': '#45454a',
+	'patchwork-dark-50': '#585e62',
 	'patchwork-dark-100': '#0D0D0D',
 	'patchwork-grey-50': '#f8f8f8',
 	'patchwork-grey-70': '#434A4F',
@@ -15,11 +15,12 @@ const customColor = {
 	'skeleton-highlight': '#7A8288',
 	'skeleton-bg': '#585e62',
 	'modal-bg': 'rgba(0, 0, 0, 0.5)',
-	'patchwork-primary': '#0029BF',
-	'patchwork-primary-dark': '#0029BF',
-	'patchwork-secondary': '#fdc104',
-	'patchwork-flourish': '#0C1D75',
-	'patchwork-soft-primary': '#4D70FF',
+	'patchwork-primary': '#ff3c26', //#cf4af0
+	'patchwork-primary-dark': '#ff3c26',
+	'patchwork-secondary': '#3fa7e8',
+	'patchwork-flourish': '#45e67a',
+	'patchwork-foundation-blue': '#001347',
+	'patchwork-soft-primary': '#ff3c26',
 };
 
 export default customColor;

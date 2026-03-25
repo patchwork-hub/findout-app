@@ -1,6 +1,6 @@
-# FindOut Media
+# Patchwork
 
-React Native repo for the **FindOut Media** Mastodon instance, an ongoing project designed to rebuild the place for honest, real conversations.
+React Native repo for the **Patchwork** Mastodon instance, an ongoing project designed to rebuild the place for honest, real conversations.
 
 This documentation serves as a comprehensive guide for developers, covering environment setup, project structure, building and releasing for iOS and Android, and configuring essential services like Push Notifications and Sentry.
 
@@ -392,7 +392,7 @@ Archive with Xcode
 Open workspace:
 
 ```
-open ios/FindOutMedia.xcworkspace
+open ios/Patchwork.xcworkspace
 ```
 
 Make sure the correct **Apple Developer Account** is selected:
@@ -405,8 +405,8 @@ Select **Any iOS Device (arm64)** as the build target.
 
 Check signing settings:
 
-- Go to `FindOutMedia` project (top of Project Navigator)
-- Select `FindOutMedia` target → **Signing & Capabilities**
+- Go to `Patchwork` project (top of Project Navigator)
+- Select `Patchwork` target → **Signing & Capabilities**
 - Ensure the correct **Team** is selected
 - Ensure the **Bundle Identifier** matches the one registered in Apple Developer Console
 - Ensure **Automatically Manage Signing** is enabled (recommended)
@@ -429,7 +429,7 @@ Steps for preparing push notifications, FCM integration, and backend-triggered n
 
 1. Go to **Firebase Console** → https://console.firebase.google.com
 2. Click **Add project**
-3. Enter project name (ex: `FindOut Media Production`)
+3. Enter project name (ex: `Patchwork Production`)
 4. Disable Google Analytics unless required
 5. Finish project creation
 
@@ -438,7 +438,7 @@ Steps for preparing push notifications, FCM integration, and backend-triggered n
 1. In Firebase → **Project Settings → General**
 2. Under **Your Apps**, choose **Android**
 3. Add:
-   - **Package name** → must match the app bundle id: **com.findoutmedia.social**
+   - **Package name** → must match the app bundle id: **com.patchwork.demo**
 4. Download the generated `google-services.json`
 5. Place it in:
 
@@ -572,7 +572,7 @@ Steps:
 3. On the left sidebar, click **Projects**.
 4. Click **Create Project**.
 5. Select **React Native** as the platform. Set your alert frequency.
-6. Enter the project name (example: `FindOut Media App`).
+6. Enter the project name (example: `Patchwork App`).
 7. Choose or create an **Organization**.
 8. Click **Create Project**.
 9. After creating the project, Sentry will present two setup options: **Automatic Configuration** and **Manual Configuration**. For this project, continue with **Manual Configuration**, as other setup steps have already been completed.
@@ -628,7 +628,7 @@ This project uses **GitHub Actions** and **Fastlane** to automate testing and de
 - **Action**: `release`
 - **Steps**:
   - Increment build number.
-  - Build App (`FindOutMedia` scheme).
+  - Build App (`Patchwork` scheme).
   - Upload to App Store.
 
 ### GitHub Secrets Required

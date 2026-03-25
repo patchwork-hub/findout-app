@@ -41,15 +41,15 @@ const StatusShareMenu: React.FC<Props> = ({ status }: Props) => {
 							},
 						},
 						linkMetadata: {
-							title: 'Find Out Media',
+							title: 'Patchwork',
 							icon: FALLBACK_PREVIEW_IMAGE_URL,
 						},
 					},
 				],
 			},
 			default: {
-				title: 'Find Out Media',
-				subject: 'Find Out Media',
+				title: 'Patchwork',
+				subject: 'Patchwork',
 				message: SHARE_LINK_URL,
 			},
 		});

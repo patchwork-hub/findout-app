@@ -8,11 +8,11 @@ platform :ios do
     # Update match (optional, if you use match for code signing)
     # match(type: "appstore", readonly: is_ci)
 
-    increment_build_number(xcodeproj: "FindOutMedia.xcodeproj")
+    increment_build_number(xcodeproj: "Patchwork.xcodeproj")
     
     build_app(
-      scheme: "FindOutMedia",
-      workspace: "FindOutMedia.xcworkspace",
+      scheme: "Patchwork",
+      workspace: "Patchwork.xcworkspace",
       clean: true
     )
     

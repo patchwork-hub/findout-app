@@ -21,7 +21,7 @@ This project uses **GitHub Actions** and **Fastlane** to automate testing and de
 - **Action**: `release`
 - **Steps**:
   - Increment build number.
-  - Build App (`FindOutMedia` scheme).
+  - Build App (`Patchwork` scheme).
   - Upload to App Store.
 
 ## GitHub Secrets

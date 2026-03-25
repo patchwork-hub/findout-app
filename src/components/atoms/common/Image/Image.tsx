@@ -78,12 +78,12 @@ const Image = ({
 					colors={
 						colorScheme == 'dark'
 							? [
-									customColor['patchwork-primary-dark'],
-									customColor['patchwork-primary-dark'],
+									customColor['patchwork-secondary'],
+									customColor['patchwork-secondary'],
 							  ]
 							: [
-									customColor['patchwork-primary'],
-									customColor['patchwork-primary'],
+									customColor['patchwork-secondary'],
+									customColor['patchwork-secondary'],
 							  ]
 					}
 					start={{ x: 0, y: 0 }}

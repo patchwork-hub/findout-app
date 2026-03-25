@@ -178,7 +178,7 @@
 	"delete_account_confirm": {
 		"title": "Sei sicuro di voler eliminare il tuo account?",
 		"info_box": "Il tuo account associato a {{email}} verrà eliminato da {{server}}.",
-		"main_info": "Inviando una richiesta a Find Out Media per eliminare il tuo account, comprendi e accetti quanto segue. Prima di procedere, leggi attentamente queste note:",
+		"main_info": "Inviando una richiesta a Patchwork per eliminare il tuo account, comprendi e accetti quanto segue. Prima di procedere, leggi attentamente queste note:",
 		"point_1": "Non potrai ripristinare o riattivare il tuo account",
 		"point_2": "I tuoi nomi utente rimarranno non disponibili",
 		"point_3": "I tuoi post e altri dati verranno rimossi in modo permanente",

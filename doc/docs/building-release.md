@@ -57,9 +57,9 @@ Path: `android/app/build/outputs/bundle/release/app-release.aab`
 
 ### Archive with Xcode
 
-1. Open workspace: `open ios/FindOutMedia.xcworkspace`
+1. Open workspace: `open ios/Patchwork.xcworkspace`
 2. Ensure correct **Apple Developer Account** is selected in **Xcode → Settings → Accounts**.
 3. Select **Any iOS Device (arm64)** as build target.
-4. Check signing settings in **FindOutMedia** target → **Signing & Capabilities**.
+4. Check signing settings in **Patchwork** target → **Signing & Capabilities**.
 5. Archive: **Product → Archive**.
 6. Export or Upload via Organizer.

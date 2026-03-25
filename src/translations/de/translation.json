@@ -178,7 +178,7 @@
 	"delete_account_confirm": {
 		"title": "Sind Sie sicher, dass Sie Ihr Konto löschen möchten?",
 		"info_box": "Ihr mit {{email}} verknüpftes Konto wird von {{server}} gelöscht.",
-		"main_info": "Indem Sie einen Antrag auf Löschung Ihres Kontos bei Find Out Media stellen, verstehen und anerkennen Sie Folgendes. Bevor Sie fortfahren, lesen Sie diese Hinweise bitte sorgfältig durch:",
+		"main_info": "Indem Sie einen Antrag auf Löschung Ihres Kontos bei Patchwork stellen, verstehen und anerkennen Sie Folgendes. Bevor Sie fortfahren, lesen Sie diese Hinweise bitte sorgfältig durch:",
 		"point_1": "Sie können Ihr Konto nicht wiederherstellen oder reaktivieren",
 		"point_2": "Ihre Benutzernamen bleiben unverfügbar",
 		"point_3": "Ihre Beiträge und andere Daten werden dauerhaft entfernt",

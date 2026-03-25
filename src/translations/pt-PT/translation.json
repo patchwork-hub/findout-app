@@ -182,7 +182,7 @@
 	"delete_account_confirm": {
 		"title": "Tem a certeza que deseja eliminar a sua conta?",
 		"info_box": "A sua conta associada ao {{email}} será apagada do servidor {{server}}.",
-		"main_info": "Ao submeter um pedido à Find Out Media para eliminar a sua conta, entende e aceita os pontos que se seguem. Antes de avançar, leia estas notas atenciosamente:",
+		"main_info": "Ao submeter um pedido à Patchwork para eliminar a sua conta, entende e aceita os pontos que se seguem. Antes de avançar, leia estas notas atenciosamente:",
 		"point_1": "Não poderá recuperar nem reativar a sua conta",
 		"point_2": "Os seus nomes de utilizador permanecerão indisponíveis",
 		"point_3": "As suas publicações e outros dados serão desfeitos permanentemente",

@@ -58,7 +58,7 @@ const HowToUseApp = () => {
 					// }
 					titleComponent={
 						<ThemeText className="font-BBHSansBogle_Regular text-2xl mr-3">
-							Find Out Media
+							Patchwork
 						</ThemeText>
 					}
 					style={styles.header}

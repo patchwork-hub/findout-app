@@ -101,7 +101,7 @@ export const useMastodonAuth = ({
 			}
 
 			if (await InAppBrowser.isAvailable()) {
-				const result = await InAppBrowser.openAuth(url, 'FindOutMedia://', {
+				const result = await InAppBrowser.openAuth(url, 'Patchwork://', {
 					ephemeralWebSession: false,
 					showTitle: false,
 					enableUrlBarHiding: true,
@@ -119,7 +119,7 @@ export const useMastodonAuth = ({
 							domain: removeHttps(domain),
 							client_id,
 							client_secret,
-							redirect_uri: 'FindOutMedia://',
+							redirect_uri: 'Patchwork://',
 							grant_type: 'authorization_code',
 						});
 					}
@@ -137,7 +137,7 @@ export const useMastodonAuth = ({
 					client_id: res.client_id,
 					client_secret: res.client_secret,
 					response_type: 'code',
-					redirect_uri: 'FindOutMedia://',
+					redirect_uri: 'Patchwork://',
 					scope: 'write read follow push',
 				});
 				const url = `https://${removeHttps(

@@ -12,9 +12,6 @@ import { useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '@/types/navigation';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { truncateStr } from '@/util/helper/helper';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { AppIcons } from '@/util/icons/icon.common';
-import customColor from '@/util/constant/color';
 
 type Props = {
 	title: string;
@@ -73,11 +70,6 @@ const FeedTitleHeader = ({ title, emojis, isOwnProfile = false }: Props) => {
 		return { opacity };
 	});
 
-	//still in testing state need to optimize
-	// useShowHideBottomTab({
-	// 	sharedScrollYOffset,
-	// });
-
 	return (
 		<>
 			{/* First Back Button */}
@@ -92,28 +84,6 @@ const FeedTitleHeader = ({ title, emojis, isOwnProfile = false }: Props) => {
 					<ProfileBackIcon forceLight />
 				</TouchableOpacity>
 			</Animated.View>
-
-			{isOwnProfile && (
-				<Animated.View
-					className="absolute right-3 z-10"
-					style={[{ top: top }, firstBackButtonStyle]}
-				>
-					<TouchableOpacity
-						className="w-9 h-9 items-center justify-center rounded-full bg-patchwork-dark-100/50 mr-1"
-						onPress={() => {
-							navigation.navigate('SettingStack', {
-								screen: 'Settings',
-							});
-						}}
-					>
-						<FontAwesomeIcon
-							icon={AppIcons.setting}
-							size={16}
-							color={customColor['patchwork-grey-50']}
-						/>
-					</TouchableOpacity>
-				</Animated.View>
-			)}
 
 			{/* Animated Header */}
 			<Animated.View
@@ -133,32 +103,6 @@ const FeedTitleHeader = ({ title, emojis, isOwnProfile = false }: Props) => {
 						<ProfileBackIcon colorScheme={colorScheme} />
 					</TouchableOpacity>
 				</Animated.View>
-
-				{isOwnProfile && (
-					<Animated.View
-						className="absolute right-3 z-10"
-						style={[{ top: top }, secondBackButtonStyle]}
-					>
-						<TouchableOpacity
-							className="w-9 h-9 items-center justify-center rounded-full ml-3 mr-1 border-[1px] border-patchwork-grey-100"
-							onPress={() => {
-								navigation.navigate('SettingStack', {
-									screen: 'Settings',
-								});
-							}}
-						>
-							<FontAwesomeIcon
-								icon={AppIcons.setting}
-								size={16}
-								color={
-									colorScheme == 'dark'
-										? customColor['patchwork-grey-50']
-										: customColor['patchwork-grey-70']
-								}
-							/>
-						</TouchableOpacity>
-					</Animated.View>
-				)}
 
 				<Animated.View
 					className="flex-1 items-center justify-center"

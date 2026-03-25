@@ -2,7 +2,7 @@ import SafeScreen from '@/components/template/SafeScreen/SafeScreen';
 import { Button } from '@/components/atoms/common/Button/Button';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
 import { GuestStackScreenProps } from '@/types/navigation';
-import { CustomCurveIcon } from '@/util/svg/icon.common';
+import { CustomCurveIcon, PatchworkLogo } from '@/util/svg/icon.common';
 import { Image, View } from 'react-native';
 import { cn } from '@/util/helper/twutil';
 import { isTablet } from '@/util/helper/isTablet';
@@ -30,34 +30,12 @@ const Welcome: React.FC<GuestStackScreenProps<'Welcome'>> = ({
 	return (
 		<SafeScreen className="pt-0">
 			<View className="flex-1 justify-center mb-9">
-				<View className="bg-patchwork-primary pt-10 px-6">
+				<View className="pt-10 px-6">
 					<AccountSwitchingModal isWelcome />
 				</View>
-				<View className="h-[45%] items-center justify-center bg-primary bg-patchwork-primary">
-					<View className="-mt-14 items-center justify-center">
-						<Image
-							source={require('../../../assets/images/FOMW.png')}
-							style={{ width: 150, height: 150 }}
-						/>
-						<View className="items-center">
-							<ThemeText className="text-zinc-200 text-center">
-								Rebuilding the influence of the left demands
-							</ThemeText>
-							<ThemeText className="text-zinc-200">
-								honest, real, uncomfortable conversations...
-							</ThemeText>
-						</View>
-						<View className="my-3 items-center">
-							<ThemeText className="text-zinc-200 text-center">
-								Luckily for us,
-							</ThemeText>
-							<ThemeText className="text-zinc-200">
-								that’s what we’re known for.
-							</ThemeText>
-						</View>
-					</View>
-					<View className="absolute bottom-[43] left-0">
-						<CustomCurveIcon width={45} height={65} colorScheme={colorScheme} />
+				<View className="h-[40%] items-center justify-center">
+					<View className="items-center justify-center mt-10">
+						<PatchworkLogo colorScheme={colorScheme} />
 					</View>
 				</View>
 				<View className="flex-1 rounded-tr-[50] -mt-[56] bg-white dark:bg-patchwork-dark-100 p-6 pb-10">

@@ -586,7 +586,7 @@ export const useStarterPackList = () => {
 		// 				return {
 		// 					...item,
 		// 					title: 'Team Bristol Cable Staff',
-		// 					description: 'People and accounts related to Find Out Media',
+		// 					description: 'People and accounts related to Patchwork',
 		// 					collected_by: {
 		// 						...item.collected_by,
 		// 						display_name: 'Team Bristol Staff',

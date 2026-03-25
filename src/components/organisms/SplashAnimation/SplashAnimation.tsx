@@ -1,8 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Dimensions, Easing, Image, View } from 'react-native';
-import { Wander } from 'react-native-animated-spinkit';
+import { Animated, Easing, Image, View } from 'react-native';
+import {
+	Bounce,
+	Chase,
+	Plane,
+	Swing,
+	Wander,
+} from 'react-native-animated-spinkit';
 import customColor from '../../../util/constant/color';
-import { BlockIcon } from '../../../util/svg/icon.common';
 
 interface SplashAnimationProps {
 	onFinishAnimation: () => void;
@@ -11,14 +16,12 @@ interface SplashAnimationProps {
 const SplashAnimation: React.FC<SplashAnimationProps> = ({
 	onFinishAnimation,
 }) => {
-	const { width, height } = Dimensions.get('window');
 	const [showSpinner, setShowSpinner] = useState(false);
 
 	const animationValue = useRef(new Animated.Value(0)).current;
-	const findOutX = useRef(new Animated.Value(width)).current;
-	const blockScale = useRef(new Animated.Value(0)).current;
-	const blockSquash = useRef(new Animated.Value(1)).current;
-	const mediaX = useRef(new Animated.Value(-width)).current;
+	const logoScale = useRef(new Animated.Value(0)).current;
+	const logoOpacity = useRef(new Animated.Value(0)).current;
+	const logoSquash = useRef(new Animated.Value(1)).current;
 	const containerTranslateY = useRef(new Animated.Value(0)).current;
 	const spinnerOpacity = useRef(new Animated.Value(0)).current;
 	const spinnerTranslateY = useRef(new Animated.Value(20)).current;
@@ -32,45 +35,32 @@ const SplashAnimation: React.FC<SplashAnimationProps> = ({
 		}).start();
 
 		Animated.sequence([
-			// 1. Block scales up
-			Animated.timing(blockScale, {
-				toValue: 1,
-				duration: 800,
-				easing: Easing.back(1.5),
-				useNativeDriver: true,
-			}),
-
-			// 2. FindOutText runs from right and hits block
-			Animated.sequence([
-				Animated.timing(findOutX, {
-					toValue: 0,
-					duration: 600,
-					easing: Easing.out(Easing.quad),
+			// 1. Square logo scales up with bounce
+			Animated.parallel([
+				Animated.timing(logoScale, {
+					toValue: 1,
+					duration: 700,
+					easing: Easing.back(1.5),
 					useNativeDriver: true,
 				}),
-			]),
-
-			// 3. MediaText runs from left and hits block
-			Animated.sequence([
-				Animated.timing(mediaX, {
-					toValue: 0,
-					duration: 600,
-					easing: Easing.out(Easing.quad),
+				Animated.timing(logoOpacity, {
+					toValue: 1,
+					duration: 400,
 					useNativeDriver: true,
 				}),
 			]),
 		]).start(() => {
 			setShowSpinner(true);
-			// Start looping squash breathing effect when spinner shows
+			// Breathing squash on logo while loading
 			Animated.loop(
 				Animated.sequence([
-					Animated.timing(blockSquash, {
-						toValue: 0.9,
+					Animated.timing(logoSquash, {
+						toValue: 0.95,
 						duration: 1000,
 						easing: Easing.inOut(Easing.sin),
 						useNativeDriver: true,
 					}),
-					Animated.timing(blockSquash, {
+					Animated.timing(logoSquash, {
 						toValue: 1,
 						duration: 1000,
 						easing: Easing.inOut(Easing.sin),
@@ -81,7 +71,7 @@ const SplashAnimation: React.FC<SplashAnimationProps> = ({
 
 			Animated.parallel([
 				Animated.timing(containerTranslateY, {
-					toValue: -30, // Move up slightly
+					toValue: -30,
 					duration: 800,
 					easing: Easing.out(Easing.quad),
 					useNativeDriver: true,
@@ -105,13 +95,14 @@ const SplashAnimation: React.FC<SplashAnimationProps> = ({
 
 	return (
 		<View className="flex-1 bg-white items-center justify-center overflow-hidden">
+			{/* Expanding background circle */}
 			<Animated.View
 				style={{
 					position: 'absolute',
 					width: 100,
 					height: 100,
 					borderRadius: 100,
-					backgroundColor: customColor['patchwork-primary'],
+					backgroundColor: '#000',
 					transform: [
 						{
 							scale: animationValue.interpolate({
@@ -122,39 +113,23 @@ const SplashAnimation: React.FC<SplashAnimationProps> = ({
 					],
 				}}
 			/>
+
+			{/* Logo + MEDIA text group */}
 			<Animated.View
 				style={{ transform: [{ translateY: containerTranslateY }] }}
 				className="items-center"
 			>
+				{/* Square Patchwork logo scales in from center */}
 				<Animated.View
 					style={{
-						transform: [{ translateX: findOutX }],
+						opacity: logoOpacity,
+						transform: [{ scale: logoScale }, { scaleY: logoSquash }],
 					}}
-					className="self-start mb-1"
 				>
 					<Image
-						source={require('../../../../assets/images/FINDOUT_TEXT.png')}
-						style={{ width: 130, height: 40 }}
-					/>
-				</Animated.View>
-
-				<Animated.View
-					style={{
-						transform: [{ scale: blockScale }, { scaleY: blockSquash }],
-					}}
-				>
-					<BlockIcon />
-				</Animated.View>
-
-				<Animated.View
-					style={{
-						transform: [{ translateX: mediaX }],
-					}}
-					className="self-end mt-2"
-				>
-					<Image
-						source={require('../../../../assets/images/MEDIA_TEXT.png')}
-						style={{ width: 95, height: 28 }}
+						source={require('../../../../assets/images/PatchworkColorful.png')}
+						style={{ width: 160, height: 160 }}
+						resizeMode="contain"
 					/>
 				</Animated.View>
 			</Animated.View>
@@ -165,9 +140,8 @@ const SplashAnimation: React.FC<SplashAnimationProps> = ({
 						opacity: spinnerOpacity,
 						transform: [{ translateY: spinnerTranslateY }],
 					}}
-					className="mt-10"
 				>
-					<Wander size={40} color="white" />
+					<Swing size={40} color="white" />
 				</Animated.View>
 			)}
 		</View>

@@ -182,7 +182,7 @@
 	"delete_account_confirm": {
 		"title": "Er du sikker på, at du vil slette din konto?",
 		"info_box": "Din konto forbundet med {{email}} vil blive slettet fra {{server}}.",
-		"main_info": "Ved at indsende en anmodning til Find Out Media om at slette din konto, forstår og anerkender du følgende. Læs venligst disse bemærkninger grundigt igennem, før du fortsætter:",
+		"main_info": "Ved at indsende en anmodning til Patchwork om at slette din konto, forstår og anerkender du følgende. Læs venligst disse bemærkninger grundigt igennem, før du fortsætter:",
 		"point_1": "Du vil ikke kunne gendanne eller genaktivere din konto",
 		"point_2": "Dine brugernavne vil forblive utilgængelige",
 		"point_3": "Dine indlæg og andre data vil blive slettet permanent",

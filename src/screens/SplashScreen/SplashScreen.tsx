@@ -10,7 +10,7 @@ export default function SplashScreen() {
 	return (
 		<View className={`flex-1 items-center justify-center`}>
 			<Image
-				source={require('../../../assets/images/FOM.png')}
+				source={require('../../../assets/images/patchwork_logo.png')}
 				style={{ width: 150, height: 150, marginTop: -14 }}
 			/>
 			<View className="mt-5">

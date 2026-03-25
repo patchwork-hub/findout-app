@@ -113,7 +113,7 @@ const MastodonSignInWebView = ({
 				domain,
 				client_id,
 				client_secret,
-				redirect_uri: 'FindOutMedia://',
+				redirect_uri: 'Patchwork://',
 				grant_type: 'authorization_code',
 			});
 		}

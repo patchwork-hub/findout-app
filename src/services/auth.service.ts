@@ -328,7 +328,7 @@ export const requestInstance = async ({ domain }: { domain: string }) => {
 		const body = {
 			client_name: domain,
 			website: DEFAULT_API_URL,
-			redirect_uris: 'FindOutMedia://',
+			redirect_uris: 'Patchwork://',
 			scopes: `write read follow push`,
 		};
 

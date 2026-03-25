@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Introduction
 
-**FindOut Media** is a React Native repo for the FindOut Media Mastodon instance, an ongoing project designed to rebuild the place for honest, real conversations.
+**Patchwork** is a React Native repo for the Patchwork Mastodon instance, an ongoing project designed to rebuild the place for honest, real conversations.
 
 This documentation serves as a comprehensive guide for developers, covering environment setup, project structure, building and releasing for iOS and Android, and configuring essential services like Push Notifications and Sentry.
 

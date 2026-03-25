@@ -177,7 +177,7 @@
 	"delete_account_confirm": {
 		"title": "Tem certeza de que deseja excluir sua conta?",
 		"info_box": "Sua conta associada a {{email}} será excluída de {{server}}.",
-		"main_info": "Ao enviar uma solicitação para que o Find Out Media exclua sua conta, você entende e reconhece o seguinte. Antes de prosseguir, leia atentamente estas observações:",
+		"main_info": "Ao enviar uma solicitação para que o Patchwork exclua sua conta, você entende e reconhece o seguinte. Antes de prosseguir, leia atentamente estas observações:",
 		"point_1": "Você não poderá restaurar ou reativar sua conta",
 		"point_2": "Seus nomes de usuário permanecerão indisponíveis",
 		"point_3": "Seus posts e outros dados serão removidos permanentemente",

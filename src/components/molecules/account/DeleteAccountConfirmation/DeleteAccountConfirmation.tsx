@@ -23,7 +23,7 @@ const DeleteAccountConfirmation = () => {
 				ensureHttp(userOriginInstance) ? /https?:\/\// : '',
 				'',
 		  )
-		: 'Findout Media';
+		: 'Patchwork';
 
 	const handlePressLink = async (url: string) => {
 		try {

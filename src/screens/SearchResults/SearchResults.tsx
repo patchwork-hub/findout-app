@@ -181,14 +181,10 @@ const SearchResults = ({
 						onPress={() => Keyboard.dismiss()}
 					>
 						<Image
-							source={
-								colorScheme == 'dark'
-									? require('../../../assets/images/FOMW.png')
-									: require('../../../assets/images/FOM.png')
-							}
-							style={{ width: 100, height: 100 }}
+							source={require('../../../assets/images/patchwork_logo.png')}
+							style={{ width: 180, height: 180 }}
 						/>
-						<ThemeText className="font-NewsCycle_Bold mt-2 tracking-wider">
+						<ThemeText className="font-NewsCycle_Bold tracking-wider">
 							{t('search.search_text_guide')}
 						</ThemeText>
 					</Pressable>

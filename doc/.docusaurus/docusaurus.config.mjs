@@ -4,7 +4,7 @@
  * Modify the docusaurus.config.js file at your site's root instead.
  */
 export default {
-	title: 'FindOut Media',
+	title: 'Patchwork',
 	tagline: 'Developer Documentation',
 	url: 'https://patchwork-hub.github.io',
 	baseUrl: '/findout-app/',
@@ -31,7 +31,7 @@ export default {
 	],
 	themeConfig: {
 		navbar: {
-			title: 'FindOut Media',
+			title: 'Patchwork',
 			items: [
 				{
 					type: 'doc',
@@ -44,7 +44,7 @@ export default {
 		},
 		footer: {
 			style: 'dark',
-			copyright: 'Copyright © 2026 FindOut Media. Built with Docusaurus.',
+			copyright: 'Copyright © 2026 Patchwork. Built with Docusaurus.',
 			links: [],
 		},
 		prism: {

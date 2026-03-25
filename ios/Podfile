@@ -35,6 +35,19 @@ target 'FindOutMedia' do
       # :ccache_enabled => true
     )
 
+    # Fix fmt consteval incompatibility with Apple Clang (>= 14).
+    # fmt 11.x enables consteval for Apple Clang >= 14, but pointer arithmetic
+    # on string literals inside consteval is still broken, causing build errors.
+    fmt_base_h = "#{installer.sandbox.root}/fmt/include/fmt/base.h"
+    if File.exist?(fmt_base_h)
+      content = File.read(fmt_base_h)
+      patched = content.gsub(
+        'defined(__apple_build_version__) && __apple_build_version__ < 14000029L',
+        'defined(__apple_build_version__)'
+      )
+      File.write(fmt_base_h, patched)
+    end
+
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
         config.build_settings['TARGETED_DEVICE_FAMILY'] = '1,2'

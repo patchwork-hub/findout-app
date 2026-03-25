@@ -62,6 +62,10 @@
 	<string>spb_Kj74TpPaInIO2tmTsuzyvxZ3jGn5YC5itF4CqJWqFj</string>
 	<key>StallionProjectId</key>
 	<string>6912ae22470155478e99ca3e</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Find Out Media needs access to add events to your calendar.</string>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>Find Out Media needs full calendar access to add events.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>BBHSansBogle-Regular.ttf</string>

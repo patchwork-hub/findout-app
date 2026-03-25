@@ -1,4 +1,3 @@
-import { createStackNavigator } from '@react-navigation/stack';
 import {
 	DarkTheme,
 	DefaultTheme,
@@ -11,8 +10,8 @@ import {
 	LocalImageViewer,
 	SplashScreen,
 	QuotePost,
-	GifPlayer,
 	VideoPlayer,
+	GifPlayer,
 } from '@/screens';
 import type { RootStackParamList } from '@/types/navigation';
 import BottomTabs from './BottomTabStackNavigator';
@@ -34,6 +33,7 @@ import { usePushNoticationActions } from '@/store/pushNoti/pushNotiStore';
 import navigationRef from '@/util/navigation/navigationRef';
 import messaging from '@react-native-firebase/messaging';
 import SettingStack from './SettingsStackNavigator';
+import NotiStack from './NotiStackNavigator';
 import { useTranslationLanguagesQueries } from '@/hooks/queries/feed.queries';
 import { useTranslationLanguageStore } from '@/store/compose/translationLanguage/translationLanguage';
 import ConversationsStack from './ConversationsStackNavigator';
@@ -60,7 +60,7 @@ const MyLightTheme = {
 	...DefaultTheme,
 	colors: {
 		...DefaultTheme.colors,
-		background: '#ffffff',
+		background: customColor['patchwork-grey-50'],
 	},
 };
 
@@ -160,8 +160,6 @@ function ApplicationNavigator() {
 			.then(remoteMessage => {
 				onRemoveNotifcationCount();
 				if (remoteMessage?.data) {
-					// const { noti_type, destination_id, reblogged_id } =
-					// 	remoteMessage.data;
 					const notiResp =
 						remoteMessage.data as Patchwork.PushNotiResponse['data'];
 					if (notiResp.noti_type === 'follow') {
@@ -224,6 +222,7 @@ function ApplicationNavigator() {
 								component={LocalImageViewer}
 							/>
 							<Stack.Screen name="SettingStack" component={SettingStack} />
+							<Stack.Screen name="NotiStack" component={NotiStack} />
 							<Stack.Screen
 								name="ConversationsStack"
 								component={ConversationsStack}

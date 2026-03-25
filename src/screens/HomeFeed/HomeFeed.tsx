@@ -24,6 +24,7 @@ import { usePushNoticationStore } from '@/store/pushNoti/pushNotiStore';
 import { usePushNotiTokenMutation } from '@/hooks/mutations/pushNoti.mutation';
 import { useColorScheme } from 'nativewind';
 import { useTabBarTheme } from '@/hooks/custom/useTabBarTheme';
+import HomeResourcesTab from '@/components/organisms/home/HomeResourcesTab/HomeResourcesTab';
 
 const { width: windowWidth } = Dimensions.get('window');
 
@@ -115,12 +116,12 @@ const HomeFeed = ({ navigation }: HomeStackScreenProps<'HomeFeed'>) => {
 									height: 3,
 									...(isTablet
 										? {
-												maxWidth: windowWidth * 0.21,
-												marginLeft: windowWidth * 0.0625,
+												maxWidth: windowWidth * 0.2,
+												marginLeft: windowWidth * 0.025,
 										  }
 										: {
-												maxWidth: 110,
-												marginHorizontal: 12,
+												maxWidth: 90,
+												marginHorizontal: 8,
 										  }),
 								}}
 								style={{
@@ -164,6 +165,9 @@ const HomeFeed = ({ navigation }: HomeStackScreenProps<'HomeFeed'>) => {
 					</Tabs.Tab>
 					<Tabs.Tab name="Channels" label={t('timeline.channels')}>
 						<HomeChannelTab />
+					</Tabs.Tab>
+					<Tabs.Tab name="Resources" label="Resources">
+						<HomeResourcesTab />
 					</Tabs.Tab>
 				</Tabs.Container>
 			</View>

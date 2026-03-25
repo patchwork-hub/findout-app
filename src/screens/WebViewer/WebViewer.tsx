@@ -13,7 +13,7 @@ import { cn } from '@/util/helper/twutil';
 import { useColorScheme } from 'nativewind';
 
 const WebViewer: React.FC<RootScreenProps<'WebViewer'>> = ({ route }) => {
-	const { url, hideHeader } = route.params;
+	const { url, hideHeader, hideExternalOpen } = route.params;
 	const match = url.match(/^(?:https?:\/\/)?(?:www\.)?([^\\/\n?]+)/i);
 	const customTitle = route.params.customTitle;
 	const [progress, setProgress] = useState(0);
@@ -26,7 +26,11 @@ const WebViewer: React.FC<RootScreenProps<'WebViewer'>> = ({ route }) => {
 				<Header
 					title={customTitle || match![0]}
 					leftCustomComponent={<BackButton extraClass="border-0" />}
-					rightCustomComponent={<OpenInBrowser url={route.params.url} />}
+					rightCustomComponent={
+						hideExternalOpen ? undefined : (
+							<OpenInBrowser url={route.params.url} />
+						)
+					}
 					hideUnderline
 				/>
 			)}
@@ -49,7 +53,9 @@ const WebViewer: React.FC<RootScreenProps<'WebViewer'>> = ({ route }) => {
 				style={{
 					flex: 1,
 					backgroundColor:
-						colorScheme == 'dark' ? customColor['patchwork-dark-100'] : 'white',
+						colorScheme == 'dark'
+							? customColor['patchwork-dark-100']
+							: customColor['patchwork-grey-50'],
 				}}
 				startInLoadingState={true}
 				source={{ uri: route?.params?.url }}

@@ -7,11 +7,13 @@ import { useColorScheme } from 'nativewind';
 import useAppropiateColorHash from '@/hooks/custom/useAppropiateColorHash';
 import { cn } from '@/util/helper/twutil';
 import styles from './SafeScreen.style';
+import customColor from '@/util/constant/color';
 
 type SafeScreenProps = PropsWithChildren &
 	ViewProps & {
 		isBottomSafe?: boolean;
 		isTopSafe?: boolean;
+		statusBarBg?: string;
 	};
 
 function SafeScreen({
@@ -20,12 +22,16 @@ function SafeScreen({
 	isBottomSafe,
 	isTopSafe = true,
 	style,
+	statusBarBg: customStatusBarBg,
 	...props
 }: SafeScreenProps) {
 	const insets = useSafeAreaInsets();
 	const tabBarHeight = useContext(BottomTabBarHeightContext);
 	const { colorScheme } = useColorScheme();
-	const barColor = useAppropiateColorHash('patchwork-dark-100');
+
+	const defaultStatusBarBg =
+		colorScheme === 'dark' ? customColor['patchwork-dark-100'] : '#fff';
+	const statusBarBg = customStatusBarBg ?? defaultStatusBarBg;
 
 	const shouldAddBottomPadding = isBottomSafe ?? tabBarHeight === undefined;
 
@@ -45,9 +51,8 @@ function SafeScreen({
 		>
 			<StatusBar
 				barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
-				// backgroundColor={barColor}
 				translucent
-				backgroundColor="transparent"
+				backgroundColor={statusBarBg}
 			/>
 			{children}
 		</View>

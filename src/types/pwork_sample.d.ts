@@ -1352,4 +1352,61 @@ declare namespace Patchwork {
 			curies: { name: string; href: string; templated: boolean }[];
 		};
 	};
+
+	type WPTerm = {
+		id: number;
+		name: string;
+		slug: string;
+		description: string;
+		link: string;
+		count: number;
+		image?: string;
+	};
+
+	type WPPost = {
+		id: number;
+		date: string;
+		slug: string;
+		link: string;
+		title: { rendered: string };
+		excerpt: { rendered: string };
+		content?: { rendered: string };
+		featured_media: number;
+		type: string;
+		acf?: Record<string, any>;
+		meta?: Record<string, any>;
+		external_url?: string;
+		_embedded?: {
+			'wp:featuredmedia'?: Array<{ source_url: string }>;
+			author?: Array<{
+				id: number;
+				name: string;
+				avatar_urls: Record<string, string>;
+			}>;
+		};
+	};
+
+	type PeopleDirectoryItem = {
+		id: string;
+		displayName: string;
+		firstName: string;
+		lastName: string;
+		department: string;
+		subtitle: string;
+		email: string;
+		phone: string;
+		country: string;
+		city: string;
+		avatarUrl: string;
+		contactType: string;
+	};
+
+	type WPUser = {
+		id: number;
+		name: string;
+		slug: string;
+		link: string;
+		description: string;
+		avatar_urls: Record<string, string>;
+	};
 }

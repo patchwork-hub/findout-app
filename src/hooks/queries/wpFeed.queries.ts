@@ -11,6 +11,11 @@ import {
 	getWordpressPostsByAuthorIdPaginated,
 	getWordpressFeed,
 	getWordpressCategories,
+	getWpResources,
+	getWpResourcesPaginated,
+	getEventOgImage,
+	searchWordpressPosts,
+	getWpEventsPaginated,
 } from '@/services/wpFeed.service';
 import { SearchUsersQueryKey } from '@/types/queries/conversations.type';
 import { WordpressPostsByCategoryIdQueryKey } from '@/types/queries/wordpressFeed.type';
@@ -18,6 +23,7 @@ import { QueryOptionHelper } from '@/util/helper/helper';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { MOCK_WP_COMMENTS } from '@/util/constant/wpComments';
+import { getEventWebsiteUrl, getFaviconUrl } from '@/util/helper/wpContent';
 
 export const useSearchUsers = ({
 	options,
@@ -175,5 +181,130 @@ export const useGetWordpressLikesByPostId = (
 				found: (postId % 100) + 1100,
 			};
 		},
+	});
+};
+
+export const useGetWpResources = () => {
+	return useQuery({
+		queryKey: ['wpResources'],
+		queryFn: getWpResources,
+		staleTime: 5 * 60 * 1000,
+	});
+};
+
+export const useGetWpResourcesPaginated = () => {
+	return useInfiniteQuery({
+		queryKey: ['wpResourcesPaginated'],
+		queryFn: ({ pageParam = 1 }) =>
+			getWpResourcesPaginated({ page: pageParam }),
+		getNextPageParam: (lastPage, allPages) => {
+			const nextPage = allPages.length + 1;
+			return nextPage > lastPage.totalPages ? undefined : nextPage;
+		},
+		initialPageParam: 1,
+	});
+};
+
+export const useGetEventOgImage = (url?: string) => {
+	return useQuery({
+		queryKey: ['eventOgImage', url],
+		queryFn: () => getEventOgImage(url!),
+		enabled: Boolean(url),
+		staleTime: Infinity,
+		gcTime: Infinity,
+		retry: 0,
+	});
+};
+
+export const useEventImage = (item: Patchwork.WPPost) => {
+	const wpImageUrl =
+		item._embedded?.['wp:featuredmedia']?.[0]?.source_url ??
+		item.acf?.event_image ??
+		item.acf?.featured_image_url ??
+		item.meta?.event_image;
+	const websiteUrl = getEventWebsiteUrl(
+		item.excerpt?.rendered ?? '',
+		item.content?.rendered,
+	);
+	const isCsidInternal = !wpImageUrl && !websiteUrl;
+	const { data: ogImageUrl, isFetched: ogFetched } = useGetEventOgImage(
+		!wpImageUrl ? websiteUrl : undefined,
+	);
+	const primaryImageUrl = wpImageUrl ?? ogImageUrl ?? undefined;
+	const isLoadingOg = !wpImageUrl && !isCsidInternal && !ogFetched;
+	const faviconUrl =
+		!primaryImageUrl && ogFetched && websiteUrl
+			? getFaviconUrl(websiteUrl)
+			: undefined;
+	return {
+		isCsidInternal,
+		isLoadingOg,
+		faviconUrl,
+		primaryImageUrl,
+		websiteUrl,
+	};
+};
+
+const isCsidUrl = (url: string): boolean => {
+	try {
+		const host = new URL(url).hostname.toLowerCase();
+		return host === 'csidnet.org' || host.endsWith('.csidnet.org');
+	} catch {
+		return false;
+	}
+};
+
+export const useResourceImage = (item: Patchwork.WPPost) => {
+	const wpImageUrl = item._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+	const externalUrl =
+		item.external_url ??
+		item.acf?.external_url ??
+		item.meta?.external_url ??
+		'';
+	const isExternal = Boolean(externalUrl) && !isCsidUrl(externalUrl);
+	const { data: ogImageUrl, isFetched: ogFetched } = useGetEventOgImage(
+		!wpImageUrl && isExternal ? externalUrl : undefined,
+	);
+	const isCsidInternal = !wpImageUrl && !isExternal;
+	const primaryImageUrl = wpImageUrl ?? ogImageUrl ?? undefined;
+	const isLoadingOg = !wpImageUrl && isExternal && !ogFetched;
+	const faviconUrl =
+		!primaryImageUrl && ogFetched && isExternal
+			? getFaviconUrl(externalUrl)
+			: undefined;
+	return { isCsidInternal, isLoadingOg, faviconUrl, primaryImageUrl };
+};
+
+export const useSearchWpResources = (search: string) => {
+	return useInfiniteQuery({
+		queryKey: ['wpResourcesSearch', { search }],
+		queryFn: ({ pageParam }) =>
+			searchWordpressPosts({
+				search,
+				page: pageParam as number,
+				per_page: 10,
+				post_type: 'resource',
+			}),
+		initialPageParam: 1,
+		getNextPageParam: (lastPage, allPages) => {
+			if (!lastPage) return undefined;
+			return allPages.length < lastPage.totalPages
+				? allPages.length + 1
+				: undefined;
+		},
+		enabled: search.length >= 3,
+		staleTime: 5 * 60 * 1000,
+	});
+};
+
+export const useGetWpEventsPaginated = () => {
+	return useInfiniteQuery({
+		queryKey: ['wpEventsPaginated'],
+		queryFn: ({ pageParam = 1 }) => getWpEventsPaginated({ page: pageParam }),
+		getNextPageParam: (lastPage, allPages) => {
+			const nextPage = allPages.length + 1;
+			return nextPage > lastPage.totalPages ? undefined : nextPage;
+		},
+		initialPageParam: 1,
 	});
 };

@@ -42,6 +42,10 @@ import {
 	getFocusedRouteNameFromRoute,
 	StackActions,
 } from '@react-navigation/native';
+import CalendarStack from './CalendarStackNavigator';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar as regularCalendar } from '@fortawesome/free-regular-svg-icons';
 
 const Tab = createBottomTabNavigator<BottomStackParamList>();
 
@@ -221,45 +225,18 @@ export default function BottomTabs() {
 				})}
 			/>
 			<Tab.Screen
-				name="Notification"
-				component={NotiStack}
-				options={({ route }) => {
-					const routeName = getFocusedRouteNameFromRoute(route) ?? '';
-					const hideTabBar = routeName === 'QuotePost';
-
-					return {
-						...(hideTabBar
-							? {
-									tabBarStyle: { display: 'none' },
-							  }
-							: {}),
-						tabBarIcon: ({ focused }) => (
-							<NotiTabBarIcon {...{ colorScheme, focused, notiCount }} />
-						),
-					};
+				name="Calendar"
+				component={CalendarStack}
+				options={{
+					tabBarAccessibilityLabel: 'Calendar',
+					tabBarIcon: ({ color, focused }) => (
+						<FontAwesomeIcon
+							icon={focused ? faCalendar : regularCalendar}
+							size={24}
+							color={colorScheme === 'dark' ? '#fff' : '#000'}
+						/>
+					),
 				}}
-				listeners={({ navigation }) => ({
-					tabPress: event => {
-						event.preventDefault();
-						notiCount !== 0 && onRemoveNotifcationCount();
-						if (
-							notiCount > 0 &&
-							notificationMarker?.notifications &&
-							notificationMarker?.notifications?.last_read_id !==
-								notificationList[0]?.most_recent_notification_id
-						) {
-							markAsRead({
-								id: notificationList[0]?.most_recent_notification_id,
-							});
-						}
-						navigation.navigate('Notification', {
-							screen: 'NotificationList',
-							params: {
-								tabIndex: 0,
-							},
-						});
-					},
-				})}
 			/>
 			<Tab.Screen
 				name="Conversations"

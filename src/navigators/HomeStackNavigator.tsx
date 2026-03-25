@@ -28,6 +28,12 @@ import WpCategoryViewAll from '@/screens/WpCategoryViewAll/WpCategoryViewAll';
 import AuthorDetail from '@/screens/AuthorDetail/AuthorDetail';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import StarterPackDetail from '@/screens/StarterPackDetail/StarterPackDetail';
+import HowToUseApp from '@/screens/HowToUseApp/HowToUseApp';
+import WpNewsList from '@/screens/WpNewsList/WpNewsList';
+import WpNewsDetail from '@/screens/WpNewsDetail/WpNewsDetail';
+import WpKnowledgeList from '@/screens/WpKnowledgeList/WpKnowledgeList';
+import ProjectsEventsList from '@/screens/ProjectsEventsList/ProjectsEventsList';
+import ProjectsEventsDetail from '@/screens/ProjectsEventsDetail/ProjectsEventsDetail';
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
@@ -79,6 +85,15 @@ const HomeStack = () => {
 			<Stack.Screen name="AuthorDetail" component={AuthorDetail} />
 			<Stack.Screen name="StarterPackDetail" component={StarterPackDetail} />
 			<Stack.Screen name="QuotedBy" component={QuotedBy} />
+			<Stack.Screen name="HowToUseApp" component={HowToUseApp} />
+			<Stack.Screen name="WpNewsList" component={WpNewsList} />
+			<Stack.Screen name="WpNewsDetail" component={WpNewsDetail} />
+			<Stack.Screen name="WpKnowledgeList" component={WpKnowledgeList} />
+			<Stack.Screen name="ProjectsEventsList" component={ProjectsEventsList} />
+			<Stack.Screen
+				name="ProjectsEventsDetail"
+				component={ProjectsEventsDetail}
+			/>
 		</Stack.Navigator>
 	);
 };

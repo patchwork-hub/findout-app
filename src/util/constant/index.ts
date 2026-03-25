@@ -21,6 +21,8 @@ export const DEFAULT_FINDOUT_DASHBOARD_API_URL =
 	'https://dashboard.findout.media';
 export const PATCHWORK_CHANNEL_API_URL = 'https://patchwork.channel.org';
 
+export const CSID_WP_URL = process.env.CSID_WP_URL ?? 'https://csidnet.org';
+
 // export const DEFAULT_API_URL = 'https://staging.patchwork.online';
 // export const DEFAULT_DASHBOARD_API_URL =
 // 	'https://staging-dashboard.patchwork.online';

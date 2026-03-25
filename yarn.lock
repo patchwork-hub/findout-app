@@ -5839,6 +5839,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/geojson@npm:^7946.0.13":
+  version: 7946.0.16
+  resolution: "@types/geojson@npm:7946.0.16"
+  checksum: d66e5e023f43b3e7121448117af1930af7d06410a32a585a8bc9c6bb5d97e0d656cd93d99e31fa432976c32e98d4b780f82bf1fd1acd20ccf952eb6b8e39edf2
+  languageName: node
+  linkType: hard
+
 "@types/graceful-fs@npm:^4.1.3":
   version: 4.1.9
   resolution: "@types/graceful-fs@npm:4.1.9"
@@ -9923,6 +9930,7 @@ __metadata:
     react-native: 0.80.2
     react-native-animated-spinkit: ^1.5.2
     react-native-blurhash: ^2.1.2
+    react-native-calendar-events: ^2.2.0
     react-native-collapsible-tab-view: 9.0.0-rc.0
     react-native-confirmation-code-field: ^7.4.0
     react-native-date-picker: 5.0.12
@@ -9935,6 +9943,7 @@ __metadata:
     react-native-keyboard-aware-scroll-view: ^0.9.5
     react-native-keyboard-controller: ^1.17.1
     react-native-linear-gradient: ^2.8.3
+    react-native-maps: ^1.27.2
     react-native-material-menu: ^2.0.0
     react-native-mmkv: ^3.3.0
     react-native-pager-view: ^6.9.1
@@ -14340,6 +14349,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-calendar-events@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "react-native-calendar-events@npm:2.2.0"
+  peerDependencies:
+    react-native: ">=0.60.0"
+  checksum: cc86ece7c92df94cc2ccca2e640451fafda8517b7737301c1d5c9f586dcf061eb411152af9f186fac0ee53796d43ac82a2841c5977bae6a8efbb366085b35553
+  languageName: node
+  linkType: hard
+
 "react-native-collapsible-tab-view@npm:9.0.0-rc.0":
   version: 9.0.0-rc.0
   resolution: "react-native-collapsible-tab-view@npm:9.0.0-rc.0"
@@ -14501,6 +14519,22 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: f980d324e551bbc475c6406bdc5250a08242020cbe653412fa169bbdf51e28a502e225de105b4d696d6a1a1b733d44782469020f4936d8b3ce0e2c78e51cf58f
+  languageName: node
+  linkType: hard
+
+"react-native-maps@npm:^1.27.2":
+  version: 1.27.2
+  resolution: "react-native-maps@npm:1.27.2"
+  dependencies:
+    "@types/geojson": ^7946.0.13
+  peerDependencies:
+    react: ">= 18.3.1"
+    react-native: ">= 0.76.0"
+    react-native-web: ">= 0.11"
+  peerDependenciesMeta:
+    react-native-web:
+      optional: true
+  checksum: e6cf3faa7ce5d28ba66679781732ad429386773b1528b34c96c0a5bdd29d276af05a5058badbe03290b7eb89ded179b2768b9e8518946ff31741d2fc46ebd9e6
   languageName: node
   linkType: hard
 

@@ -23,3 +23,10 @@ const customColor = {
 };
 
 export default customColor;
+
+export const homeCardAccentPalette = [
+	'#033E45',
+	'#0A5058',
+	'#1B646A',
+	'#2F7173',
+];

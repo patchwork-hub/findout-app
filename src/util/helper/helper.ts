@@ -792,3 +792,87 @@ export const getQuotePolicy = (status: Patchwork.Status): QuotePolicy => {
 export function extractPlainText(html: string): string {
 	return html ? html.replace(/<[^>]+>/g, '') : '';
 }
+
+export const stripHtml = (text: string) =>
+	text
+		.replace(/<[^>]*>/g, ' ')
+		.replace(/&nbsp;/g, ' ')
+		.replace(/\s+/g, ' ')
+		.trim();
+
+export const formatDate = (dateStr: string) => {
+	const date = new Date(dateStr);
+	return date.toLocaleDateString('en-US', {
+		month: 'short',
+		day: 'numeric',
+		year: 'numeric',
+	});
+};
+
+export const SCREEN_WIDTH = Dimensions.get('window').width;
+
+export const toArray = <T>(value: T[] | Record<string, T> | undefined): T[] => {
+	if (Array.isArray(value)) return value;
+	if (value && typeof value === 'object') return Object.values(value);
+	return [];
+};
+
+export const normalizeUrl = (url?: string): string => {
+	if (!url) return '';
+	const trimmed = url.trim();
+	if (!trimmed) return '';
+	if (/^https?:\/\//i.test(trimmed)) return trimmed;
+	return `https://${trimmed}`;
+};
+
+export const formatDateRange = (start?: string, end?: string) => {
+	if (!start) return '';
+	const startDate = new Date(start);
+	if (Number.isNaN(startDate.getTime())) return '';
+
+	const formatter = new Intl.DateTimeFormat('en-US', {
+		month: 'short',
+		day: 'numeric',
+		year: 'numeric',
+	});
+	if (!end) return formatter.format(startDate);
+
+	const endDate = new Date(end);
+	if (Number.isNaN(endDate.getTime())) return formatter.format(startDate);
+	return `${formatter.format(startDate)} - ${formatter.format(endDate)}`;
+};
+
+export const getMappedWorkingGroupChannels = (
+	collections?: Patchwork.CollectionList[],
+): Patchwork.ChannelList[] => {
+	if (!collections || collections.length <= 1) {
+		return [];
+	}
+
+	const workingGroupTypeCollections = collections[1];
+	if (!workingGroupTypeCollections) {
+		return [];
+	}
+
+	const workingGroupChannelList =
+		workingGroupTypeCollections.attributes.channels.data;
+
+	return workingGroupChannelList.map<Patchwork.ChannelList>(channel => {
+		const admin = channel.attributes.community_admin;
+		return {
+			...channel,
+			attributes: {
+				...channel.attributes,
+				community_admin: admin
+					? {
+							...admin,
+							username: admin.username.replace(
+								'@channel.org',
+								'@csidnet.channel.org',
+							),
+					  }
+					: admin,
+			},
+		};
+	});
+};

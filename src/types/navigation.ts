@@ -14,6 +14,7 @@ import type {
 	BottomTabScreenProps,
 } from '@react-navigation/bottom-tabs';
 import { StatusCurrentPage } from '@/context/statusItemContext/statusItemContext.type';
+import { LautiEventDocument, LautiGroupDocument } from './calendar.type';
 
 export type RootStackParamList = {
 	Profile: { id: string };
@@ -27,7 +28,12 @@ export type RootStackParamList = {
 	Index: NavigatorScreenParams<BottomStackParamList>;
 	Guest: NavigatorScreenParams<GuestStackParamList>;
 	SettingStack: NavigatorScreenParams<SettingStackParamList>;
-	WebViewer: { url: string; customTitle?: string; hideHeader?: boolean };
+	WebViewer: {
+		url: string;
+		customTitle?: string;
+		hideHeader?: boolean;
+		hideExternalOpen?: boolean;
+	};
 	ImageViewer: {
 		imageUrls: Patchwork.ImageUrl[];
 		id: Patchwork.Attachment['id'];
@@ -46,11 +52,12 @@ export type RootStackParamList = {
 	SplashScreen: undefined;
 	VideoPlayer: { status: Patchwork.Status };
 	GifPlayer: { status: Patchwork.Status; gifUrl: string };
+	NotiStack: NavigatorScreenParams<NotiStackParamList>;
 };
 
 export type BottomStackParamList = {
 	Home: NavigatorScreenParams<HomeStackParamList>;
-	Notification: NavigatorScreenParams<NotiStackParamList>;
+	Calendar: undefined;
 	Search: NavigatorScreenParams<SearchStackParamList>;
 	Compose:
 		| {
@@ -111,7 +118,12 @@ export type HomeStackParamList = {
 		isUserFromSameServer?: boolean;
 		userAccHandle: string;
 	};
-	WebViewer: { url: string; customTitle?: string; hideHeader?: boolean };
+	WebViewer: {
+		url: string;
+		customTitle?: string;
+		hideHeader?: boolean;
+		hideExternalOpen?: boolean;
+	};
 	SettingStack: NavigatorScreenParams<SettingStackParamList>;
 	PeopleFollowing: undefined;
 	ListsStack: NavigatorScreenParams<ListsStackParamList>;
@@ -146,6 +158,55 @@ export type HomeStackParamList = {
 		id: Patchwork.Attachment['id'];
 	};
 	QuotePost: { statusId: string };
+	HowToUseApp: undefined;
+	WpPeopleList: undefined;
+	WpNewsList: undefined;
+	WpNewsDetail: {
+		title: string;
+		date: string;
+		content: string;
+		link: string;
+	};
+	WpKnowledgeList: undefined;
+	WorkingGroupList: undefined;
+	WorkingGroupDetail: {
+		name: string;
+		description: string;
+		link: string;
+		slug: string;
+		count: number;
+		image?: string;
+	};
+	CommitteeList: undefined;
+	CommitteeDetail: {
+		name: string;
+		description: string;
+		link: string;
+		slug: string;
+		count: number;
+		image?: string;
+	};
+	ProjectsEventsList: undefined;
+	ProjectsEventsDetail: {
+		title: string;
+		date: string;
+		excerpt: string;
+		content?: string;
+		imageUrl?: string;
+		acf?: Record<string, any>;
+		meta?: Record<string, any>;
+	};
+};
+
+export type CalendarStackParamList = {
+	CalendarHome:
+		| {
+				focusMarker?: { lat: number; lng: number };
+				focusEvent?: LautiEventDocument;
+		  }
+		| undefined;
+	CalendarEventDetail: { event: LautiEventDocument };
+	CalendarOrganiserDetail: { group: LautiGroupDocument };
 };
 
 export type SearchStackParamList = {
@@ -153,6 +214,12 @@ export type SearchStackParamList = {
 		activeIndex: number;
 	};
 	SearchFeed: undefined;
+	WebViewer: {
+		url: string;
+		customTitle?: string;
+		hideHeader?: boolean;
+		hideExternalOpen?: boolean;
+	};
 	FeedDetail: {
 		id: string;
 		isMainChannel?: boolean;
@@ -312,7 +379,12 @@ export type GuestStackParamList = {
 		isAddAccount?: boolean;
 		isFromSwitchAccount?: boolean;
 	};
-	WebViewer: { url: string; customTitle?: string; hideHeader?: boolean };
+	WebViewer: {
+		url: string;
+		customTitle?: string;
+		hideHeader?: boolean;
+		hideExternalOpen?: boolean;
+	};
 	SignUp: undefined;
 	SignUpOTP: { email: string; signup_token: string };
 	AddUserNameScreen: {
@@ -334,7 +406,12 @@ export type SettingStackParamList = {
 	UpdatePassword: undefined;
 	MuteAndBlockList: undefined;
 	MyInformation: undefined;
-	WebViewer: { url: string; customTitle?: string; hideHeader?: boolean };
+	WebViewer: {
+		url: string;
+		customTitle?: string;
+		hideHeader?: boolean;
+		hideExternalOpen?: boolean;
+	};
 	BookmarkList: undefined;
 	ProfileOther: {
 		id: string;

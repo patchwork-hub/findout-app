@@ -13,7 +13,7 @@ export const NEWSMAST_FALLBACK_PREVIEW_IMAGE_URL =
 export const CHANNELS_FALLBACK_PREVIEW_IMAGE_URL =
 	'https://patchwork-staging-bucket.s3.eu-west-2.amazonaws.com/default_fallback_resized.png';
 
-export const DEFAULT_API_URL = 'https://findout.media';
+export const DEFAULT_API_URL = 'https://patchwork.io';
 export const DEFAULT_DASHBOARD_API_URL = 'https://dashboard.channel.org';
 export const DEFAULT_BRISTOL_DASHBOARD_API_URL =
 	'https://dashboard.thebristolcable.social';

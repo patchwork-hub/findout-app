@@ -170,10 +170,11 @@ const navigateToConversationDetail = (
 const navigateToFeedDetail = (notiResp: Patchwork.PushNotiResponse['data']) => {
 	navigationRef.dispatch(
 		CommonActions.reset({
-			index: 0,
+			index: 1,
 			routes: [
+				{ name: 'Index' },
 				{
-					name: 'Notification',
+					name: 'NotiStack',
 					state: {
 						routes: [
 							{
@@ -204,10 +205,11 @@ const handleNotiProfileDetailPress = (destinationId: string) => {
 	if (navigationRef.isReady()) {
 		navigationRef.dispatch(
 			CommonActions.reset({
-				index: 0,
+				index: 1,
 				routes: [
+					{ name: 'Index' },
 					{
-						name: 'Notification',
+						name: 'NotiStack',
 						state: {
 							routes: [
 								{
@@ -233,10 +235,11 @@ const handleNotiFollowRequestPress = () => {
 	if (navigationRef.isReady()) {
 		navigationRef.dispatch(
 			CommonActions.reset({
-				index: 0,
+				index: 1,
 				routes: [
+					{ name: 'Index' },
 					{
-						name: 'Notification',
+						name: 'NotiStack',
 						state: {
 							routes: [
 								{

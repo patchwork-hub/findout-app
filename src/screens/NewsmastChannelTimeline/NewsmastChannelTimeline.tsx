@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { View, TouchableOpacity, Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColorScheme } from 'nativewind';
@@ -31,8 +31,7 @@ import VerticalSwipeHelper from '@/components/atoms/feed/VerticalSwipeHelper/Ver
 import { useTranslation } from 'react-i18next';
 import ChannelPostsTab from '@/components/molecules/channel/ChannelPostsTab/ChannelPostsTab';
 import ChannelAboutTab from '@/components/molecules/channel/ChannelAboutTab/ChannelAboutTab';
-import { FloatingAddButton } from '@/components/molecules/conversations/FloatingAddButton/FloatingAddButton';
-import { AnimatedFabWrapper } from '@/components/molecules/feed/AnimatedFabWrapper/AnimatedFabWrapper';
+import { useComposePrefillStore } from '@/store/ui/composePrefillStore';
 
 const NewsmastChannelTimeline: React.FC<
 	HomeStackScreenProps<'NewsmastChannelTimeline'>
@@ -43,6 +42,8 @@ const NewsmastChannelTimeline: React.FC<
 	const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 	const [isTimelineLoading, setIsTimelineLoading] = useState(true);
 	const { barColor, tabBarTextColor } = useTabBarTheme();
+
+	const { setChannelPrefill, clearChannelPrefill } = useComposePrefillStore();
 
 	const {
 		accountHandle,
@@ -79,6 +80,26 @@ const NewsmastChannelTimeline: React.FC<
 	};
 
 	const isHeaderReady = newsmastChannelDetail && newsmastCommunityDetailBio;
+
+	useEffect(() => {
+		if (!newsmastCommunityDetailBio || !newsmastChannelDetail) return;
+		setChannelPrefill({
+			prefilledHashtags:
+				newsmastCommunityDetailBio.attributes?.patchwork_community_hashtags,
+			prefilledAudience: newsmastCommunityDetailBio.attributes,
+			channelType: accountHandle.endsWith('findout.media') ? 'local' : 'public',
+			channelId: newsmastChannelDetail.id,
+		});
+		return () => {
+			clearChannelPrefill();
+		};
+	}, [
+		newsmastCommunityDetailBio,
+		newsmastChannelDetail,
+		accountHandle,
+		setChannelPrefill,
+		clearChannelPrefill,
+	]);
 
 	return (
 		<ScrollProvider>
@@ -210,24 +231,6 @@ const NewsmastChannelTimeline: React.FC<
 						</View>
 					</View>
 				)}
-
-				<AnimatedFabWrapper isVisible={!isTimelineLoading}>
-					<FloatingAddButton
-						onPress={() => {
-							navigation.navigate('Compose' as any, {
-								type: 'create',
-								prefilledHashtags:
-									newsmastCommunityDetailBio?.attributes
-										?.patchwork_community_hashtags,
-								prefilledAudience: newsmastCommunityDetailBio?.attributes,
-								channelType: accountHandle.endsWith('findout.media')
-									? 'local'
-									: 'public',
-								channelId: newsmastChannelDetail?.id,
-							});
-						}}
-					/>
-				</AnimatedFabWrapper>
 			</View>
 		</ScrollProvider>
 	);

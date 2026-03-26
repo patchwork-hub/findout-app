@@ -37,6 +37,7 @@ import { useMarkLastReadNotification } from '@/hooks/mutations/pushNoti.mutation
 import customColor from '@/util/constant/color';
 import { isTablet } from '@/util/helper/isTablet';
 import { useWpSearchStore } from '@/store/feed/wpSearchStore';
+import { useComposePrefillStore } from '@/store/ui/composePrefillStore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
 	getFocusedRouteNameFromRoute,
@@ -175,17 +176,8 @@ export default function BottomTabs() {
 				options={({ navigation }) => {
 					const state = navigation.getState();
 					const activeTab = state.routes[state.index]?.name;
-					const isNewsmastChannelTimeline = state.routes.some(route => {
-						if (route.name !== 'Home' && route.name !== 'Search') {
-							return false;
-						}
-
-						const focusedRouteName = getFocusedRouteNameFromRoute(route);
-						return focusedRouteName === 'NewsmastChannelTimeline';
-					});
 					const isConversationTab = activeTab === 'Conversations';
-					const shouldDisableCompose =
-						isConversationTab || isNewsmastChannelTimeline;
+					const shouldDisableCompose = isConversationTab;
 					return {
 						tabBarStyle: { display: 'none' },
 						tabBarButton: props => (
@@ -198,9 +190,12 @@ export default function BottomTabs() {
 							<View
 								style={{
 									padding: 10,
-									backgroundColor: colorScheme === 'dark' ? '#444A4F' : '#333',
+									backgroundColor: shouldDisableCompose
+										? colorScheme === 'dark'
+											? '#333'
+											: '#999'
+										: customColor['patchwork-primary'],
 									borderRadius: 10,
-									opacity: shouldDisableCompose ? 0.4 : 1,
 								}}
 							>
 								<ComposeTabIcon
@@ -216,7 +211,11 @@ export default function BottomTabs() {
 				listeners={({ navigation }) => ({
 					tabPress: event => {
 						event.preventDefault();
-						navigation.navigate('Compose', { type: 'create' });
+						const prefill = useComposePrefillStore.getState().channelPrefill;
+						navigation.navigate('Compose', {
+							type: 'create',
+							...prefill,
+						});
 					},
 				})}
 			/>

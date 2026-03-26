@@ -31,7 +31,7 @@ const SaveDraftButton = () => {
 	const { resetAttachmentStore } = useManageAttachmentActions();
 	const { draftType, selectedDraftId } = useDraftPostsStore();
 	const { setSelectedDraftId, setDraftType } = useDraftPostsActions();
-	const { selectedAudience } = useCreateAudienceStore();
+	const { selectedAudience, clearAudience } = useCreateAudienceStore();
 	const { editSelectedAudience, clearEditSelectedAudience } =
 		useEditAudienceStore();
 	const { colorScheme } = useColorScheme();
@@ -65,6 +65,7 @@ const SaveDraftButton = () => {
 				composeDispatch({ type: 'clear' });
 				queryClient.invalidateQueries({ queryKey: ['view-multi-draft'] });
 			}
+			clearAudience();
 			clearEditSelectedAudience();
 			navigation.goBack();
 		},
@@ -73,6 +74,7 @@ const SaveDraftButton = () => {
 	const { mutate: updateDraft, isPending: isUpdatingDraft } =
 		useUpdateSpecificDraftMutation({
 			onSettled(data, error) {
+				clearAudience();
 				clearEditSelectedAudience();
 				setDraftType('create');
 				setSelectedDraftId(null);

@@ -5,11 +5,6 @@ import {
 	Platform,
 	TextInput as RNTextInput,
 } from 'react-native';
-import {
-	ComposeGalleryIcon,
-	ComposeGifIcon,
-	EmojiIcon,
-} from '@/util/svg/icon.compose';
 import { useColorScheme } from 'nativewind';
 import { useComposeStatus } from '@/context/composeStatusContext/composeStatus.context';
 import { useComposeMutation } from '@/hooks/mutations/feed.mutation';
@@ -21,7 +16,6 @@ import {
 	useManageAttachmentActions,
 	useManageAttachmentStore,
 } from '@/store/compose/manageAttachments/manageAttachmentStore';
-import { playSound } from '@/util/helper/conversation';
 import ThemeModal from '@/components/atoms/common/ThemeModal/ThemeModal';
 import ManageAttachmentModal from '@/components/organisms/compose/modal/ManageAttachment/MakeAttachmentModal';
 import { cn } from '@/util/helper/twutil';
@@ -30,7 +24,6 @@ import { addAllUserAcctFromConversation } from '@/util/helper/helper';
 import Graphemer from 'graphemer';
 import EmojiModal from '@/components/organisms/compose/modal/Emoji/EmojiModal';
 import GifPickerModal from '../../compose/GifPickerModal/GifPickerModal';
-import { SendMessageIcon } from '@/util/svg/icon.conversations';
 import customColor from '@/util/constant/color';
 import { useCursorStore } from '@/store/compose/cursorStore/cursorStore';
 import { useTranslation } from 'react-i18next';
@@ -107,6 +100,7 @@ const InitialMessageActionsBar = ({
 			let payload;
 			payload = prepareComposePayload(composeState);
 			payload.visibility = 'direct';
+			payload.local_only = false;
 			payload.in_reply_to_id = lastMsg?.id;
 			payload.status = addAllUserAcctFromConversation(
 				totalMentionUserList,

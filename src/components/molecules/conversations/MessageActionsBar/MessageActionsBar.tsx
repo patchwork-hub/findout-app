@@ -118,6 +118,7 @@ const MessageActionsBar = ({
 			let payload;
 			payload = prepareComposePayload(composeState);
 			payload.visibility = 'direct';
+			payload.local_only = false;
 			payload.in_reply_to_id = lastMsg?.id;
 			payload.status = addAllUserAcctFromConversation(
 				currentConversation?.accounts,

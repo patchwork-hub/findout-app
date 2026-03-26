@@ -303,6 +303,7 @@ declare namespace Patchwork {
 		sensitive: boolean;
 		spoiler_text?: string;
 		visibility: string;
+		local_only?: boolean;
 		language: string;
 		uri: string;
 		url: string;

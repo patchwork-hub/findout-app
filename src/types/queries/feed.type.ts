@@ -55,6 +55,7 @@ export type ComposeMutationPayload = {
 	media_attributes?: { id: string; description: string }[];
 	schedule_detail_id?: string;
 	scheduled_at?: Date;
+	local_only?: boolean;
 };
 
 export type RepostMutationPayload = {

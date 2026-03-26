@@ -118,6 +118,8 @@ const ReplyActionBar = ({
 				(feedDetailStatus?.visibility as Patchwork.ComposeVisibility) ||
 				'public';
 
+			payload.local_only = feedDetailStatus?.local_only === true;
+
 			mutate({ ...payload });
 		}
 	};

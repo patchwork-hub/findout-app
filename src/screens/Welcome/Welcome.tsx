@@ -111,7 +111,7 @@ const Welcome: React.FC<GuestStackScreenProps<'Welcome'>> = ({
 										className="my-4 active:opacity-80"
 										onPress={() => {
 											navigation.navigate('WebViewer', {
-												url: 'https://thebristolcable.org/terms/',
+												url: 'https://newsmastfoundation.org/terms-conditions/',
 												customTitle: 'Terms & Conditions',
 											});
 										}}
@@ -123,7 +123,7 @@ const Welcome: React.FC<GuestStackScreenProps<'Welcome'>> = ({
 										className="my-4 active:opacity-80"
 										onPress={() => {
 											navigation.navigate('WebViewer', {
-												url: 'https://thebristolcable.org/privacy-policy/',
+												url: 'https://findout.media/privacy-policy/',
 												customTitle: 'Privacy Policy',
 											});
 										}}

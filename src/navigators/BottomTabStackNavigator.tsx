@@ -61,6 +61,10 @@ export default function BottomTabs() {
 		return notiList.flatMap(item => item.notification_groups);
 	}, [groupNotification]);
 
+	const isChannelLoading = useComposePrefillStore(
+		state => state.isChannelLoading,
+	);
+
 	const { mutate: markAsRead } = useMarkLastReadNotification({
 		onSuccess: () => {},
 	});
@@ -183,7 +187,7 @@ export default function BottomTabs() {
 						tabBarButton: props => (
 							<Pressable
 								{...(props as PressableProps)}
-								disabled={shouldDisableCompose}
+								disabled={shouldDisableCompose || isChannelLoading}
 							/>
 						),
 						tabBarIcon: ({ focused }) => (

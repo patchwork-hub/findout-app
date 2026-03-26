@@ -43,7 +43,12 @@ const NewsmastChannelTimeline: React.FC<
 	const [isTimelineLoading, setIsTimelineLoading] = useState(true);
 	const { barColor, tabBarTextColor } = useTabBarTheme();
 
-	const { setChannelPrefill, clearChannelPrefill } = useComposePrefillStore();
+	const { setChannelPrefill, clearChannelPrefill, setChannelLoading } =
+		useComposePrefillStore();
+
+	useEffect(() => {
+		setChannelLoading(true);
+	}, []);
 
 	const {
 		accountHandle,
@@ -99,6 +104,7 @@ const NewsmastChannelTimeline: React.FC<
 		accountHandle,
 		setChannelPrefill,
 		clearChannelPrefill,
+		setChannelLoading,
 	]);
 
 	return (

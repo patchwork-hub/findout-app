@@ -9,12 +9,18 @@ type ChannelComposePrefill = {
 
 type ComposePrefillState = {
 	channelPrefill: ChannelComposePrefill | null;
+	isChannelLoading: boolean;
+	setChannelLoading: (loading: boolean) => void;
 	setChannelPrefill: (prefill: ChannelComposePrefill) => void;
 	clearChannelPrefill: () => void;
 };
 
 export const useComposePrefillStore = create<ComposePrefillState>(set => ({
 	channelPrefill: null,
-	setChannelPrefill: prefill => set({ channelPrefill: prefill }),
-	clearChannelPrefill: () => set({ channelPrefill: null }),
+	isChannelLoading: false,
+	setChannelLoading: loading => set({ isChannelLoading: loading }),
+	setChannelPrefill: prefill =>
+		set({ channelPrefill: prefill, isChannelLoading: false }),
+	clearChannelPrefill: () =>
+		set({ channelPrefill: null, isChannelLoading: false }),
 }));

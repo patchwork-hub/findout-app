@@ -614,6 +614,12 @@ export const useGetSpeakOutChannelList = () => {
 	return useQuery({
 		queryKey,
 		queryFn: getSpeakOutChannelList,
+		select: (data: Patchwork.ChannelList[]) => {
+			if (!data || !Array.isArray(data)) return [];
+			return [...data].sort((a, b) =>
+				a.attributes?.name?.localeCompare(b.attributes?.name),
+			);
+		},
 	});
 };
 

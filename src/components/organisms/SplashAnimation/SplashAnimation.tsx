@@ -1,13 +1,6 @@
+import MultiColorFlowSpinner from '@/components/atoms/common/MultiColorFlowSpinner/MultiColorFlowSpinner';
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Image, View } from 'react-native';
-import {
-	Bounce,
-	Chase,
-	Plane,
-	Swing,
-	Wander,
-} from 'react-native-animated-spinkit';
-import customColor from '../../../util/constant/color';
 
 interface SplashAnimationProps {
 	onFinishAnimation: () => void;
@@ -20,13 +13,16 @@ const SplashAnimation: React.FC<SplashAnimationProps> = ({
 
 	const animationValue = useRef(new Animated.Value(0)).current;
 	const logoScale = useRef(new Animated.Value(0)).current;
+	const logoRotation = useRef(new Animated.Value(0)).current;
 	const logoOpacity = useRef(new Animated.Value(0)).current;
-	const logoSquash = useRef(new Animated.Value(1)).current;
 	const containerTranslateY = useRef(new Animated.Value(0)).current;
 	const spinnerOpacity = useRef(new Animated.Value(0)).current;
 	const spinnerTranslateY = useRef(new Animated.Value(20)).current;
 
 	useEffect(() => {
+		let timeoutId: NodeJS.Timeout;
+
+		// 1. Background expansion
 		Animated.timing(animationValue, {
 			toValue: 1,
 			duration: 2000,
@@ -34,44 +30,35 @@ const SplashAnimation: React.FC<SplashAnimationProps> = ({
 			useNativeDriver: true,
 		}).start();
 
-		Animated.sequence([
-			// 1. Square logo scales up with bounce
-			Animated.parallel([
-				Animated.timing(logoScale, {
-					toValue: 1,
-					duration: 700,
-					easing: Easing.back(1.5),
-					useNativeDriver: true,
-				}),
-				Animated.timing(logoOpacity, {
-					toValue: 1,
-					duration: 400,
-					useNativeDriver: true,
-				}),
-			]),
+		// 2. Logo Rotation (spin continuously)
+		Animated.loop(
+			Animated.timing(logoRotation, {
+				toValue: 1,
+				duration: 3000,
+				easing: Easing.linear,
+				useNativeDriver: true,
+			}),
+		).start();
+
+		// 3. Entrance Sequence
+		Animated.parallel([
+			Animated.timing(logoScale, {
+				toValue: 1,
+				duration: 700,
+				easing: Easing.back(1.5),
+				useNativeDriver: true,
+			}),
+			Animated.timing(logoOpacity, {
+				toValue: 1,
+				duration: 400,
+				useNativeDriver: true,
+			}),
 		]).start(() => {
 			setShowSpinner(true);
-			// Breathing squash on logo while loading
-			Animated.loop(
-				Animated.sequence([
-					Animated.timing(logoSquash, {
-						toValue: 0.95,
-						duration: 1000,
-						easing: Easing.inOut(Easing.sin),
-						useNativeDriver: true,
-					}),
-					Animated.timing(logoSquash, {
-						toValue: 1,
-						duration: 1000,
-						easing: Easing.inOut(Easing.sin),
-						useNativeDriver: true,
-					}),
-				]),
-			).start();
 
 			Animated.parallel([
 				Animated.timing(containerTranslateY, {
-					toValue: -30,
+					toValue: 0,
 					duration: 800,
 					easing: Easing.out(Easing.quad),
 					useNativeDriver: true,
@@ -88,10 +75,27 @@ const SplashAnimation: React.FC<SplashAnimationProps> = ({
 					useNativeDriver: true,
 				}),
 			]).start(() => {
-				onFinishAnimation();
+				timeoutId = setTimeout(onFinishAnimation, 1500);
 			});
 		});
+
+		// Cleanup function to prevent memory leaks and stop animations if the component unmounts
+		return () => {
+			if (timeoutId) clearTimeout(timeoutId);
+			animationValue.stopAnimation();
+			logoRotation.stopAnimation();
+			logoScale.stopAnimation();
+			logoOpacity.stopAnimation();
+			containerTranslateY.stopAnimation();
+			spinnerOpacity.stopAnimation();
+			spinnerTranslateY.stopAnimation();
+		};
 	}, []);
+
+	const rotateInterpolate = logoRotation.interpolate({
+		inputRange: [0, 1],
+		outputRange: ['0deg', '360deg'],
+	});
 
 	return (
 		<View className="flex-1 bg-white items-center justify-center overflow-hidden">
@@ -123,7 +127,7 @@ const SplashAnimation: React.FC<SplashAnimationProps> = ({
 				<Animated.View
 					style={{
 						opacity: logoOpacity,
-						transform: [{ scale: logoScale }, { scaleY: logoSquash }],
+						transform: [{ scale: logoScale }, { rotate: rotateInterpolate }],
 					}}
 				>
 					<Image
@@ -141,7 +145,7 @@ const SplashAnimation: React.FC<SplashAnimationProps> = ({
 						transform: [{ translateY: spinnerTranslateY }],
 					}}
 				>
-					<Swing size={40} color="white" />
+					<MultiColorFlowSpinner size={25} dotSize={12} />
 				</Animated.View>
 			)}
 		</View>

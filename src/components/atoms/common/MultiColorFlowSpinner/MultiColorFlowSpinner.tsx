@@ -9,7 +9,7 @@ interface MultiColorFlowSpinnerProps {
 
 const MultiColorFlowSpinner = ({
 	size = 50,
-	colors = ['#fff', '#fff', '#fff'],
+	colors = ['#cf4af0', '#3fa7e8', '#45e67a'],
 	dotSize = 15,
 }: MultiColorFlowSpinnerProps) => {
 	const animations = useRef(colors.map(() => new Animated.Value(0))).current;

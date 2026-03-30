@@ -33,12 +33,12 @@ const Welcome: React.FC<GuestStackScreenProps<'Welcome'>> = ({
 				<View className="pt-10 px-6">
 					<AccountSwitchingModal isWelcome />
 				</View>
-				<View className="h-[40%] items-center justify-center">
+				<View className="h-[40%] items-center justify-end">
 					<View className="items-center justify-center mt-10">
 						<PatchworkLogo colorScheme={colorScheme} />
 					</View>
 				</View>
-				<View className="flex-1 rounded-tr-[50] -mt-[56] bg-white dark:bg-patchwork-dark-100 p-6 pb-10">
+				<View className="flex-1 rounded-tr-[50] bg-white dark:bg-patchwork-dark-100 p-6 pb-10">
 					<View className="flex-grow items-center mx-3">
 						<Button
 							variant="default"
@@ -89,7 +89,7 @@ const Welcome: React.FC<GuestStackScreenProps<'Welcome'>> = ({
 										className="my-4 active:opacity-80"
 										onPress={() => {
 											navigation.navigate('WebViewer', {
-												url: 'https://thebristolcable.org/terms/',
+												url: 'https://patchwork.io/terms-of-service',
 												customTitle: 'Terms & Conditions',
 											});
 										}}
@@ -101,7 +101,7 @@ const Welcome: React.FC<GuestStackScreenProps<'Welcome'>> = ({
 										className="my-4 active:opacity-80"
 										onPress={() => {
 											navigation.navigate('WebViewer', {
-												url: 'https://thebristolcable.org/privacy-policy/',
+												url: 'https://patchwork.io/privacy-policy',
 												customTitle: 'Privacy Policy',
 											});
 										}}

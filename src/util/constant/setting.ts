@@ -1,17 +1,17 @@
 export const SettingTCLinkKeys = [
 	{
 		textKey: 'setting.terms_and_conditions',
-		path: 'https://thebristolcable.org/terms/',
+		path: 'https://patchwork.io/terms-of-service',
 		titleKey: 'Terms & Conditions',
 	},
 	{
 		textKey: 'setting.privacy_policy',
-		path: 'https://thebristolcable.org/privacy-policy/',
+		path: 'https://patchwork.io/privacy-policy',
 		titleKey: 'Privacy Policy',
 	},
 	{
 		textKey: 'setting.community_guidelines',
-		path: 'https://thebristolcable.org/guideline/',
+		path: 'https://newsmastfoundation.org/community-guidelines/',
 		titleKey: `Community Guidelines`,
 	},
 	// {

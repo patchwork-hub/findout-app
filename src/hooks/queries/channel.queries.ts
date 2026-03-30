@@ -17,6 +17,7 @@ import {
 	GetSpeakOutChannelListQueryKey,
 	GetDetailCollectionChannelListQueryKey,
 	GetFavouriteChannelListsQueryKey,
+	GetChannelFeedCollectionsQueryKey,
 	GetForYouChannelListQueryKey,
 	GetHomeTimelineQueryKey,
 	GetLocalMastodonTimelineQueryKey,
@@ -67,6 +68,7 @@ import {
 	getNewsmastCommunityHashtags,
 	getNewsmastCommunityPeopleToFollow,
 	getNewsmastChannelListWBearerToken,
+	getChannelFeedCollections,
 	getForYouChannelList,
 	getCatchUpChannelList,
 	getSpeakOutChannelList,
@@ -507,51 +509,96 @@ export const useGetNewsmastCommunityPeopleToFollow = ({
 	});
 };
 
-export const useGetForYouChannelList = () => {
-	const queryKey: GetForYouChannelListQueryKey = ['for-you-channel-list'];
-
+export const useGetChannelFeedCollections = () => {
+	const queryKey: GetChannelFeedCollectionsQueryKey = [
+		'channel-feed-collections',
+	];
 	return useQuery({
 		queryKey,
-		queryFn: getForYouChannelList,
+		queryFn: getChannelFeedCollections,
 		staleTime: Infinity,
 		gcTime: Infinity,
-		select: data => {
-			if (data.length > 1 && data[1].attributes.slug === 'government') {
-				const channels = data[1].attributes.channels.data;
-				const reorderedChannels = channels?.map(channel => {
-					const admin = channel.attributes.community_admin;
+	});
+};
 
-					return {
-						...channel,
-						attributes: {
-							...channel.attributes,
-							community_admin: admin
-								? {
-										...admin,
-										username: admin.username.replace(
-											'@channel.org',
-											'@findout.media',
-										),
-								  }
-								: admin,
-						},
-					};
-				});
+export const useGetForYouChannelList = () => {
+	const {
+		data: collections,
+		isLoading: isCollectionLoading,
+		isSuccess: isCollectionSuccess,
+		refetch: refetchCollections,
+	} = useGetChannelFeedCollections();
 
-				const podcastIndex = reorderedChannels.findIndex(
-					channel => channel?.attributes?.slug === 'findoutpodcast',
-				);
+	const slug = collections?.[1]?.attributes?.slug || 'government';
 
-				if (podcastIndex > 0) {
-					const [podcastChannel] = reorderedChannels.splice(podcastIndex, 1);
-					reorderedChannels.unshift(podcastChannel);
+	const queryKey: GetForYouChannelListQueryKey = [
+		'for-you-channel-list',
+		{ slug },
+	];
+
+	const queryResult = useQuery({
+		queryKey,
+		queryFn: getForYouChannelList,
+		enabled: !isCollectionLoading,
+		staleTime: Infinity,
+		gcTime: Infinity,
+		select: channels => {
+			if (!channels || !Array.isArray(channels)) return [];
+
+			const reorderedChannels = channels.map(channel => {
+				const admin = channel.attributes?.community_admin;
+
+				return {
+					...channel,
+					attributes: {
+						...channel.attributes,
+						community_admin: admin
+							? {
+									...admin,
+									username: admin.username.replace(
+										'@channel.org',
+										'@findout.media',
+									),
+							  }
+							: admin,
+					},
+				};
+			});
+
+			const customOrder = [
+				'findoutpodcast',
+				'AmericanPower',
+				'executivedysfunction',
+				'getangry',
+				'norahaynesisnotaspy',
+				'BradandCory',
+			];
+
+			reorderedChannels.sort((a, b) => {
+				const indexA = customOrder.indexOf(a.attributes?.slug);
+				const indexB = customOrder.indexOf(b.attributes?.slug);
+
+				if (indexA !== -1 && indexB !== -1) {
+					return indexA - indexB;
 				}
+				if (indexA !== -1) return -1;
+				if (indexB !== -1) return 1;
+				return 0;
+			});
 
-				return reorderedChannels;
-			}
-			return data;
+			return reorderedChannels;
 		},
 	});
+
+	return {
+		...queryResult,
+		isLoading: isCollectionLoading || queryResult.isLoading,
+		isSuccess: isCollectionSuccess && queryResult.isSuccess,
+		refetch: () => {
+			refetchCollections();
+			queryResult.refetch();
+		},
+	};
 };
 
 export const useGetCatchUpChannelList = () => {

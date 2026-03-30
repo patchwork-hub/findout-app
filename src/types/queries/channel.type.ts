@@ -146,7 +146,12 @@ export type GetNewsmastCommunityPeopleToFollowQueryKey = [
 	{ id: string; domain_name?: string },
 ];
 
-export type GetForYouChannelListQueryKey = ['for-you-channel-list'];
+export type GetChannelFeedCollectionsQueryKey = ['channel-feed-collections'];
+
+export type GetForYouChannelListQueryKey = [
+	'for-you-channel-list',
+	{ slug: string },
+];
 
 export type GetCatchUpChannelListQueryKey = ['catch-up-channel-list'];
 

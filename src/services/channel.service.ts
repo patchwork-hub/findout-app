@@ -886,8 +886,7 @@ export const getNewsmastCommunityPeopleToFollow = async (
 	return resp.data.contributors;
 };
 
-export const getForYouChannelList = async () => {
-	const state = useAuthStore.getState();
+export const getChannelFeedCollections = async () => {
 	const resp: AxiosResponse<{ data: Patchwork.CollectionList[] }> =
 		await instance.get(
 			appendApiVersion('collections/channel_feed_collections', 'v1'),
@@ -899,7 +898,24 @@ export const getForYouChannelList = async () => {
 			},
 		);
 
-	return (resp.data?.data as Patchwork.CollectionList[]) || [];
+	return resp.data?.data || [];
+};
+
+export const getForYouChannelList = async (
+	qfContext: QueryFunctionContext<[string, { slug: string }]>,
+) => {
+	const { slug } = qfContext.queryKey[1];
+	const resp: AxiosResponse<{ data: Patchwork.ChannelList[] }> =
+		await instance.get(appendApiVersion('collections/fetch_channels', 'v1'), {
+			params: {
+				domain_name: DEFAULT_FINDOUT_DASHBOARD_API_URL,
+				isDynamicDomain: true,
+				slug,
+				type: 'channel_feed',
+			},
+		});
+
+	return (resp.data?.data as Patchwork.ChannelList[]) || [];
 };
 
 export const getCatchUpChannelList = async () => {

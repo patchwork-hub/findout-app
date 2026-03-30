@@ -78,9 +78,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.findoutmedia.social"
+    namespace "com.patchwork.demo"
     defaultConfig {
-        applicationId "com.findoutmedia.social"
+        applicationId "com.patchwork.demo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 3
@@ -97,17 +97,10 @@ android {
             keyPassword 'android'
         }
          release {
-            if (project.hasProperty('ANDROID_KEYSTORE_FILE')) {
-                storeFile file(ANDROID_KEYSTORE_FILE)
-                storePassword ANDROID_KEYSTORE_PASSWORD
-                keyAlias ANDROID_KEY_ALIAS
-                keyPassword ANDROID_KEY_PASSWORD
-            } else if (localProperties.containsKey('ANDROID_KEYSTORE_FILE')) {
-                storeFile file(localProperties['ANDROID_KEYSTORE_FILE'])
-                storePassword localProperties['ANDROID_KEYSTORE_PASSWORD']
-                keyAlias localProperties['ANDROID_KEY_ALIAS']
-                keyPassword localProperties['ANDROID_KEY_PASSWORD']
-            }
+            storeFile file('patchwork-demo-app.keystore')
+            storePassword 'B!n@ryl@b0!25'
+            keyAlias 'patchwork-demo-binarylab'
+            keyPassword 'B!n@ryl@b0!25'
         }
     }
     buildTypes {

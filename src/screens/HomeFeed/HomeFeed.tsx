@@ -150,7 +150,7 @@ const HomeFeed = ({ navigation }: HomeStackScreenProps<'HomeFeed'>) => {
 						);
 					}}
 				>
-					<Tabs.Tab name="Home" label={t('timeline.home')}>
+					<Tabs.Tab name="Home" label={t('timeline.for_you')}>
 						<HomeDefaultTab />
 					</Tabs.Tab>
 					<Tabs.Tab name="Following" label={timelineLabel}>

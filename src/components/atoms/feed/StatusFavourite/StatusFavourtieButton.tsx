@@ -3,10 +3,7 @@ import { useFavouriteMutation } from '@/hooks/mutations/feed.mutation';
 import { updateStatusFaouriteCache } from '@/util/cache/feed/feedCache';
 import customColor from '@/util/constant/color';
 import { formatNumber } from '@/util/helper/helper';
-import { AppIcons } from '@/util/icons/icon.common';
 import { StatusFavouriteIcon } from '@/util/svg/icon.status_actions';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { uniqueId } from 'lodash';
 import { useColorScheme } from 'nativewind';
 import { TouchableOpacity, ViewProps } from 'react-native';
 
@@ -45,6 +42,7 @@ const StatusFavourtieButton = ({ status, isFromNoti, ...props }: Props) => {
 			onPress={handleFavourite}
 		>
 			<StatusFavouriteIcon
+				isFavourited={isFavourited}
 				fill={
 					isFavourited && colorScheme == 'dark'
 						? customColor['patchwork-soft-primary']

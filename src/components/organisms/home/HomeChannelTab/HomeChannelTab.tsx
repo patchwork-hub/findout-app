@@ -164,12 +164,12 @@ const HomeChannelTab = () => {
 				>
 					{forYouChannelList && (
 						<HorizontalChannelSection
-							title={'Find out'}
+							title={'Find Out Media Shows'}
 							data={forYouChannelList}
 							onPressItem={onPressMyNewsmastChannelItem}
 							onPressViewAll={() => {
 								navigation.navigate('ViewAllChannelScreen', {
-									title: 'Find out',
+									title: 'Find Out Media Shows',
 									data: forYouChannelList,
 								});
 							}}
@@ -177,12 +177,12 @@ const HomeChannelTab = () => {
 					)}
 					{catchUpList && (
 						<HorizontalChannelSection
-							title={'Catch up'}
+							title={'Catch Up'}
 							data={catchUpList}
 							onPressItem={onPressMyNewsmastChannelItem}
 							onPressViewAll={() => {
 								navigation.navigate('ViewAllChannelScreen', {
-									title: 'Catch up',
+									title: 'Catch Up',
 									data: catchUpList,
 								});
 							}}
@@ -190,12 +190,12 @@ const HomeChannelTab = () => {
 					)}
 					{speakOutList && (
 						<HorizontalChannelSection
-							title={'Speak out'}
+							title={'Speak Out'}
 							data={speakOutList}
 							onPressItem={onPressMyNewsmastChannelItem}
 							onPressViewAll={() => {
 								navigation.navigate('ViewAllChannelScreen', {
-									title: 'Speak out',
+									title: 'Speak Out',
 									data: speakOutList,
 								});
 							}}
@@ -241,9 +241,12 @@ const HomeChannelTab = () => {
 					}
 					showsVerticalScrollIndicator={false}
 				>
-					<ChannelLoading title="Find out" cardCount={loadingCardCount} />
-					<ChannelLoading title="Catch up" cardCount={loadingCardCount} />
-					<ChannelLoading title="Speak out" cardCount={loadingCardCount} />
+					<ChannelLoading
+						title="Find Out Media Shows"
+						cardCount={loadingCardCount}
+					/>
+					<ChannelLoading title="Catch Up" cardCount={loadingCardCount} />
+					<ChannelLoading title="Speak Out" cardCount={loadingCardCount} />
 					<ChannelLoading
 						title="Starter Packs"
 						cardCount={loadingCardCount}
@@ -254,7 +257,7 @@ const HomeChannelTab = () => {
 						<AvatarLoading title="Following" cardCount={loadingCardCount} />
 					)}
 					<ChannelLoading
-						title="Newsmast channels"
+						title="Newsmast Channels"
 						cardCount={loadingCardCount}
 					/>
 					<ChannelLoading title="Channels" cardCount={loadingCardCount} />
@@ -266,10 +269,10 @@ const HomeChannelTab = () => {
 						<AvatarLoading title="Following" cardCount={loadingCardCount} />
 					)}
 					<HashtagLoading
-						title="Hashtags following"
+						title="Hashtags Following"
 						cardCount={loadingCardCount}
 					/>
-					<HashtagLoading title="My lists" cardCount={loadingCardCount} />
+					<HashtagLoading title="My Lists" cardCount={loadingCardCount} />
 				</Tabs.ScrollView>
 			)}
 		</>

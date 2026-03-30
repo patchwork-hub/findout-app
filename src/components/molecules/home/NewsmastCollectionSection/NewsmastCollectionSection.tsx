@@ -44,7 +44,7 @@ export const NewsmastCollectionSection = ({ data, isFromHomeFeed }: Props) => {
 		<View>
 			<View className="flex-row items-center px-4">
 				<ThemeText className="font-NewsCycle_Bold my-2 flex-1" size="lg_18">
-					Global channels
+					Global Channels
 				</ThemeText>
 				<Pressable onPress={onPressViewAll} className="active:opacity-80">
 					<ThemeText variant="textGrey">{t('common.view_all')}</ThemeText>

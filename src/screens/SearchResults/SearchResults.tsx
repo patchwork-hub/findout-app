@@ -42,7 +42,7 @@ const SearchResults = ({
 	const headerAnimatedStyle = useAnimatedStyle(() => {
 		const shouldHide = isFocused.value || finalKeyword.length > 0;
 		return {
-			height: withTiming(shouldHide ? 0 : 56),
+			height: withTiming(shouldHide ? 0 : 65),
 			opacity: withTiming(shouldHide ? 0 : 1),
 			transform: [
 				{

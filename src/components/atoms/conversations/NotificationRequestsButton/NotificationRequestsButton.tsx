@@ -22,13 +22,11 @@ const NofiReqButton = ({
 			onPress={() => (customOnPress ? customOnPress() : navigation.goBack())}
 			className={cn(
 				'w-10 h-10 items-center justify-center rounded-full border-[1px] border-patchwork-grey-100',
+				isThereData ? 'bg-patchwork-primary border-none' : 'bg-transparent',
 				extraClass,
 			)}
 		>
-			{isThereData && (
-				<View className="w-2 h-2 bg-patchwork-primary dark:bg-patchwork-primary-dark rounded-full absolute right-0 top-0" />
-			)}
-			<MessageRequestsIcon colorScheme={colorScheme} />
+			<MessageRequestsIcon colorScheme={'dark'} />
 		</Pressable>
 	);
 };

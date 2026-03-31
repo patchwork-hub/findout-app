@@ -10,6 +10,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { ConversationsStackParamList } from '@/types/navigation';
 import { useGetConversationByUserId } from '@/hooks/queries/conversations.queries';
 import CustomAlert from '../../common/CustomAlert/CustomAlert';
+import { useCheckRelationships } from '@/hooks/queries/profile.queries';
 import {
 	CHANNEL_INSTANCE,
 	DEFAULT_INSTANCE,
@@ -41,7 +42,18 @@ const NewMsgUserItem = ({ item }: Props) => {
 		},
 	});
 
-	const [alertState, setAlert] = useState({
+	const { data: relationships } = useCheckRelationships({
+		accountIds: [item.id],
+		options: {
+			enabled: !!item.id,
+		},
+	});
+
+	const [alertState, setAlert] = useState<{
+		message: string;
+		isOpen: boolean;
+		type?: 'existing' | 'follow_request';
+	}>({
 		message: '',
 		isOpen: false,
 	});
@@ -61,7 +73,20 @@ const NewMsgUserItem = ({ item }: Props) => {
 				if (userConversation && userConversation.last_status) {
 					return setAlert({
 						isOpen: true,
+						type: 'existing',
 						message: t('toast.existing_conversation', {
+							user: item.display_name || item.username,
+						}),
+					});
+				}
+
+				const isFollowing = relationships?.[0]?.following;
+
+				if (!isFollowing) {
+					return setAlert({
+						isOpen: true,
+						type: 'follow_request',
+						message: t('conversation.request_conversation_message', {
 							user: item.display_name || item.username,
 						}),
 					});
@@ -99,17 +124,31 @@ const NewMsgUserItem = ({ item }: Props) => {
 						'text-patchwork-primary dark:text-patchwork-primary-dark mx-1'
 					}
 					message={alertState.message}
-					cancelBtnText={t('toast.proceed_with_old_one')}
-					confirmBtnText={t('toast.create_a_new_one')}
-					title={t('toast.exisiting_convo_found')}
+					cancelBtnText={
+						alertState.type === 'existing'
+							? t('toast.proceed_with_old_one')
+							: t('common.cancel')
+					}
+					confirmBtnText={
+						alertState.type === 'existing'
+							? t('toast.create_a_new_one')
+							: t('common.send')
+					}
+					title={
+						alertState.type === 'existing'
+							? t('toast.exisiting_convo_found')
+							: t('conversation.request_conversation_title')
+					}
 					handleCancel={() => {
+						if (alertState.type === 'existing') {
+							navigation.navigate('ConversationDetail', {
+								id: userConversation?.last_status?.id || '',
+							});
+						}
 						setAlert(prev => ({
 							...prev,
 							isOpen: false,
 						}));
-						navigation.navigate('ConversationDetail', {
-							id: userConversation?.last_status?.id || '',
-						});
 					}}
 					handleOk={() => {
 						setAlert(prev => ({

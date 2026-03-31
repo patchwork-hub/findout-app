@@ -26,7 +26,7 @@ const NofiReqButton = ({
 				extraClass,
 			)}
 		>
-			<MessageRequestsIcon colorScheme={'dark'} />
+			<MessageRequestsIcon colorScheme={isThereData ? 'dark' : colorScheme} />
 		</Pressable>
 	);
 };

@@ -31,9 +31,16 @@ const AccountName = ({
 }: AccountNameProps & { username?: string } & ViewProps) => {
 	const { t } = useTranslation();
 	const { colorScheme } = useColorScheme();
-	const isBluesky = username?.endsWith('bsky.brid.gy');
+	const isBluesky =
+		username?.includes('bsky.brid.gy') ||
+		username?.includes('bsky.social') ||
+		username?.includes('bluesky');
+
 	const isThreads =
-		username?.endsWith('@threads.net') || username?.endsWith('@threads.social');
+		username?.includes('threads.net') ||
+		username?.includes('threads.social') ||
+		username?.includes('threads');
+
 	const textColor = colorScheme === 'dark' ? '#fff' : '#000';
 	const borderColor = colorScheme === 'dark' ? '#fff' : '#000';
 	return (
@@ -42,27 +49,24 @@ const AccountName = ({
 			onPress={onPress}
 			{...props}
 		>
-			{(isBluesky || isThreads) && (
-				<View className="mr-2 justify-center">
-					<FontAwesomeIcon
-						icon={isBluesky ? faBluesky : faThreads}
-						color={
-							isBluesky
-								? '#0F73FF'
-								: colorScheme === 'dark'
-								? '#FFFFFF'
-								: '#000000'
-						}
-						size={13}
-					/>
-				</View>
-			)}
 			<ThemeText
 				emojis={emojis}
 				className={`font-Oswald_Bold text-[17px] leading-6 ${acctNameTextStyle}`}
 			>
 				{accountName}
 			</ThemeText>
+
+			{(isBluesky || isThreads) && (
+				<View className="ml-2 justify-center">
+					<FontAwesomeIcon
+						icon={isBluesky ? faBluesky : faThreads}
+						color={
+							isBluesky ? '#0F73FF' : colorScheme === 'dark' ? '#fff' : '#000'
+						}
+						size={13}
+					/>
+				</View>
+			)}
 
 			<View className="flex-row items-center">
 				{locked && (

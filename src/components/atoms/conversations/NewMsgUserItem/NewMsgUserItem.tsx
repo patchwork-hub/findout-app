@@ -20,6 +20,9 @@ import {
 import Image from '../../common/Image/Image';
 import { useColorScheme } from 'nativewind';
 import { useTranslation } from 'react-i18next';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { AppIcons } from '@/util/icons/icon.common';
+import { useMemo } from 'react';
 
 type Props = {
 	item: Patchwork.Account;
@@ -57,6 +60,21 @@ const NewMsgUserItem = ({ item }: Props) => {
 		message: '',
 		isOpen: false,
 	});
+
+	const platformIcon = useMemo(() => {
+		const domain = item.domain?.toLowerCase() || item.acct?.toLowerCase();
+		if (
+			domain?.includes('bsky.social') ||
+			domain?.includes('bluesky') ||
+			domain?.includes('bsky.brid.gy')
+		) {
+			return { icon: AppIcons.bluesky, type: 'bluesky' };
+		}
+		if (domain?.includes('threads.net') || domain?.includes('threads')) {
+			return { icon: AppIcons.threads, type: 'threads' };
+		}
+		return null;
+	}, [item.domain, item.acct]);
 
 	return (
 		<Pressable
@@ -108,6 +126,21 @@ const NewMsgUserItem = ({ item }: Props) => {
 					</ThemeText>
 					{checkIsAccountVerified(item.fields) && (
 						<ProfileNameRedMark className="ml-2" colorScheme={colorScheme} />
+					)}
+					{platformIcon && (
+						<View className="ml-1.5 justify-center">
+							<FontAwesomeIcon
+								icon={platformIcon.icon}
+								size={13}
+								color={
+									platformIcon.type === 'bluesky'
+										? '#0F73FF'
+										: colorScheme === 'dark'
+										? '#fff'
+										: '#000'
+								}
+							/>
+						</View>
 					)}
 				</View>
 				<ThemeText className="text-patchwork-dark-100 dark:text-white">

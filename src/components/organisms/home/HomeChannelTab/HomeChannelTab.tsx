@@ -177,12 +177,12 @@ const HomeChannelTab = () => {
 					)}
 					{catchUpList && (
 						<HorizontalChannelSection
-							title={'Catch Up'}
+							title={'News'}
 							data={catchUpList}
 							onPressItem={onPressMyNewsmastChannelItem}
 							onPressViewAll={() => {
 								navigation.navigate('ViewAllChannelScreen', {
-									title: 'Catch Up',
+									title: 'News',
 									data: catchUpList,
 								});
 							}}
@@ -190,12 +190,12 @@ const HomeChannelTab = () => {
 					)}
 					{speakOutList && (
 						<HorizontalChannelSection
-							title={'Speak Out'}
+							title={'Activism'}
 							data={speakOutList}
 							onPressItem={onPressMyNewsmastChannelItem}
 							onPressViewAll={() => {
 								navigation.navigate('ViewAllChannelScreen', {
-									title: 'Speak Out',
+									title: 'Activism',
 									data: speakOutList,
 								});
 							}}
@@ -245,8 +245,8 @@ const HomeChannelTab = () => {
 						title="Find Out Media Shows"
 						cardCount={loadingCardCount}
 					/>
-					<ChannelLoading title="Catch Up" cardCount={loadingCardCount} />
-					<ChannelLoading title="Speak Out" cardCount={loadingCardCount} />
+					<ChannelLoading title="News" cardCount={loadingCardCount} />
+					<ChannelLoading title="Activism" cardCount={loadingCardCount} />
 					<ChannelLoading
 						title="Starter Packs"
 						cardCount={loadingCardCount}

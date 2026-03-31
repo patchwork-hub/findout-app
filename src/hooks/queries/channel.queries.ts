@@ -606,6 +606,28 @@ export const useGetCatchUpChannelList = () => {
 	return useQuery({
 		queryKey,
 		queryFn: getCatchUpChannelList,
+		select: (data: Patchwork.ChannelList[]) => {
+			if (!data || !Array.isArray(data)) return [];
+
+			const sortedList = [...data];
+			const politicsIndex = sortedList.findIndex(
+				item => item.attributes.slug === 'us-politics',
+			);
+			const electionsIndex = sortedList.findIndex(
+				item => item.attributes.slug === 'uselections',
+			);
+
+			if (
+				politicsIndex !== -1 &&
+				electionsIndex !== -1 &&
+				politicsIndex > electionsIndex
+			) {
+				const [politicsItem] = sortedList.splice(politicsIndex, 1);
+				sortedList.splice(electionsIndex, 0, politicsItem);
+			}
+
+			return sortedList;
+		},
 	});
 };
 
@@ -614,6 +636,11 @@ export const useGetSpeakOutChannelList = () => {
 	return useQuery({
 		queryKey,
 		queryFn: getSpeakOutChannelList,
+		select: data => {
+			return [...data].sort((a, b) =>
+				(a?.attributes?.name || '').localeCompare(b?.attributes?.name || ''),
+			);
+		},
 	});
 };
 

@@ -1353,4 +1353,28 @@ declare namespace Patchwork {
 			curies: { name: string; href: string; templated: boolean }[];
 		};
 	};
+
+	type PostHashtag = {
+		id: number;
+		hashtag: string;
+		created_at: string;
+		updated_at: string;
+	};
+
+	type PostHashtagDetail = {
+		community_name: string;
+		patchwork_community_id: number;
+		hashtags: PostHashtag[];
+	};
+
+	type PostHashtagList = {
+		data: PostHashtagDetail[];
+		meta: {
+			current_page: number;
+			next_page: number | null;
+			prev_page: number | null;
+			total_pages: number;
+			total_count: number;
+		};
+	};
 }

@@ -1,22 +1,17 @@
+import { useAudienceStore } from '@/store/compose/audienceStore/audienceStore';
 import Checkbox from '@/components/atoms/common/Checkbox/Checkbox';
 import Image from '@/components/atoms/common/Image/Image';
 import ThemeModal from '@/components/atoms/common/ThemeModal/ThemeModal';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
-import {
-	useFavouriteChannelLists,
-	useGetForYouChannelList,
-} from '@/hooks/queries/channel.queries';
-import { useCreateAudienceStore } from '@/store/compose/audienceStore/createAudienceStore';
-import { useEditAudienceStore } from '@/store/compose/audienceStore/editAudienceStore';
 import { useDraftPostsStore } from '@/store/compose/draftPosts/draftPostsStore';
 import customColor from '@/util/constant/color';
-import { Dimensions, FlatList, Pressable, View } from 'react-native';
+import { Dimensions, FlatList, View } from 'react-native';
 import { Flow } from 'react-native-animated-spinkit';
 import { useComposeStatus } from '@/context/composeStatusContext/composeStatus.context';
 import { useColorScheme } from 'nativewind';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { AppIcons } from '@/util/icons/icon.common';
-import { useTranslation } from 'react-i18next';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { useGetForYouChannelList } from '@/hooks/queries/channel.queries';
 
 const screenHeight = Dimensions.get('window').height;
 const modalHeight = screenHeight * 0.6;
@@ -27,38 +22,43 @@ type Props = {
 };
 
 export const AudienceListModal = ({ composeType, onClose }: Props) => {
-	const { t } = useTranslation();
 	const { composeState, composeDispatch } = useComposeStatus();
 	const { colorScheme } = useColorScheme();
-	const { selectedAudience, setSelectedAudience } = useCreateAudienceStore();
-	const { editSelectedAudience, setEditSelectedAudience } =
-		useEditAudienceStore();
+	const { selectedAudience, setSelectedAudience: setAudience } =
+		useAudienceStore();
+	const audienceSource = selectedAudience?.flat() || [];
 	const { selectedDraftId } = useDraftPostsStore();
 
 	const isSchedule = !!composeState.schedule?.is_edting_previous_schedule;
 	const isDraft = composeType === 'create' && !!selectedDraftId;
 
-	const audienceSource =
-		isSchedule || isDraft || composeType === 'edit'
-			? editSelectedAudience
-			: selectedAudience;
-
-	const setAudience =
-		isSchedule || isDraft || composeType === 'edit'
-			? setEditSelectedAudience
-			: setSelectedAudience;
-
-	const { data: newsmastChannels, isLoading } = useGetForYouChannelList();
+	const { data: forYouChannels, isLoading } = useGetForYouChannelList();
 
 	const onPressCheckbox = (item: Patchwork.ChannelList) => {
-		const isCurrentlySelected = audienceSource.some(
-			sel => sel.id === item.attributes?.id,
+		const isCurrentlySelected = audienceSource.some(sel =>
+			sel.hashtags?.some(selHashtag =>
+				item.attributes?.patchwork_community_hashtags?.some(
+					forYouHashtag => forYouHashtag.hashtag === selHashtag.hashtag,
+				),
+			),
 		);
 
 		if (isCurrentlySelected) {
 			setAudience([]);
 		} else {
-			setAudience([item.attributes]);
+			setAudience([
+				{
+					community_name: item.attributes?.name,
+					patchwork_community_id: item.attributes?.id,
+					hashtags:
+						item.attributes?.patchwork_community_hashtags?.map(h => ({
+							id: h.id,
+							hashtag: h.hashtag,
+							created_at: new Date().toISOString(),
+							updated_at: new Date().toISOString(),
+						})) || [],
+				},
+			]);
 			composeDispatch({ type: 'visibility_change', payload: 'local' });
 		}
 		onClose();
@@ -79,21 +79,25 @@ export const AudienceListModal = ({ composeType, onClose }: Props) => {
 	return (
 		<ThemeModal
 			type="simple"
-			title={t('setting.choose_audience')}
+			title="Choose audience"
 			position="bottom"
 			visible={true}
 			onClose={onClose}
 		>
 			<View style={{ height: modalHeight, paddingTop: 12 }}>
-				{newsmastChannels && (
+				{forYouChannels && (
 					<FlatList
-						data={newsmastChannels}
+						data={forYouChannels}
 						showsVerticalScrollIndicator={false}
 						ListHeaderComponent={() => (
 							<Checkbox
 								isChecked={
 									audienceSource.length === 0 &&
 									composeState.visibility === 'local'
+								}
+								disabled={
+									composeType !== 'create' &&
+									composeState.visibility === 'public'
 								}
 								handleOnCheck={handleSelectLocal}
 							>
@@ -112,6 +116,10 @@ export const AudienceListModal = ({ composeType, onClose }: Props) => {
 						ListFooterComponent={() => (
 							<Checkbox
 								isChecked={composeState.visibility === 'public'}
+								disabled={
+									composeType !== 'create' &&
+									composeState.visibility === 'local'
+								}
 								handleOnCheck={handleSelectPublic}
 							>
 								<View className="flex-row items-center px-3 py-3 space-x-3">
@@ -129,13 +137,18 @@ export const AudienceListModal = ({ composeType, onClose }: Props) => {
 						ListEmptyComponent={() => {
 							return (
 								<ThemeText variant="textPrimary" className="text-center">
-									There is no community available.
+									There is no joined working group available.
 								</ThemeText>
 							);
 						}}
 						renderItem={({ item }) => {
-							const isChecked = audienceSource.some(
-								sel => sel.id === item.attributes?.id,
+							const isChecked = audienceSource.some(sel =>
+								sel.hashtags?.some(selHashtag =>
+									item.attributes?.patchwork_community_hashtags?.some(
+										forYouHashtag =>
+											forYouHashtag.hashtag === selHashtag.hashtag,
+									),
+								),
 							);
 
 							return (

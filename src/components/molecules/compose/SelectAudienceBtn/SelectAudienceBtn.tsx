@@ -1,16 +1,14 @@
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
-import { useGetForYouChannelList } from '@/hooks/queries/channel.queries';
 import { useComposeStatus } from '@/context/composeStatusContext/composeStatus.context';
 import { useAuthStore } from '@/store/auth/authStore';
-import { useCreateAudienceStore } from '@/store/compose/audienceStore/createAudienceStore';
-import { useEditAudienceStore } from '@/store/compose/audienceStore/editAudienceStore';
 import { useDraftPostsStore } from '@/store/compose/draftPosts/draftPostsStore';
-import { CHANNEL_INSTANCE, DEFAULT_INSTANCE } from '@/util/constant';
+import { DEFAULT_INSTANCE } from '@/util/constant';
 import { PollDropperIcon } from '@/util/svg/icon.compose';
 import { useColorScheme } from 'nativewind';
 import { Pressable } from 'react-native';
-import { useEffect, useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
+import { useAudienceStore } from '@/store/compose/audienceStore/audienceStore';
 
 type Props = {
 	composeType: 'create' | 'edit' | 'repost' | 'schedule' | 'quote';
@@ -25,19 +23,11 @@ export const SelectAudienceBtn = ({
 }: Props) => {
 	const { composeState } = useComposeStatus();
 	const { userOriginInstance } = useAuthStore();
-	const { selectedAudience } = useCreateAudienceStore();
-	const { editSelectedAudience } = useEditAudienceStore();
+	const { selectedAudience } = useAudienceStore();
 	const { selectedDraftId } = useDraftPostsStore();
 	const isSchedule = !!composeState.schedule?.is_edting_previous_schedule;
 	const isDraft = !!selectedDraftId;
 	const { colorScheme } = useColorScheme();
-
-	const audienceSource =
-		isDraft || isSchedule || composeType === 'edit'
-			? editSelectedAudience
-			: selectedAudience;
-
-	const { data: newsmastChannels } = useGetForYouChannelList();
 
 	const isMastodonScheduleActive =
 		!!composeState.schedule?.schedule_detail_id &&
@@ -59,16 +49,20 @@ export const SelectAudienceBtn = ({
 
 		if (composeState.visibility === 'public') return 'Public';
 
-		if (audienceSource && audienceSource.length > 0) {
-			const isValidAudience = newsmastChannels?.some(
-				channel => channel.attributes?.id === audienceSource[0].id,
-			);
-			if (isValidAudience) {
-				return `${audienceSource[0].name}${
-					audienceSource.length > 1 ? ` +${audienceSource.length - 1} more` : ''
+		if (selectedAudience && selectedAudience.length > 0) {
+			const firstItem = Array.isArray(selectedAudience[0])
+				? selectedAudience[0][0]
+				: selectedAudience[0];
+
+			if (firstItem) {
+				return `${firstItem.community_name}${
+					selectedAudience.length > 1
+						? ` +${selectedAudience.length - 1} more`
+						: ''
 				}`;
 			}
 		}
+
 		if (composeState.visibility === 'local') return 'Local';
 		if (composeState.visibility) {
 			return (
@@ -76,6 +70,7 @@ export const SelectAudienceBtn = ({
 				composeState.visibility.slice(1)
 			);
 		}
+
 		return 'Show name';
 	};
 

@@ -31,6 +31,8 @@ import {
 	GetNewsmastCommunityDetailProfileQueryKey,
 	GetNewsmastCommunityHashtagQueryKey,
 	GetNewsmastCommunityPeopleToFollowQueryKey,
+	GetPostHashtagsListQueryKey,
+	GetPostHashtagsQueryKey,
 	GetRecommendedChannelsQueryKey,
 	GetStarterPackLDetailQueryKey,
 	MutedContributorListQueryKey,
@@ -1014,4 +1016,44 @@ export const getForYouTimeline = async (
 	} catch (e) {
 		return handleError(e);
 	}
+};
+
+export const getPostHashtagsDetail = async (
+	qfContext: QueryFunctionContext<GetPostHashtagsQueryKey>,
+) => {
+	const { domain_name, channel_type, channel_name } = qfContext.queryKey[1];
+	const { userOriginInstance } = useAuthStore.getState();
+	const domain = removeHttps(userOriginInstance);
+	const resp: AxiosResponse<{ data: Patchwork.PostHashtagDetail }> =
+		await instance.get(appendApiVersion(`channels/post_hashtag_list`, 'v1'), {
+			params: {
+				channel_type: channel_type,
+				channel_name: channel_name,
+				instance_domain: domain,
+				domain_name: domain_name || DEFAULT_DASHBOARD_API_URL,
+				isDynamicDomain: true,
+			},
+		});
+
+	return resp.data.data;
+};
+
+export const getPostHashtagsList = async (
+	qfContext: QueryFunctionContext<GetPostHashtagsListQueryKey>,
+) => {
+	const { domain_name, channel_type } = qfContext.queryKey[1];
+	const { userOriginInstance } = useAuthStore.getState();
+	const domain = removeHttps(userOriginInstance);
+	const resp: AxiosResponse<{ data: Patchwork.PostHashtagDetail[] }> =
+		await instance.get(appendApiVersion(`channels/post_hashtag_list`, 'v1'), {
+			params: {
+				channel_type: channel_type,
+				instance_domain: domain,
+				domain_name: domain_name || DEFAULT_DASHBOARD_API_URL,
+				isDynamicDomain: true,
+				per_page: 100,
+			},
+		});
+
+	return resp.data.data;
 };

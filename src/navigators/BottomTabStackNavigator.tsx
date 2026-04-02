@@ -37,12 +37,12 @@ import { useMarkLastReadNotification } from '@/hooks/mutations/pushNoti.mutation
 import customColor from '@/util/constant/color';
 import { isTablet } from '@/util/helper/isTablet';
 import { useWpSearchStore } from '@/store/feed/wpSearchStore';
-import { useComposePrefillStore } from '@/store/ui/composePrefillStore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
 	getFocusedRouteNameFromRoute,
 	StackActions,
 } from '@react-navigation/native';
+import { useComposePrefillStore } from '@/store/compose/audienceStore/composePrefillStore';
 
 const Tab = createBottomTabNavigator<BottomStackParamList>();
 

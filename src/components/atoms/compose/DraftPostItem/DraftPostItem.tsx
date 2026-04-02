@@ -1,3 +1,4 @@
+import { useAudienceStore } from '@/store/compose/audienceStore/audienceStore';
 import React, { useState } from 'react';
 import { View, Pressable } from 'react-native';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
@@ -11,17 +12,17 @@ import { useDeleteDraft } from '@/hooks/mutations/feed.mutation';
 import { useComposeStatus } from '@/context/composeStatusContext/composeStatus.context';
 import { useDraftPostsActions } from '@/store/compose/draftPosts/draftPostsStore';
 import { useManageAttachmentActions } from '@/store/compose/manageAttachments/manageAttachmentStore';
-import {
-	extractAllAudienceHashtags,
-	getComposeUpdatePayload,
-} from '@/util/helper/compose';
+import { getComposeUpdatePayload } from '@/util/helper/compose';
 import CustomAlert from '../../common/CustomAlert/CustomAlert';
 import { truncateStr } from '@/util/helper/helper';
-import { useFavouriteChannelLists } from '@/hooks/queries/channel.queries';
+
 import Graphemer from 'graphemer';
-import { useEditAudienceStore } from '@/store/compose/audienceStore/editAudienceStore';
 import { removeDraftPostFromDraftList } from '@/util/cache/compose/draftCache';
-import { useTranslation } from 'react-i18next'; // <--- i18n import
+import { useTranslation } from 'react-i18next';
+import {
+	useGetForYouChannelList,
+	useGetPostHashtagsList,
+} from '@/hooks/queries/channel.queries';
 
 interface DraftPostItemProps {
 	item: Patchwork.DraftStatusItem;
@@ -33,8 +34,8 @@ interface DraftPostItemProps {
 const splitter = new Graphemer();
 
 const DraftPostItem = ({ item, index, date, onClose }: DraftPostItemProps) => {
-	const { t } = useTranslation(); // <--- hook
-	const { setEditSelectedAudience } = useEditAudienceStore();
+	const { t } = useTranslation();
+	const { setSelectedAudience } = useAudienceStore();
 	const { composeState, composeDispatch } = useComposeStatus();
 	const { setDraftType, setSelectedDraftId } = useDraftPostsActions();
 	const { resetAttachmentStore, onAddMedia } = useManageAttachmentActions();
@@ -43,13 +44,12 @@ const DraftPostItem = ({ item, index, date, onClose }: DraftPostItemProps) => {
 		id: string | null;
 	}>({ isVisible: false, id: null });
 
-	const { data: newsmastChannels } = useFavouriteChannelLists(false);
-	const allAudienceHashtags = extractAllAudienceHashtags(newsmastChannels!);
-	const filteredText = item.params.text
-		.split(' ')
-		.filter(word => !allAudienceHashtags.includes(word.trim()))
-		.join(' ')
-		.trim();
+	const { data: forYouChannels } = useGetForYouChannelList();
+	const { data: postHashtagsRes } = useGetPostHashtagsList({
+		channel_type: 'newsmast',
+	});
+
+	const filteredText = item.params.text;
 
 	const { mutate: deleteDraft, isPending: isDeletingDraft } = useDeleteDraft({
 		onMutate: async deletedDraft => {
@@ -81,60 +81,119 @@ const DraftPostItem = ({ item, index, date, onClose }: DraftPostItemProps) => {
 			}),
 		);
 
-		if (newsmastChannels && newsmastChannels.length > 0) {
-			const draftHashtags = new Set(
-				item?.params?.text
-					.split(/\s+/)
-					.filter(word => word.startsWith('#'))
-					.map(word => word.trim()),
+		let computedVisibility = item.params
+			.visibility as Patchwork.ComposeVisibility;
+
+		const draftHashtags = new Set(
+			item?.params?.text
+				?.split(/\s+/)
+				?.filter(word => word.startsWith('#'))
+				?.map(word => word.trim().toLowerCase()),
+		);
+
+		let foundAudience: Patchwork.PostHashtagDetail[] | null = null;
+		let allAudHashtags: string[] = [];
+		let isFromForYouChannels = false;
+
+		if (forYouChannels && forYouChannels.length > 0) {
+			const mappedSelectedAudience = forYouChannels
+				.map(wg => {
+					const originalHashtags =
+						wg.attributes?.patchwork_community_hashtags ?? [];
+					const matchedHashtags = originalHashtags.filter(h =>
+						draftHashtags.has(`#${h.hashtag.toLowerCase()}`),
+					);
+
+					if (matchedHashtags.length > 0) {
+						return {
+							community_name: wg.attributes?.name || '',
+							patchwork_community_id: wg.attributes?.id || 0,
+							hashtags: matchedHashtags.map(h => ({
+								id: h.id,
+								hashtag: h.hashtag,
+								created_at: new Date().toISOString(),
+								updated_at: new Date().toISOString(),
+							})),
+						} as Patchwork.PostHashtagDetail;
+					}
+					return null;
+				})
+				.filter((c): c is Patchwork.PostHashtagDetail => c !== null);
+
+			if (mappedSelectedAudience.length > 0) {
+				foundAudience = mappedSelectedAudience;
+				isFromForYouChannels = true;
+			}
+		}
+
+		if (!foundAudience && postHashtagsRes && postHashtagsRes.length > 0) {
+			const mappedSelectedAudience = postHashtagsRes
+				.map(channel => {
+					const originalHashtags = channel.hashtags ?? [];
+					const matchedHashtags = originalHashtags.filter(h =>
+						draftHashtags.has(`#${h.hashtag.toLowerCase()}`),
+					);
+
+					if (matchedHashtags.length > 0) {
+						return {
+							community_name: channel.community_name,
+							patchwork_community_id: channel.patchwork_community_id,
+							hashtags: matchedHashtags,
+						} as Patchwork.PostHashtagDetail;
+					}
+					return null;
+				})
+				.filter((c): c is Patchwork.PostHashtagDetail => c !== null);
+
+			if (mappedSelectedAudience.length > 0) {
+				foundAudience = mappedSelectedAudience;
+			}
+		}
+
+		if (foundAudience) {
+			setSelectedAudience(foundAudience);
+			if (isFromForYouChannels) {
+				computedVisibility = 'local';
+			}
+
+			allAudHashtags = foundAudience.flatMap(
+				aud => aud.hashtags?.map(h => `#${h.hashtag.toLowerCase()}`) ?? [],
 			);
 
-			const newSelectedAudience = newsmastChannels.map(channel => {
-				const originalHashtags =
-					channel.attributes?.patchwork_community_hashtags ?? [];
-				const matchedHashtags = originalHashtags.filter(h =>
-					draftHashtags.has(`#${h.hashtag}`),
-				);
-
-				if (matchedHashtags.length > 0) {
-					return {
-						...channel.attributes,
-						patchwork_community_hashtags: matchedHashtags,
-					};
-				}
-				return null;
-			});
-
-			setEditSelectedAudience(
-				newSelectedAudience.filter(
-					(
-						channel,
-					): channel is Patchwork.ChannelAttributes & {
-						patchwork_community_hashtags: Patchwork.PatchworkCommunityHashtag[];
-					} => channel !== null,
-				),
+			const contentWithoutAudienceTags = item.params.text.replace(
+				/#\w+/g,
+				match => {
+					const lower = match.toLowerCase();
+					return allAudHashtags.some(tag => tag === lower) ? '' : match;
+				},
 			);
-
-			const allAudHashtags = extractAllAudienceHashtags(newsmastChannels);
-			const filteredRaw = item?.params?.text?.replace(/#\w+/g, match => {
-				const lower = match.toLowerCase();
-				return allAudHashtags.some(tag => tag.toLowerCase() === lower)
-					? ''
-					: match;
-			});
 
 			composeDispatch({
 				type: 'text',
 				payload: {
-					count: splitter.countGraphemes(filteredRaw),
-					raw: filteredRaw,
+					count: splitter.countGraphemes(contentWithoutAudienceTags),
+					raw: contentWithoutAudienceTags.trimEnd(),
 				},
 			});
+		} else {
+			composeDispatch({
+				type: 'text',
+				payload: {
+					count: splitter.countGraphemes(item.params.text),
+					raw: item.params.text,
+				},
+			});
+
 			composeDispatch({
 				type: 'spoilerText',
 				payload: draft.params.spoiler_text || '',
 			});
 		}
+
+		composeDispatch({
+			type: 'visibility_change',
+			payload: computedVisibility,
+		});
 
 		onClose();
 		setDraftType('update');
@@ -185,6 +244,7 @@ const DraftPostItem = ({ item, index, date, onClose }: DraftPostItemProps) => {
 					</ThemeText>
 				</Pressable>
 				<Pressable
+					accessibilityLabel={t('common.delete')}
 					onPress={() => setDelConfAlert({ isVisible: true, id: item.id })}
 					className={`w-8 h-8 ml-auto z-10 bg-red-50 rounded-full aspect-square  items-center justify-center active:opacity-80 ${
 						isDeletingDraft && delConfAlert.id === item.id ? 'opacity-50' : ''

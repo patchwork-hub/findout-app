@@ -1,7 +1,4 @@
-import {
-	ComposeAction,
-	ComposeState,
-} from '@/context/composeStatusContext/composeStatus.type';
+import { ComposeState } from '@/context/composeStatusContext/composeStatus.type';
 import {
 	ComposeMutationPayload,
 	QuoteMutationPayload,
@@ -11,8 +8,6 @@ import {
 import { Match } from 'linkify-it';
 import { differenceWith, isEqual } from 'lodash';
 import { Asset } from 'react-native-image-picker';
-import { mediaUploadAction } from './mediaUploadActions';
-import { Dispatch } from 'react';
 import Graphemer from 'graphemer';
 import { isTablet } from './isTablet';
 
@@ -172,6 +167,7 @@ export const prepareDraftPayload = (
 		media_ids: state.media_ids.length > 0 ? state.media_ids : [],
 		poll: state.poll,
 		drafted: isDrafted,
+		local_only: state.visibility === 'local',
 	};
 };
 

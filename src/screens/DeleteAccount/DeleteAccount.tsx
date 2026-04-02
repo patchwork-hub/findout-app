@@ -31,7 +31,6 @@ import {
 } from '@/hooks/mutations/pushNoti.mutation';
 import { usePushNoticationStore } from '@/store/pushNoti/pushNotiStore';
 import { useAccounts } from '@/hooks/custom/useAccounts';
-import { useCreateAudienceStore } from '@/store/compose/audienceStore/createAudienceStore';
 
 const DeleteAccount = () => {
 	const { t } = useTranslation();
@@ -43,7 +42,6 @@ const DeleteAccount = () => {
 	const { mutateAsync: revokePushToken } = usePushNotiRevokeTokenMutation({});
 	const { mutateAsync: registerPushToken } = usePushNotiTokenMutation({});
 	const { fetchAccounts, activeAccId } = useAccounts();
-	const { clearAudience } = useCreateAudienceStore();
 
 	const handleStepChange = (nextStep: number) => {
 		layoutAnimation();
@@ -72,7 +70,6 @@ const DeleteAccount = () => {
 
 			await switchActiveAccount(null);
 			await fetchAccounts();
-			clearAudience();
 			queryClient.clear();
 
 			Toast.show({

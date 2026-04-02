@@ -36,6 +36,8 @@ import {
 	MutedContributorListQueryKey,
 	PatchworkChannelTimelineQueryKey,
 	SearchContributorQueryKey,
+	GetPostHashtagsQueryKey,
+	GetPostHashtagsListQueryKey,
 } from './../../types/queries/channel.type';
 import {
 	getChannelAbout,
@@ -75,6 +77,8 @@ import {
 	getStarterPackList,
 	getStarterPackDetail,
 	getForYouTimeline,
+	getPostHashtagsDetail,
+	getPostHashtagsList,
 } from '@/services/channel.service';
 import { SearchServerInstanceQueryKey } from '@/types/queries/auth.type';
 import {
@@ -711,5 +715,51 @@ export const useStarterPackDetail = ({ slug }: { slug: string }) => {
 		// 	}
 		// 	return item;
 		// },
+	});
+};
+
+export const useGetPostHashtagsDetail = ({
+	channel_type,
+	channel_name,
+	domain_name,
+	options,
+}: {
+	channel_type: string;
+	channel_name: string;
+	domain_name?: string;
+	options?: { enabled: boolean };
+}) => {
+	const queryKey: GetPostHashtagsQueryKey = [
+		'post-hashtags',
+		{ domain_name, channel_type, channel_name },
+	];
+	return useQuery({
+		queryKey,
+		queryFn: getPostHashtagsDetail,
+		enabled: options?.enabled,
+		staleTime: Infinity,
+		gcTime: Infinity,
+	});
+};
+
+export const useGetPostHashtagsList = ({
+	channel_type,
+	domain_name,
+	options,
+}: {
+	channel_type: string;
+	domain_name?: string;
+	options?: { enabled: boolean };
+}) => {
+	const queryKey: GetPostHashtagsListQueryKey = [
+		'post-hashtags-list',
+		{ domain_name, channel_type },
+	];
+	return useQuery({
+		queryKey,
+		queryFn: getPostHashtagsList,
+		enabled: options?.enabled,
+		staleTime: Infinity,
+		gcTime: Infinity,
 	});
 };

@@ -20,7 +20,6 @@ import {
 } from '@/store/compose/editPhotoMeta/editPhotoMeta';
 import { StatusCurrentPage } from '@/context/statusItemContext/statusItemContext.type';
 import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import ScheduleListButton from '@/components/atoms/compose/ScheduleListButton/ScheduleListButton';
 import ScheduleListModal from '@/components/molecules/compose/ScheduleListModal/ScheduleListModal';
 import DraftAlert from '@/components/atoms/compose/DraftAlert/DraftAlert';
@@ -34,8 +33,6 @@ import {
 import SaveDraftButton from '@/components/atoms/compose/SaveDraftButton/SaveDraftButton';
 import WordCountIndicator from '@/components/atoms/compose/WordCountIndicator/WordCountIndicator';
 import { useDraftPostsActions } from '@/store/compose/draftPosts/draftPostsStore';
-import { useEditAudienceStore } from '@/store/compose/audienceStore/editAudienceStore';
-import { useCreateAudienceStore } from '@/store/compose/audienceStore/createAudienceStore';
 import { getComposeUpdatePayload } from '@/util/helper/compose';
 import { useManageAttachmentActions } from '@/store/compose/manageAttachments/manageAttachmentStore';
 import { useTranslation } from 'react-i18next';
@@ -46,13 +43,14 @@ import { AudienceListModal } from '../AudienceListModal/AudienceListModal';
 import { SelectedAudience } from '@/components/molecules/compose/SelectedAudience/SelectedAudience';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomTabBarHeightContext } from '@react-navigation/bottom-tabs';
+import { useAudienceStore } from '@/store/compose/audienceStore/audienceStore';
 
 type Props = {
 	composeParams:
 		| {
 				type: 'create';
-				prefilledHashtags?: Patchwork.PatchworkCommunityHashtag[]; // allow this
-				prefilledAudience?: Patchwork.ChannelAttributes;
+				prefilledHashtags?: Patchwork.PostHashtag[];
+				prefilledAudience?: Patchwork.PostHashtagDetail;
 				channelType?: 'local' | 'public';
 				channelId?: string;
 		  }
@@ -80,7 +78,6 @@ const ComposeContent = ({ composeParams }: Props) => {
 	const { editPhotoModal } = useEditPhotoMeta();
 	const { composeState, composeDispatch } = useComposeStatus();
 	const { userOriginInstance } = useAuthStore();
-	const { clearEditSelectedAudience } = useEditAudienceStore();
 	const { setSelectedDraftId } = useDraftPostsActions();
 	const [showDraftAlert, setShowDraftAlert] = useState(false);
 	const { height } = useGradualAnimation();
@@ -90,7 +87,7 @@ const ComposeContent = ({ composeParams }: Props) => {
 	const { t } = useTranslation();
 	const { clearQuotedStatus } = useQuoteStore();
 
-	const { setSelectedAudience, clearAudience } = useCreateAudienceStore();
+	const { setSelectedAudience, clearAudience } = useAudienceStore();
 
 	const insets = useSafeAreaInsets();
 	const tabBarHeight = useContext(BottomTabBarHeightContext);
@@ -211,7 +208,6 @@ const ComposeContent = ({ composeParams }: Props) => {
 			setShowDraftAlert(true);
 		} else {
 			setSelectedDraftId(null);
-			clearEditSelectedAudience();
 			clearAudience();
 			navigation.goBack();
 		}

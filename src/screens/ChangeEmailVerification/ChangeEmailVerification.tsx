@@ -19,7 +19,7 @@ import {
 	useChangeNewsmastEmailVerificationMutation,
 } from '@/hooks/mutations/auth.mutation';
 import Toast from 'react-native-toast-message';
-import { handleError, saveAuthState } from '@/util/helper/helper';
+import { handleError } from '@/util/helper/helper';
 import { verifyAuthToken } from '@/services/auth.service';
 import { useAuthStore, useAuthStoreAction } from '@/store/auth/authStore';
 import { NEWSMAST_INSTANCE_V1 } from '@/util/constant';
@@ -27,7 +27,6 @@ import { usePushNotiRevokeTokenMutation } from '@/hooks/mutations/pushNoti.mutat
 import { usePushNoticationStore } from '@/store/pushNoti/pushNotiStore';
 import { queryClient } from '@/App';
 import { useActiveDomainStore } from '@/store/feed/activeDomain';
-import { useCreateAudienceStore } from '@/store/compose/audienceStore/createAudienceStore';
 import { Trans, useTranslation } from 'react-i18next';
 import colors from 'tailwindcss/colors';
 import {
@@ -53,7 +52,6 @@ const ChangeEmailVerification: React.FC<
 	const { setAuthState, setUserInfo, clearAuthState } = useAuthStoreAction();
 	const { mutateAsync } = usePushNotiRevokeTokenMutation({});
 	const fcmToken = usePushNoticationStore(state => state.fcmToken);
-	const { clearAudience } = useCreateAudienceStore();
 	const lineHeightStyle = i18n.language === 'my' ? { lineHeight: 32 } : {};
 
 	const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -75,7 +73,6 @@ const ChangeEmailVerification: React.FC<
 			clearAuthState();
 			queryClient.clear();
 			navigation.navigate('Welcome');
-			clearAudience();
 		}
 	};
 

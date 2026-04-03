@@ -38,7 +38,6 @@ const VideoFeedItem = ({
 	index: number;
 	visibleHeight?: number;
 }) => {
-	const [isMuted, setIsMuted] = useState(false);
 	const youtubeId = extractYoutubeId(post.content.rendered);
 	const assumedOrientation = getInitialVideoOrientation(post);
 	const [isLandscape, setIsLandscape] = useState(
@@ -48,7 +47,13 @@ const VideoFeedItem = ({
 		youtubeId ? 16 / 9 : assumedOrientation.aspectRatio,
 	);
 	const { colorScheme } = useColorScheme();
-	const { openComments, openContent, openLikeSheet } = useLiveVideoFeedStore();
+	const {
+		openComments,
+		openContent,
+		openLikeSheet,
+		isGlobalMuted,
+		setIsGlobalMuted,
+	} = useLiveVideoFeedStore();
 
 	const { data: comments } = useGetWordpressCommentsByPostId(
 		post.id,
@@ -63,6 +68,9 @@ const VideoFeedItem = ({
 	const { setVideoProgress, videoProgressMap } = useLiveVideoFeedStore();
 	const initialTime = videoProgressMap[post.id] || 0;
 
+	const playerStateRef = useRef<string>('unstarted');
+	const isPlayerReadyRef = useRef<boolean>(false);
+
 	const [isPlaying, setIsPlaying] = useState(true);
 
 	useEffect(() => {
@@ -76,6 +84,38 @@ const VideoFeedItem = ({
 			setIsPlaying(true);
 		}
 	}, [isActive, post.id, setVideoProgress]);
+
+	useEffect(() => {
+		let interval: NodeJS.Timeout | null = null;
+		let consecutiveValidFrames = 0;
+		if (isActive && youtubeId) {
+			interval = setInterval(() => {
+				if (
+					!isPlayerReadyRef.current ||
+					(playerStateRef.current !== 'playing' &&
+						playerStateRef.current !== 'paused')
+				) {
+					consecutiveValidFrames = 0;
+					return;
+				}
+				consecutiveValidFrames++;
+				if (consecutiveValidFrames < 4) {
+					return;
+				}
+				playerRef.current
+					?.isMuted()
+					.then(muted => {
+						if (muted !== undefined && muted !== isGlobalMuted) {
+							setIsGlobalMuted(muted);
+						}
+					})
+					.catch(() => {});
+			}, 500);
+		}
+		return () => {
+			if (interval) clearInterval(interval);
+		};
+	}, [isActive, youtubeId, isGlobalMuted, setIsGlobalMuted]);
 
 	const onFullScreenChange = useCallback(
 		(isFullScreen: boolean) => {
@@ -98,8 +138,8 @@ const VideoFeedItem = ({
 	}, [post, youtubeId]);
 
 	const toggleMute = useCallback(() => {
-		setIsMuted(prev => !prev);
-	}, []);
+		setIsGlobalMuted(!isGlobalMuted);
+	}, [isGlobalMuted, setIsGlobalMuted]);
 
 	const handleAspectRatioLoad = useCallback(
 		(landscape: boolean, ratio: number) => {
@@ -125,9 +165,16 @@ const VideoFeedItem = ({
 						height={Dimensions.get('window').width / (16 / 9)}
 						play={isActive}
 						videoId={youtubeId}
+						mute={isGlobalMuted}
 						initialPlayerParams={{
 							start: initialTime,
 							preventFullScreen: false,
+						}}
+						onReady={() => {
+							isPlayerReadyRef.current = true;
+						}}
+						onChangeState={(state: string) => {
+							playerStateRef.current = state;
 						}}
 						onFullScreenChange={onFullScreenChange}
 						webViewProps={{
@@ -145,7 +192,7 @@ const VideoFeedItem = ({
 				key={post.id}
 				post={post}
 				isActive={isActive}
-				isMuted={isMuted}
+				isMuted={isGlobalMuted}
 				toggleMute={toggleMute}
 				onAspectRatioLoad={handleAspectRatioLoad}
 			>

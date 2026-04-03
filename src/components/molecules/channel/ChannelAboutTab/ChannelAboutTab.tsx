@@ -13,6 +13,7 @@ import { useActiveDomainStore } from '@/store/feed/activeDomain';
 import NewsmastPeopleToFollowItem from '@/components/atoms/channel/NewsmastPeopleToFollowItem/NewsmastPeopleToFollowItem';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DEFAULT_FINDOUT_DASHBOARD_API_URL } from '@/util/constant';
+import { useSpecificServerProfile } from '@/hooks/queries/profile.queries';
 
 interface ChannelAboutTabProps {
 	note: string;
@@ -59,16 +60,45 @@ const ChannelAboutTab: React.FC<ChannelAboutTabProps> = ({
 		[],
 	);
 
+	const { data: specificServerProfile } = useSpecificServerProfile({
+		q: adminUsername as string,
+		options: {
+			enabled: !!adminUsername,
+		},
+	});
+
+	const findAccountId = (
+		specificServerProfile: Patchwork.SearchResult | null | undefined,
+		accUri: string | undefined,
+	): string | undefined => {
+		const accounts = specificServerProfile?.accounts ?? [];
+		if (!accUri) return accounts[0]?.id;
+
+		const normalized = accUri.startsWith('@') ? accUri.slice(1) : accUri;
+
+		if (accounts.length > 1) {
+			const foundAccount = accounts.find(acc => acc.acct == normalized);
+			return foundAccount?.id;
+		}
+
+		return accounts.length > 0 ? accounts[0].id : '';
+	};
+
+	const adminUsernameId = findAccountId(specificServerProfile, adminUsername);
+
 	return (
 		<Tabs.ScrollView showsVerticalScrollIndicator={false}>
 			<View className="m-5">
-				<View className="mb-3">
-					<ThemeText size={'md_16'} variant={'textBold'}>
-						{t('channel.about_this_community')}
-					</ThemeText>
-					{note && <Bio userBio={note} customMaxWordCount={500} />}
-					<Underline className="mt-5" />
-				</View>
+				{note && (
+					<View className="mb-3">
+						<ThemeText size={'md_16'} variant={'textBold'}>
+							{t('channel.about_this_community')}
+						</ThemeText>
+						<Bio userBio={note} customMaxWordCount={500} />
+						<Underline className="mt-5" />
+					</View>
+				)}
+
 				{hashtags && hashtags?.length > 0 && (
 					<View className="mb-3">
 						<View className="flex-row justify-center">
@@ -129,7 +159,15 @@ const ChannelAboutTab: React.FC<ChannelAboutTabProps> = ({
 							values={{ botAccount: adminUsername }}
 							components={{
 								orangeText: (
-									<ThemeText key={'orangeText'} variant="textPrimary" />
+									<ThemeText
+										key={'orangeText'}
+										variant="textPrimary"
+										onPress={() =>
+											navigation.navigate('ProfileOther', {
+												id: adminUsernameId!,
+											})
+										}
+									/>
 								),
 							}}
 						/>
@@ -173,9 +211,9 @@ const ChannelAboutTab: React.FC<ChannelAboutTabProps> = ({
 							/>
 						</View>
 					)}
-				<Underline />
+				{/* <Underline /> */}
 
-				<View className="my-4">
+				{/* <View className="my-4">
 					<ThemeText size={'md_16'} variant={'textBold'} className="mb-3">
 						{t('channel.community_guidelines')}
 					</ThemeText>
@@ -187,7 +225,7 @@ const ChannelAboutTab: React.FC<ChannelAboutTabProps> = ({
 						))}
 					</View>
 					<Underline />
-				</View>
+				</View> */}
 			</View>
 		</Tabs.ScrollView>
 	);

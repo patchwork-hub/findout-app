@@ -14,28 +14,14 @@ export const slides = [
 		description:
 			'Your home feed brings you the latest local news, community updates, and discussions.',
 		bullets: [
-			'Find Out tab: Discover curated local news and trending community topics',
-			'Main feed: See the latest timeline updates from people you follow',
+			'Find Out tab: Discover podcasts and videos from various Find Out Show Channels',
+			'Main feed: See the latest timeline updates from people you follow and local community',
 			'Channels tabs: Dive into specific focused topics and community interests',
 		],
 		tip: 'Tap on a news item to read the full context and see what others are saying.',
 	},
 	{
 		id: 2,
-		icon: faCommentAlt,
-		title: 'Community Engagement',
-		description:
-			'FindOut is built on open social protocols (Fediverse) that let you connect deeply with your neighbors and local creators.',
-		bullets: [
-			'Like and reply to participate in public discussions',
-			'Start private conversations to connect one-on-one with neighbors',
-			'Boost posts to amplify important local voices',
-			'Follow local journalists and active community members',
-		],
-		tip: 'A supportive community starts with you. Keep conversations respectful and engaging.',
-	},
-	{
-		id: 3,
 		icon: faPenNib,
 		title: 'Share Your Voice',
 		description:
@@ -46,6 +32,21 @@ export const slides = [
 			'Use content warnings for sensitive topics to respect others',
 		],
 		tip: 'Add relevant hashtags to make your posts easier to discover locally.',
+	},
+	{
+		id: 3,
+		icon: faCommentAlt,
+		title: 'Community Engagement',
+		description:
+			'Find Out is built on open social protocols (Fediverse) that let you connect deeply with your neighbors and local creators.',
+		bullets: [
+			'Post to local communities by selecting a Show Name from the dropdown on Compose screen',
+			'Like and reply to participate in public discussions',
+			'Start private conversations to connect one-on-one with neighbors',
+			'Boost posts to amplify important local voices',
+			'Follow local journalists and active community members',
+		],
+		tip: 'A supportive community starts with you. Keep conversations respectful and engaging.',
 	},
 	{
 		id: 4,
@@ -59,18 +60,5 @@ export const slides = [
 			'Explore curated lists of community content',
 		],
 		tip: 'The search tab is your gateway to topics outside your immediate following.',
-	},
-	{
-		id: 5,
-		icon: faUserCog,
-		title: 'Customizing Your Experience',
-		description:
-			'FindOut puts you in control of your timeline, your data, and your visual preferences.',
-		bullets: [
-			'Adjust your notification preferences in settings',
-			'Manage privacy levels for your profile and individual posts',
-			'Switch between light and dark themes in the appearance menu',
-		],
-		tip: 'You can mute or block accounts anytime to curate a safe personal space.',
 	},
 ];

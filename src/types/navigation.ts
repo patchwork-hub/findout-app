@@ -46,6 +46,7 @@ export type RootStackParamList = {
 	SplashScreen: undefined;
 	VideoPlayer: { status: Patchwork.Status };
 	GifPlayer: { status: Patchwork.Status; gifUrl: string };
+	HowToUseApp: undefined;
 };
 
 export type BottomStackParamList = {
@@ -147,7 +148,6 @@ export type HomeStackParamList = {
 		id: Patchwork.Attachment['id'];
 	};
 	QuotePost: { statusId: string };
-	HowToUseApp: undefined;
 };
 
 export type SearchStackParamList = {

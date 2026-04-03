@@ -2,9 +2,12 @@ import Underline from '@/components/atoms/common/Underline/Underline';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
 import { useColorScheme } from 'nativewind';
 import { View, Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {
+	CompositeNavigationProp,
+	useNavigation,
+} from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { HomeStackParamList } from '@/types/navigation';
+import { HomeStackParamList, RootStackParamList } from '@/types/navigation';
 import Image from '@/components/atoms/common/Image/Image';
 import { useCurrentTabScrollY } from 'react-native-collapsible-tab-view';
 import Animated, {
@@ -21,7 +24,13 @@ type Props = {
 };
 
 const HomeFeedHeader = ({ account, showUnderLine = true }: Props) => {
-	const navigation = useNavigation<StackNavigationProp<HomeStackParamList>>();
+	const navigation =
+		useNavigation<
+			CompositeNavigationProp<
+				StackNavigationProp<HomeStackParamList>,
+				StackNavigationProp<RootStackParamList>
+			>
+		>();
 	const { colorScheme } = useColorScheme();
 	const scrollY = useCurrentTabScrollY();
 

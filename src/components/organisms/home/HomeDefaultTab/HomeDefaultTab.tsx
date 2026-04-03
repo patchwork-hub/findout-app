@@ -248,7 +248,7 @@ const HomeDefaultTab = () => {
 										alignItems: 'center',
 										justifyContent: 'center',
 									}}
-									className="px-6 -mt-48"
+									className="px-6 -mt-32"
 								>
 									<View className="mb-6 p-6 rounded-full bg-gray-100 dark:bg-gray-800">
 										<FontAwesomeIcon

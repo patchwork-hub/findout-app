@@ -95,6 +95,7 @@ export const getAccountDetailFeed = async (
 						: {}),
 					limit: max_id ? 15 : 3,
 					...(typeof only_reblogs === 'boolean' ? { only_reblogs } : {}),
+					exclude_direct_statuses: true,
 				},
 			},
 		);

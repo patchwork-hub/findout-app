@@ -13,6 +13,7 @@ import {
 	QuotePost,
 	GifPlayer,
 	VideoPlayer,
+	HowToUseApp,
 } from '@/screens';
 import type { RootStackParamList } from '@/types/navigation';
 import BottomTabs from './BottomTabStackNavigator';
@@ -214,6 +215,7 @@ function ApplicationNavigator() {
 					) : (
 						<>
 							<Stack.Screen name="Index" component={BottomTabs} />
+							<Stack.Screen name="HowToUseApp" component={HowToUseApp} />
 							<Stack.Screen name="Profile" component={Profile} />
 							<Stack.Screen name="ProfileOther" component={ProfileOther} />
 							<Stack.Screen name="WebViewer" component={WebViewer} />

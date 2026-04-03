@@ -87,13 +87,19 @@ const UserListItem = ({ item }: Props) => {
 								/>
 							)}
 							{platformIcon && (
-								<View className="ml-1.5 mb-[1] justify-center">
+								<View
+									className={`ml-1.5 mb-[1] justify-center items-center aspect-square p-1.5 rounded-full ${
+										platformIcon.type === 'bluesky'
+											? 'bg-blue-50 dark:bg-blue-950/30'
+											: 'bg-slate-200 dark:bg-neutral-800'
+									}`}
+								>
 									<FontAwesomeIcon
 										icon={platformIcon.icon}
 										size={13}
 										color={
 											platformIcon.type === 'bluesky'
-												? '#0F73FF'
+												? '#0085ff'
 												: colorScheme === 'dark'
 												? '#fff'
 												: '#000'

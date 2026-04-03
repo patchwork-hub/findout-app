@@ -13,13 +13,17 @@ import RenderHTML, {
 } from 'react-native-render-html';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { HomeStackParamList, RootStackParamList } from '@/types/navigation';
+import { HomeStackParamList } from '@/types/navigation';
 import { useSelectedDomain } from '@/store/feed/activeDomain';
+import { useAuthStore } from '@/store/auth/authStore';
 import { useTranslation } from 'react-i18next';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
+import LoadingModal from '@/components/atoms/common/LoadingModal/LoadingModal';
 import { useColorScheme } from 'nativewind';
 import customColor from '@/util/constant/color';
 import { layoutAnimation } from '@/util/helper/timeline';
+import instance from '@/services/instance';
+import { appendApiVersion } from '@/util/helper/helper';
 
 type BioProps = {
 	userBio: string;
@@ -37,8 +41,10 @@ const Bio = ({ userBio, numberOfLines }: BioProps) => {
 	const navigation = useNavigation<StackNavigationProp<HomeStackParamList>>();
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [contentHeight, setContentHeight] = useState<number>(0);
+	const [isLoading, setIsLoading] = useState(false);
 	const { colorScheme } = useColorScheme();
 	const activeDomain = useSelectedDomain();
+	const userInfo = useAuthStore(state => state.userInfo);
 	const isDarkMode = colorScheme === 'dark';
 	const baseTextColor = isDarkMode ? '#fff' : '#000';
 
@@ -52,7 +58,7 @@ const Bio = ({ userBio, numberOfLines }: BioProps) => {
 		: customColor['patchwork-primary'];
 
 	const handleLinkPress = useCallback(
-		(
+		async (
 			event: GestureResponderEvent,
 			href: string,
 			htmlAttribs: Record<string, string>,
@@ -91,12 +97,35 @@ const Bio = ({ userBio, numberOfLines }: BioProps) => {
 				} catch (e) {}
 
 				if (acct) {
-					navigation.push('ProfileOther', {
-						id: '',
-						acct,
-						shouldResolveRemote: true,
-					});
-					return;
+					try {
+						setIsLoading(true);
+						const searchResp = await instance.get(
+							appendApiVersion(`search`, 'v2'),
+							{ params: { q: acct, resolve: true, type: 'accounts' } },
+						);
+						setIsLoading(false);
+
+						if (
+							searchResp.data &&
+							searchResp.data.accounts &&
+							searchResp.data.accounts.length > 0
+						) {
+							const foundAccount = searchResp.data.accounts[0];
+							if (userInfo && foundAccount.id === userInfo.id) {
+								navigation.push('Profile', { id: userInfo.id });
+							} else {
+								navigation.push('ProfileOther', {
+									id: foundAccount.id,
+									acct,
+									shouldResolveRemote: true,
+								});
+							}
+							return;
+						}
+					} catch (e) {
+						setIsLoading(false);
+						console.log('Account search failed, falling back to WebViewer', e);
+					}
 				}
 			}
 
@@ -151,6 +180,9 @@ const Bio = ({ userBio, numberOfLines }: BioProps) => {
 
 	return (
 		<View className="mt-2">
+			{isLoading && (
+				<LoadingModal isVisible={isLoading} message="Loading profile..." />
+			)}
 			<View
 				className="overflow-hidden relative"
 				onLayout={onLayout}

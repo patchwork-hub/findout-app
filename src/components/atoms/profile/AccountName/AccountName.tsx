@@ -51,19 +51,25 @@ const AccountName = ({
 		>
 			<ThemeText
 				emojis={emojis}
-				className={`font-Oswald_Bold text-[17px] leading-6 ${acctNameTextStyle}`}
+				className={`font-NewsCycle_Bold text-[17px] leading-6 ${acctNameTextStyle}`}
 			>
 				{accountName}
 			</ThemeText>
 
 			{(isBluesky || isThreads) && (
-				<View className="ml-2 justify-center">
+				<View
+					className={`ml-2 justify-center items-center aspect-square p-1.5 rounded-full ${
+						isBluesky
+							? 'bg-blue-50 dark:bg-blue-950/30'
+							: 'bg-slate-200 dark:bg-neutral-800'
+					}`}
+				>
 					<FontAwesomeIcon
 						icon={isBluesky ? faBluesky : faThreads}
 						color={
-							isBluesky ? '#0F73FF' : colorScheme === 'dark' ? '#fff' : '#000'
+							isBluesky ? '#0085ff' : colorScheme === 'dark' ? '#fff' : '#000'
 						}
-						size={13}
+						size={14}
 					/>
 				</View>
 			)}

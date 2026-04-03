@@ -34,11 +34,7 @@ const LoadingModal: React.FC<LoadingModalProps> = ({ isVisible, message }) => {
 								: customColor['patchwork-primary']
 						}
 					/>
-					{message && (
-						<Text className="text-lg font-medium text-white mt-4">
-							{message}
-						</Text>
-					)}
+					{message && <Text className="text-white mt-4">{message}</Text>}
 				</View>
 			</View>
 		</Modal>

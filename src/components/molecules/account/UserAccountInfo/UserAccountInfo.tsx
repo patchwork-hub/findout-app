@@ -43,6 +43,7 @@ const UserAccountInfo = ({
 			<AccountName
 				{...{
 					accountName,
+					username,
 					acctNameTextStyle,
 					hasRedMark,
 					emojis,

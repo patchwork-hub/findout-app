@@ -1,3 +1,4 @@
+import { useAudienceStore } from '@/store/compose/audienceStore/audienceStore';
 import React, { useEffect } from 'react';
 import { View } from 'react-native';
 import PollForm from '../PollForm/PollForm';
@@ -9,8 +10,10 @@ import { useManageAttachmentActions } from '@/store/compose/manageAttachments/ma
 import { POLL_DURATION_OPTIONS } from '@/util/constant/pollOption';
 import Graphemer from 'graphemer';
 import { useMaxCount } from '@/hooks/custom/useMaxCount';
-import { useFavouriteChannelLists } from '@/hooks/queries/channel.queries';
-import { useEditAudienceStore } from '@/store/compose/audienceStore/editAudienceStore';
+import {
+	useGetForYouChannelList,
+	useGetPostHashtagsList,
+} from '@/hooks/queries/channel.queries';
 import { getQuotePolicy } from '@/util/helper/helper';
 
 const splitter = new Graphemer();
@@ -26,14 +29,16 @@ const EditComposeStatus = ({ status }: { status: Patchwork.Status }) => {
 	const { composeState, composeDispatch } = useComposeStatus();
 	const { onSelectMedia, resetAttachmentStore } = useManageAttachmentActions();
 	const maxStatusLength = useMaxCount();
-	const { setEditSelectedAudience, clearEditSelectedAudience } =
-		useEditAudienceStore();
+	const { setSelectedAudience, clearAudience } = useAudienceStore();
 
-	const { data: newsmastChannels } = useFavouriteChannelLists(false);
+	const { data: forYouChannelList } = useGetForYouChannelList();
+	const { data: postHashtagsRes } = useGetPostHashtagsList({
+		channel_type: 'newsmast',
+	});
 
 	useEffect(() => {
 		return () => {
-			clearEditSelectedAudience();
+			clearAudience();
 		};
 	}, []);
 
@@ -43,57 +48,93 @@ const EditComposeStatus = ({ status }: { status: Patchwork.Status }) => {
 			payload: true,
 		});
 
+		let computedVisibility =
+			status?.local_only === true
+				? 'local'
+				: (status.visibility as Patchwork.ComposeVisibility);
+
 		if (status.text) {
-			if (newsmastChannels && newsmastChannels.length > 0) {
-				// Extracting all hashtags from the original status content
-				const statusHashtags = new Set(
-					status.text
-						.split(/\s+/)
-						.filter(word => word.startsWith('#'))
-						.map(word => word.trim()),
-				);
+			const statusHashtags = new Set(
+				status.text
+					.split(/\s+/)
+					.filter(word => word.startsWith('#'))
+					.map(word => word.trim().toLowerCase()),
+			);
 
-				const newSelectedAudience = newsmastChannels.map(channel => {
-					const originalHashtags =
-						channel.attributes?.patchwork_community_hashtags ?? [];
-					const matchedHashtags = originalHashtags.filter(h =>
-						statusHashtags.has(`#${h.hashtag}`),
-					);
+			let foundAudience: Patchwork.PostHashtagDetail[] | null = null;
+			let allAudHashtags: string[] = [];
+			let isFromForYouChannels = false;
 
-					if (matchedHashtags.length > 0) {
-						return {
-							...channel.attributes,
-							patchwork_community_hashtags: matchedHashtags,
-						};
-					}
-					return null;
-				});
+			if (forYouChannelList && forYouChannelList.length > 0) {
+				const mappedSelectedAudience = forYouChannelList
+					.map(wg => {
+						const originalHashtags =
+							wg.attributes?.patchwork_community_hashtags ?? [];
+						const matchedHashtags = originalHashtags.filter(h =>
+							statusHashtags.has(`#${h.hashtag.toLowerCase()}`),
+						);
 
-				setEditSelectedAudience(
-					newSelectedAudience.filter(
-						(
-							channel,
-						): channel is Patchwork.ChannelAttributes & {
-							patchwork_community_hashtags: Patchwork.PatchworkCommunityHashtag[];
-						} => channel !== null,
-					),
-				);
+						if (matchedHashtags.length > 0) {
+							return {
+								community_name: wg.attributes?.name || '',
+								patchwork_community_id: wg.attributes?.id || 0,
+								hashtags: matchedHashtags.map(h => ({
+									id: h.id,
+									hashtag: h.hashtag,
+									created_at: new Date().toISOString(),
+									updated_at: new Date().toISOString(),
+								})),
+							} as Patchwork.PostHashtagDetail;
+						}
+						return null;
+					})
+					.filter((c): c is Patchwork.PostHashtagDetail => c !== null);
 
-				// filtering newsmast hashtags from compose text
-				const allAudHashtags = newsmastChannels.flatMap(
-					channel =>
-						channel.attributes?.patchwork_community_hashtags?.map(
-							h => `#${h.hashtag}`,
-						) ?? [],
+				if (mappedSelectedAudience.length > 0) {
+					foundAudience = mappedSelectedAudience;
+					isFromForYouChannels = true;
+				}
+			}
+
+			if (!foundAudience && postHashtagsRes && postHashtagsRes.length > 0) {
+				const mappedSelectedAudience = postHashtagsRes
+					.map(channel => {
+						const originalHashtags = channel.hashtags ?? [];
+						const matchedHashtags = originalHashtags.filter(h =>
+							statusHashtags.has(`#${h.hashtag.toLowerCase()}`),
+						);
+
+						if (matchedHashtags.length > 0) {
+							return {
+								community_name: channel.community_name,
+								patchwork_community_id: channel.patchwork_community_id,
+								hashtags: matchedHashtags,
+							} as Patchwork.PostHashtagDetail;
+						}
+						return null;
+					})
+					.filter((c): c is Patchwork.PostHashtagDetail => c !== null);
+
+				if (mappedSelectedAudience.length > 0) {
+					foundAudience = mappedSelectedAudience;
+				}
+			}
+
+			if (foundAudience) {
+				setSelectedAudience(foundAudience);
+				if (isFromForYouChannels) {
+					computedVisibility = 'local';
+				}
+
+				allAudHashtags = foundAudience.flatMap(
+					aud => aud.hashtags?.map(h => `#${h.hashtag.toLowerCase()}`) ?? [],
 				);
 
 				const contentWithoutAudienceTags = status.text.replace(
 					/#\w+/g,
 					match => {
 						const lower = match.toLowerCase();
-						return allAudHashtags.some(tag => tag.toLowerCase() === lower)
-							? ''
-							: match;
+						return allAudHashtags.some(tag => tag === lower) ? '' : match;
 					},
 				);
 
@@ -156,7 +197,7 @@ const EditComposeStatus = ({ status }: { status: Patchwork.Status }) => {
 
 		composeDispatch({
 			type: 'visibility_change',
-			payload: status.visibility as Patchwork.ComposeVisibility,
+			payload: computedVisibility,
 		});
 
 		composeDispatch({
@@ -178,7 +219,7 @@ const EditComposeStatus = ({ status }: { status: Patchwork.Status }) => {
 			composeDispatch({ type: 'clear' });
 			resetAttachmentStore();
 		};
-	}, [status, newsmastChannels]);
+	}, [status, forYouChannelList, postHashtagsRes]);
 
 	return (
 		<View className="px-4">

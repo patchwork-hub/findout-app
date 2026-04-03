@@ -10,6 +10,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { ConversationsStackParamList } from '@/types/navigation';
 import { useGetConversationByUserId } from '@/hooks/queries/conversations.queries';
 import CustomAlert from '../../common/CustomAlert/CustomAlert';
+import { useCheckRelationships } from '@/hooks/queries/profile.queries';
 import {
 	CHANNEL_INSTANCE,
 	DEFAULT_INSTANCE,
@@ -19,6 +20,9 @@ import {
 import Image from '../../common/Image/Image';
 import { useColorScheme } from 'nativewind';
 import { useTranslation } from 'react-i18next';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { AppIcons } from '@/util/icons/icon.common';
+import { useMemo } from 'react';
 
 type Props = {
 	item: Patchwork.Account;
@@ -41,10 +45,36 @@ const NewMsgUserItem = ({ item }: Props) => {
 		},
 	});
 
-	const [alertState, setAlert] = useState({
+	const { data: relationships } = useCheckRelationships({
+		accountIds: [item.id],
+		options: {
+			enabled: !!item.id,
+		},
+	});
+
+	const [alertState, setAlert] = useState<{
+		message: string;
+		isOpen: boolean;
+		type?: 'existing' | 'follow_request';
+	}>({
 		message: '',
 		isOpen: false,
 	});
+
+	const platformIcon = useMemo(() => {
+		const domain = item.domain?.toLowerCase() || item.acct?.toLowerCase();
+		if (
+			domain?.includes('bsky.social') ||
+			domain?.includes('bluesky') ||
+			domain?.includes('bsky.brid.gy')
+		) {
+			return { icon: AppIcons.bluesky, type: 'bluesky' };
+		}
+		if (domain?.includes('threads.net') || domain?.includes('threads')) {
+			return { icon: AppIcons.threads, type: 'threads' };
+		}
+		return null;
+	}, [item.domain, item.acct]);
 
 	return (
 		<Pressable
@@ -61,7 +91,20 @@ const NewMsgUserItem = ({ item }: Props) => {
 				if (userConversation && userConversation.last_status) {
 					return setAlert({
 						isOpen: true,
+						type: 'existing',
 						message: t('toast.existing_conversation', {
+							user: item.display_name || item.username,
+						}),
+					});
+				}
+
+				const isFollowing = relationships?.[0]?.following;
+
+				if (!isFollowing) {
+					return setAlert({
+						isOpen: true,
+						type: 'follow_request',
+						message: t('conversation.request_conversation_message', {
 							user: item.display_name || item.username,
 						}),
 					});
@@ -84,6 +127,21 @@ const NewMsgUserItem = ({ item }: Props) => {
 					{checkIsAccountVerified(item.fields) && (
 						<ProfileNameRedMark className="ml-2" colorScheme={colorScheme} />
 					)}
+					{platformIcon && (
+						<View className="ml-1.5 justify-center">
+							<FontAwesomeIcon
+								icon={platformIcon.icon}
+								size={13}
+								color={
+									platformIcon.type === 'bluesky'
+										? '#0F73FF'
+										: colorScheme === 'dark'
+										? '#fff'
+										: '#000'
+								}
+							/>
+						</View>
+					)}
 				</View>
 				<ThemeText className="text-patchwork-dark-100 dark:text-white">
 					@{item.acct}
@@ -99,17 +157,31 @@ const NewMsgUserItem = ({ item }: Props) => {
 						'text-patchwork-primary dark:text-patchwork-primary-dark mx-1'
 					}
 					message={alertState.message}
-					cancelBtnText={t('toast.proceed_with_old_one')}
-					confirmBtnText={t('toast.create_a_new_one')}
-					title={t('toast.exisiting_convo_found')}
+					cancelBtnText={
+						alertState.type === 'existing'
+							? t('toast.proceed_with_old_one')
+							: t('common.cancel')
+					}
+					confirmBtnText={
+						alertState.type === 'existing'
+							? t('toast.create_a_new_one')
+							: t('common.send')
+					}
+					title={
+						alertState.type === 'existing'
+							? t('toast.exisiting_convo_found')
+							: t('conversation.request_conversation_title')
+					}
 					handleCancel={() => {
+						if (alertState.type === 'existing') {
+							navigation.navigate('ConversationDetail', {
+								id: userConversation?.last_status?.id || '',
+							});
+						}
 						setAlert(prev => ({
 							...prev,
 							isOpen: false,
 						}));
-						navigation.navigate('ConversationDetail', {
-							id: userConversation?.last_status?.id || '',
-						});
 					}}
 					handleOk={() => {
 						setAlert(prev => ({

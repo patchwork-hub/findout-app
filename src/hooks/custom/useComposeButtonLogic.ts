@@ -32,12 +32,11 @@ import {
 } from '@/store/compose/draftPosts/draftPostsStore';
 import { useEditPhotoMetaActions } from '@/store/compose/editPhotoMeta/editPhotoMeta';
 import { useComposeStatus } from '@/context/composeStatusContext/composeStatus.context';
-import { useCreateAudienceStore } from '@/store/compose/audienceStore/createAudienceStore';
-import { useEditAudienceStore } from '@/store/compose/audienceStore/editAudienceStore';
 import { POLL_LIMITS } from '@/util/constant/pollOption';
 import Graphemer from 'graphemer';
 import { StatusCurrentPage } from '@/context/statusItemContext/statusItemContext.type';
 import { SaveDraftPayload } from '@/types/queries/feed.type';
+import { useAudienceStore } from '@/store/compose/audienceStore/audienceStore';
 
 const splitter = new Graphemer();
 
@@ -64,23 +63,14 @@ export const useComposeLogic = (
 	const { resetEditPhotoMeta } = useEditPhotoMetaActions();
 	const { selectedDraftId } = useDraftPostsStore();
 	const { setDraftType, setSelectedDraftId } = useDraftPostsActions();
-	const { selectedAudience, clearAudience } = useCreateAudienceStore();
-	const { editSelectedAudience, clearEditSelectedAudience } =
-		useEditAudienceStore();
+	const { selectedAudience, clearAudience } = useAudienceStore();
 
 	const isSchedule = !!composeState.schedule?.is_edting_previous_schedule;
 	const isDraft = !!selectedDraftId;
 
-	const audienceSource =
-		isDraft || isSchedule || composeType === 'edit'
-			? editSelectedAudience
-			: selectedAudience;
-
-	const audHashtags = audienceSource
-		?.flatMap(
-			audience =>
-				audience.patchwork_community_hashtags?.map(h => `#${h.hashtag}`) ?? [],
-		)
+	const audHashtags = selectedAudience
+		?.flat()
+		?.flatMap(audience => audience.hashtags?.map(h => `#${h.hashtag}`) ?? [])
 		.join(' ');
 
 	const accountDetailFeedQueryKey = [
@@ -145,7 +135,6 @@ export const useComposeLogic = (
 			resetAttachmentStore();
 			resetEditPhotoMeta();
 			clearAudience();
-			clearEditSelectedAudience();
 
 			if (composeType === 'schedule') {
 				await queryClient.invalidateQueries({ queryKey: ['schedule-list'] });
@@ -214,7 +203,6 @@ export const useComposeLogic = (
 				resetAttachmentStore();
 				resetEditPhotoMeta();
 				clearAudience();
-				clearEditSelectedAudience();
 				navigation.goBack();
 			},
 			onError: (e: Error) => {
@@ -242,7 +230,6 @@ export const useComposeLogic = (
 				queryClient.invalidateQueries({ queryKey: ['schedule-list'] });
 				composeDispatch({ type: 'clear' });
 				clearAudience();
-				clearEditSelectedAudience();
 				resetAttachmentStore();
 				resetEditPhotoMeta();
 
@@ -309,12 +296,7 @@ export const useComposeLogic = (
 		const insufficientPollOptions =
 			poll && poll.options?.length < POLL_LIMITS.MIN_OPTIONS;
 
-		const audienceHashtags = audienceSource.flatMap(
-			a => a.patchwork_community_hashtags?.map(h => `#${h.hashtag}`) ?? [],
-		);
-		const combinedText = `${composeState.text.raw} ${audienceHashtags?.join(
-			' ',
-		)}`.trim();
+		const combinedText = `${composeState.text.raw} ${audHashtags}`.trim();
 		const combinedCount = splitter.countGraphemes(combinedText);
 
 		return (

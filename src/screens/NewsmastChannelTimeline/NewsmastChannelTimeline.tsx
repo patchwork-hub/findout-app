@@ -1,13 +1,13 @@
 import { useState, useMemo, useEffect } from 'react';
 import { View, TouchableOpacity, Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useColorScheme } from 'nativewind';
 import { HomeStackScreenProps } from '@/types/navigation';
 import ChannelProfileLoading from '@/components/atoms/loading/ChannelProfileLoading';
 import {
 	useGetChannelAbout,
 	useGetNewsmastChannelDetail,
 	useGetNewsmastCommunityDetailBio,
+	useGetPostHashtagsDetail,
 } from '@/hooks/queries/channel.queries';
 import { ProfileBackIcon } from '@/util/svg/icon.profile';
 import { useTabBarTheme } from '@/hooks/custom/useTabBarTheme';
@@ -31,13 +31,12 @@ import VerticalSwipeHelper from '@/components/atoms/feed/VerticalSwipeHelper/Ver
 import { useTranslation } from 'react-i18next';
 import ChannelPostsTab from '@/components/molecules/channel/ChannelPostsTab/ChannelPostsTab';
 import ChannelAboutTab from '@/components/molecules/channel/ChannelAboutTab/ChannelAboutTab';
-import { useComposePrefillStore } from '@/store/ui/composePrefillStore';
+import { useComposePrefillStore } from '@/store/compose/audienceStore/composePrefillStore';
 
 const NewsmastChannelTimeline: React.FC<
 	HomeStackScreenProps<'NewsmastChannelTimeline'>
 > = ({ route, navigation }) => {
 	const { t } = useTranslation();
-	const { colorScheme } = useColorScheme();
 	const { top } = useSafeAreaInsets();
 	const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 	const [isTimelineLoading, setIsTimelineLoading] = useState(true);
@@ -56,7 +55,9 @@ const NewsmastChannelTimeline: React.FC<
 		avatar_image_url,
 		banner_image_url,
 		channel_name,
+		channel_type,
 	} = route.params;
+
 	const slug = useMemo(() => {
 		return originalSlug.replace(/-/g, '_');
 	}, [originalSlug]);
@@ -77,6 +78,15 @@ const NewsmastChannelTimeline: React.FC<
 		},
 	);
 
+	const { data: postHashtagsDetail, isLoading: isLoadingPostHashtagsDetail } =
+		useGetPostHashtagsDetail({
+			channel_type: channel_type || 'channel_feed',
+			channel_name,
+			domain_name: accountHandle?.endsWith('findout.media')
+				? DEFAULT_FINDOUT_DASHBOARD_API_URL
+				: undefined,
+		});
+
 	const calculateHeaderHeightForIos = () => {
 		if (windowHeight < 680) {
 			return 80;
@@ -87,24 +97,24 @@ const NewsmastChannelTimeline: React.FC<
 	const isHeaderReady = newsmastChannelDetail && newsmastCommunityDetailBio;
 
 	useEffect(() => {
-		if (!newsmastCommunityDetailBio || !newsmastChannelDetail) return;
+		if (!postHashtagsDetail) return;
+
 		setChannelPrefill({
-			prefilledHashtags:
-				newsmastCommunityDetailBio.attributes?.patchwork_community_hashtags,
-			prefilledAudience: newsmastCommunityDetailBio.attributes,
+			prefilledHashtags: postHashtagsDetail?.hashtags,
+			prefilledAudience: postHashtagsDetail,
 			channelType: accountHandle.endsWith('findout.media') ? 'local' : 'public',
-			channelId: newsmastChannelDetail.id,
+			channelId: newsmastChannelDetail?.id,
 		});
 		return () => {
 			clearChannelPrefill();
 		};
 	}, [
-		newsmastCommunityDetailBio,
 		newsmastChannelDetail,
 		accountHandle,
 		setChannelPrefill,
 		clearChannelPrefill,
 		setChannelLoading,
+		postHashtagsDetail,
 	]);
 
 	return (

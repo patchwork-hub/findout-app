@@ -1,4 +1,5 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { faBluesky, faThreads } from '@fortawesome/free-brands-svg-icons';
 import {
 	faBell,
 	faBookmark,
@@ -138,4 +139,6 @@ export const AppIcons = {
 	email: faEnvelope as IconProp,
 	circleCheck: faCircleCheck as IconProp,
 	userClock: faUserClock as IconProp,
+	bluesky: faBluesky as IconProp,
+	threads: faThreads as IconProp,
 };

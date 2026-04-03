@@ -1,3 +1,4 @@
+import { useAudienceStore } from '@/store/compose/audienceStore/audienceStore';
 import { View, Pressable } from 'react-native';
 import { ThemeText } from '../../common/ThemeText/ThemeText';
 import { cn } from '@/util/helper/twutil';
@@ -14,14 +15,12 @@ import { DeleteIcon } from '@/util/svg/icon.common';
 import { removeScheduleFromScheduleList } from '@/util/cache/compose/scheduleCache';
 import { ComposeGalleryIcon, ComposePollIcon } from '@/util/svg/icon.compose';
 import { useColorScheme } from 'nativewind';
+import { getComposeUpdatePayload } from '@/util/helper/compose';
 import {
-	extractAllAudienceHashtags,
-	getComposeUpdatePayload,
-} from '@/util/helper/compose';
-import { useFavouriteChannelLists } from '@/hooks/queries/channel.queries';
+	useGetForYouChannelList,
+	useGetPostHashtagsList,
+} from '@/hooks/queries/channel.queries';
 import Graphemer from 'graphemer';
-import { useEditAudienceStore } from '@/store/compose/audienceStore/editAudienceStore';
-import colors from 'tailwindcss/colors';
 import { useTranslation } from 'react-i18next';
 
 const splitter = new Graphemer();
@@ -63,15 +62,14 @@ const ScheduleItem = ({
 		isOpen: false,
 		showCancel: true,
 	});
-	const { setEditSelectedAudience } = useEditAudienceStore();
+	const { setSelectedAudience } = useAudienceStore();
 
-	const { data: newsmastChannels } = useFavouriteChannelLists(false);
-	const allAudienceHashtags = extractAllAudienceHashtags(newsmastChannels!);
-	const filteredText = schedule.params.text
-		.split(' ')
-		.filter(word => !allAudienceHashtags.includes(word.trim()))
-		.join(' ')
-		.trim();
+	const filteredText = schedule.params.text;
+
+	const { data: forYouChannels } = useGetForYouChannelList();
+	const { data: postHashtagsRes } = useGetPostHashtagsList({
+		channel_type: 'newsmast',
+	});
 
 	const { mutate } = useCancelScheduleMutation({
 		onMutate: ({ id }) => {
@@ -100,57 +98,119 @@ const ScheduleItem = ({
 			}),
 		);
 
-		if (newsmastChannels && newsmastChannels.length > 0) {
-			const scheduleHashtags = new Set(
-				schedule?.params?.text
-					.split(/\s+/)
-					.filter(word => word.startsWith('#'))
-					.map(word => word.trim()),
+		let computedVisibility = schedule.params
+			.visibility as Patchwork.ComposeVisibility;
+
+		const scheduleHashtags = new Set(
+			schedule?.params?.text
+				.split(/\s+/)
+				.filter(word => word.startsWith('#'))
+				.map(word => word.trim().toLowerCase()),
+		);
+
+		let foundAudience: Patchwork.PostHashtagDetail[] | null = null;
+		let allAudHashtags: string[] = [];
+		let isFromForYouChannels = false;
+
+		if (forYouChannels && forYouChannels.length > 0) {
+			const mappedSelectedAudience = forYouChannels
+				.map(wg => {
+					const originalHashtags =
+						wg.attributes?.patchwork_community_hashtags ?? [];
+					const matchedHashtags = originalHashtags.filter(h =>
+						scheduleHashtags.has(`#${h.hashtag.toLowerCase()}`),
+					);
+
+					if (matchedHashtags.length > 0) {
+						return {
+							community_name: wg.attributes?.name || '',
+							patchwork_community_id: wg.attributes?.id || 0,
+							hashtags: matchedHashtags.map(h => ({
+								id: h.id,
+								hashtag: h.hashtag,
+								created_at: new Date().toISOString(),
+								updated_at: new Date().toISOString(),
+							})),
+						} as Patchwork.PostHashtagDetail;
+					}
+					return null;
+				})
+				.filter((c): c is Patchwork.PostHashtagDetail => c !== null);
+
+			if (mappedSelectedAudience.length > 0) {
+				foundAudience = mappedSelectedAudience;
+				isFromForYouChannels = true;
+			}
+		}
+
+		if (!foundAudience && postHashtagsRes && postHashtagsRes.length > 0) {
+			const mappedSelectedAudience = postHashtagsRes
+				.map(channel => {
+					const originalHashtags = channel.hashtags ?? [];
+					const matchedHashtags = originalHashtags.filter(h =>
+						scheduleHashtags.has(`#${h.hashtag.toLowerCase()}`),
+					);
+
+					if (matchedHashtags.length > 0) {
+						return {
+							community_name: channel.community_name,
+							patchwork_community_id: channel.patchwork_community_id,
+							hashtags: matchedHashtags,
+						} as Patchwork.PostHashtagDetail;
+					}
+					return null;
+				})
+				.filter((c): c is Patchwork.PostHashtagDetail => c !== null);
+
+			if (mappedSelectedAudience.length > 0) {
+				foundAudience = mappedSelectedAudience;
+			}
+		}
+
+		if (foundAudience) {
+			setSelectedAudience(foundAudience);
+			if (isFromForYouChannels) {
+				computedVisibility = 'local';
+			}
+
+			allAudHashtags = foundAudience.flatMap(
+				aud => aud.hashtags?.map(h => `#${h.hashtag.toLowerCase()}`) ?? [],
 			);
 
-			const newSelectedAudience = newsmastChannels.map(channel => {
-				const originalHashtags =
-					channel.attributes?.patchwork_community_hashtags ?? [];
-				const matchedHashtags = originalHashtags.filter(h =>
-					scheduleHashtags.has(`#${h.hashtag}`),
-				);
-
-				if (matchedHashtags.length > 0) {
-					return {
-						...channel.attributes,
-						patchwork_community_hashtags: matchedHashtags,
-					};
-				}
-				return null;
-			});
-
-			setEditSelectedAudience(
-				newSelectedAudience.filter(
-					(
-						channel,
-					): channel is Patchwork.ChannelAttributes & {
-						patchwork_community_hashtags: Patchwork.PatchworkCommunityHashtag[];
-					} => channel !== null,
-				),
+			const contentWithoutAudienceTags = schedule.params.text.replace(
+				/#\w+/g,
+				match => {
+					const lower = match.toLowerCase();
+					return allAudHashtags.some(tag => tag === lower) ? '' : match;
+				},
 			);
-
-			const allAudHashtags = extractAllAudienceHashtags(newsmastChannels);
-
-			const filteredRaw = schedule?.params?.text?.replace(/#\w+/g, match => {
-				const lower = match.toLowerCase();
-				return allAudHashtags.some(tag => tag.toLowerCase() === lower)
-					? ''
-					: match;
-			});
 
 			composeDispatch({
 				type: 'text',
 				payload: {
-					count: splitter.countGraphemes(filteredRaw),
-					raw: filteredRaw,
+					count: splitter.countGraphemes(contentWithoutAudienceTags),
+					raw: contentWithoutAudienceTags.trimEnd(),
 				},
 			});
+		} else {
+			composeDispatch({
+				type: 'text',
+				payload: {
+					count: splitter.countGraphemes(schedule.params.text),
+					raw: schedule.params.text,
+				},
+			});
+
+			composeDispatch({
+				type: 'spoilerText',
+				payload: schedule.params.spoiler_text || '',
+			});
 		}
+
+		composeDispatch({
+			type: 'visibility_change',
+			payload: computedVisibility,
+		});
 
 		onClose();
 	};

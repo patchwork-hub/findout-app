@@ -165,3 +165,13 @@ export type GetStarterPackLDetailQueryKey = [
 ];
 
 export type ForYouTimelineQueryKey = ['for-you-timeline'];
+
+export type GetPostHashtagsQueryKey = [
+	'post-hashtags',
+	{ domain_name?: string; channel_type: string; channel_name: string },
+];
+
+export type GetPostHashtagsListQueryKey = [
+	'post-hashtags-list',
+	{ domain_name?: string; channel_type: string },
+];

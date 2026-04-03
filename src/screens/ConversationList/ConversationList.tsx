@@ -8,8 +8,6 @@ import {
 	View,
 } from 'react-native';
 import { CompositeNavigationProp } from '@react-navigation/native';
-
-import BackButton from '@/components/atoms/common/BackButton/BackButton';
 import Header from '@/components/atoms/common/Header/Header';
 import SafeScreen from '@/components/template/SafeScreen/SafeScreen';
 import {
@@ -36,14 +34,12 @@ import {
 } from '@/util/cache/conversation/conversationCahce';
 import ConversationItem from '@/components/molecules/conversations/ConversationItem/ConversationItem';
 import { EmptyListComponent } from '@/components/molecules/conversations/EmptyListItem/EmptyListItem';
-import { FloatingAddButton } from '@/components/molecules/conversations/FloatingAddButton/FloatingAddButton';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { DeleteIcon } from '@/util/svg/icon.common';
 import DeleteModal from '@/components/atoms/conversations/DeleteModal/DeleteModal';
 import { delay } from 'lodash';
 import NofiReqButton from '@/components/atoms/conversations/NotificationRequestsButton/NotificationRequestsButton';
 import { isTablet } from '@/util/helper/isTablet';
-import ConversationsListLoading from '@/components/atoms/loading/ConversationsListLoading';
 import { useColorScheme } from 'nativewind';
 import { useTranslation } from 'react-i18next';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';

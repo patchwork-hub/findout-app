@@ -112,6 +112,7 @@ export type SaveDraftPayload = Pick<
 	| 'visibility'
 	| 'sensitive'
 	| 'spoiler_text'
+	| 'local_only'
 > & {
 	drafted: boolean;
 };

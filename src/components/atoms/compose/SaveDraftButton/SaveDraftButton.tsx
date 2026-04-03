@@ -19,11 +19,10 @@ import { Flow } from 'react-native-animated-spinkit';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { HomeStackParamList } from '@/types/navigation';
-import { useCreateAudienceStore } from '@/store/compose/audienceStore/createAudienceStore';
-import { useEditAudienceStore } from '@/store/compose/audienceStore/editAudienceStore';
 import customColor from '@/util/constant/color';
 import { useColorScheme } from 'nativewind';
 import { useTranslation } from 'react-i18next';
+import { useAudienceStore } from '@/store/compose/audienceStore/audienceStore';
 
 const SaveDraftButton = () => {
 	const navigation = useNavigation<StackNavigationProp<HomeStackParamList>>();
@@ -31,20 +30,13 @@ const SaveDraftButton = () => {
 	const { resetAttachmentStore } = useManageAttachmentActions();
 	const { draftType, selectedDraftId } = useDraftPostsStore();
 	const { setSelectedDraftId, setDraftType } = useDraftPostsActions();
-	const { selectedAudience, clearAudience } = useCreateAudienceStore();
-	const { editSelectedAudience, clearEditSelectedAudience } =
-		useEditAudienceStore();
+	const { selectedAudience, clearAudience } = useAudienceStore();
 	const { colorScheme } = useColorScheme();
 	const { t } = useTranslation();
 
-	const audienceSource = selectedDraftId
-		? editSelectedAudience
-		: selectedAudience;
-
-	const audHashtags = audienceSource
-		?.flatMap(
-			a => a.patchwork_community_hashtags?.map(h => `#${h.hashtag}`) ?? [],
-		)
+	const audHashtags = selectedAudience
+		?.flat()
+		?.flatMap(audience => audience.hashtags?.map(h => `#${h.hashtag}`) ?? [])
 		.join(' ');
 
 	const isSaveDraftVisible = useMemo(() => {
@@ -66,7 +58,6 @@ const SaveDraftButton = () => {
 				queryClient.invalidateQueries({ queryKey: ['view-multi-draft'] });
 			}
 			clearAudience();
-			clearEditSelectedAudience();
 			navigation.goBack();
 		},
 	});
@@ -75,7 +66,6 @@ const SaveDraftButton = () => {
 		useUpdateSpecificDraftMutation({
 			onSettled(data, error) {
 				clearAudience();
-				clearEditSelectedAudience();
 				setDraftType('create');
 				setSelectedDraftId(null);
 				Toast.show({

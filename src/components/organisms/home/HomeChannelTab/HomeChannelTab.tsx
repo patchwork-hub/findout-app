@@ -129,6 +129,7 @@ const HomeChannelTab = () => {
 			avatar_image_url: item?.attributes?.avatar_image_url,
 			banner_image_url: item?.attributes?.banner_image_url,
 			channel_name: item?.attributes?.name,
+			channel_type: item?.attributes?.channel_type,
 		});
 	};
 

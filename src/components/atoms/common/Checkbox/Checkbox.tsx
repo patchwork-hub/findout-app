@@ -12,6 +12,7 @@ type Props = {
 	children: React.ReactElement;
 	isChecked: boolean;
 	shouldShake?: boolean;
+	disabled?: boolean;
 	handleOnCheck: () => void;
 } & ViewProps;
 const Checkbox = ({
@@ -19,6 +20,7 @@ const Checkbox = ({
 	handleOnCheck,
 	isChecked,
 	shouldShake,
+	disabled,
 	...props
 }: Props) => {
 	const shakeValue = useSharedValue(0);
@@ -43,6 +45,8 @@ const Checkbox = ({
 		<View>
 			<Pressable
 				onPress={handleOnCheck}
+				disabled={disabled}
+				style={{ opacity: disabled ? 0.5 : 1 }}
 				className="flex flex-row items-center"
 				hitSlop={13}
 			>

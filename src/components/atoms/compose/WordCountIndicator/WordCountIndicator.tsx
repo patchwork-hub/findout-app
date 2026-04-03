@@ -10,9 +10,8 @@ import { useAuthStore } from '@/store/auth/authStore';
 import { useMaxCount } from '@/hooks/custom/useMaxCount';
 import { CHANNEL_INSTANCE } from '@/util/constant';
 import { useDraftPostsStore } from '@/store/compose/draftPosts/draftPostsStore';
-import { useCreateAudienceStore } from '@/store/compose/audienceStore/createAudienceStore';
-import { useEditAudienceStore } from '@/store/compose/audienceStore/editAudienceStore';
 import { useColorScheme } from 'nativewind';
+import { useAudienceStore } from '@/store/compose/audienceStore/audienceStore';
 
 type Props = {
 	composeType: 'create' | 'edit' | 'repost' | 'schedule' | 'quote';
@@ -20,8 +19,7 @@ type Props = {
 
 const WordCountIndicator = ({ composeType }: Props) => {
 	const { composeState, composeDispatch } = useComposeStatus();
-	const { selectedAudience } = useCreateAudienceStore();
-	const { editSelectedAudience } = useEditAudienceStore();
+	const { selectedAudience } = useAudienceStore();
 	const { colorScheme } = useColorScheme();
 
 	const maxStatusLength = useMaxCount();
@@ -32,16 +30,12 @@ const WordCountIndicator = ({ composeType }: Props) => {
 	const isSchedule = !!composeState.schedule?.is_edting_previous_schedule;
 	const isDraft = !!selectedDraftId;
 
-	const audienceSource =
-		isDraft || isSchedule || composeType === 'edit'
-			? editSelectedAudience
-			: selectedAudience;
-	const audienceHashtags = audienceSource.flatMap(
-		a => a.patchwork_community_hashtags?.map(h => `#${h.hashtag}`) ?? [],
-	);
-	const combinedText = `${composeState.text.raw} ${audienceHashtags.join(
-		' ',
-	)}`.trim();
+	const audHashtags = selectedAudience
+		?.flat()
+		?.flatMap(audience => audience.hashtags?.map(h => `#${h.hashtag}`) ?? [])
+		.join(' ');
+
+	const combinedText = `${composeState.text.raw} ${audHashtags}`.trim();
 	const combinedCount = splitter.countGraphemes(combinedText);
 
 	return (

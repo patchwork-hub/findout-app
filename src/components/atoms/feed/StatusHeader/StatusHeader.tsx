@@ -26,6 +26,8 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '@/util/helper/twutil';
 import UserRole from '../../profile/UserRole/UserRole';
 import StatusMenu from '../StatusMenu/StatusMenu';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { AppIcons } from '@/util/icons/icon.common';
 
 dayjs.extend(relativeTime);
 
@@ -97,6 +99,23 @@ const StatusHeader = ({
 		[status?.account?.fields],
 	);
 
+	const platformIcon = useMemo(() => {
+		const domain =
+			status.account.domain?.toLowerCase() ||
+			status.account.acct?.toLowerCase();
+		if (
+			domain?.includes('bsky.social') ||
+			domain?.includes('bluesky') ||
+			domain?.includes('bsky.brid.gy')
+		) {
+			return { icon: AppIcons.bluesky, type: 'bluesky' };
+		}
+		if (domain?.includes('threads.net') || domain?.includes('threads')) {
+			return { icon: AppIcons.threads, type: 'threads' };
+		}
+		return null;
+	}, [status.account.domain, status.account.acct]);
+
 	const getImageUrl = () => {
 		// if (status.account.avatar.includes('avatars/original/missing.png')) {
 		// 	`https://ui-avatars.com/api/?name=${encodeURIComponent(
@@ -153,6 +172,21 @@ const StatusHeader = ({
 									className="ml-2 mb-[2]"
 									colorScheme={colorScheme}
 								/>
+							)}
+							{platformIcon && (
+								<View className="ml-1.5 justify-center">
+									<FontAwesomeIcon
+										icon={platformIcon.icon}
+										size={13}
+										color={
+											platformIcon.type === 'bluesky'
+												? '#0F73FF'
+												: colorScheme === 'dark'
+												? '#fff'
+												: '#000'
+										}
+									/>
+								</View>
 							)}
 							<View className="ml-2 flex-row">
 								<UserRole userRoles={status.account?.roles} />

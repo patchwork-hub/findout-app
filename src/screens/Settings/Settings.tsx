@@ -9,7 +9,6 @@ import useAuthRevalidationOnAppReturn from '@/hooks/custom/useAuthRevalidationOn
 import { usePushNotiRevokeTokenMutation } from '@/hooks/mutations/pushNoti.mutation';
 import { useShowMastodonInstance } from '@/hooks/queries/auth.queries';
 import { useAuthStore, useAuthStoreAction } from '@/store/auth/authStore';
-import { useCreateAudienceStore } from '@/store/compose/audienceStore/createAudienceStore';
 import { useActiveDomainStore } from '@/store/feed/activeDomain';
 import { ILanguage } from '@/store/feed/languageStore';
 import { usePushNoticationStore } from '@/store/pushNoti/pushNotiStore';
@@ -52,7 +51,6 @@ const Settings: React.FC<SettingStackScreenProps<'Settings'>> = ({
 	const fcmToken = usePushNoticationStore(state => state.fcmToken);
 	const { mastodon, userOriginInstance, userInfo, userTheme } = useAuthStore();
 	const { actions, domain_name } = useActiveDomainStore();
-	const { clearAudience } = useCreateAudienceStore();
 	const { fetchAccounts, activeAccId } = useAccounts();
 	const isEnabledInstance = ENABLED_INSTANCES.includes(userOriginInstance);
 
@@ -62,8 +60,7 @@ const Settings: React.FC<SettingStackScreenProps<'Settings'>> = ({
 		useCallback(() => {
 			clearAuthState();
 			queryClient.clear();
-			clearAudience();
-		}, [clearAuthState, clearAudience]),
+		}, [clearAuthState]),
 	);
 
 	useFocusEffect(
@@ -89,13 +86,11 @@ const Settings: React.FC<SettingStackScreenProps<'Settings'>> = ({
 		fetchAccounts();
 		clearAuthState();
 		queryClient.clear();
-		clearAudience();
 	};
 
 	const handleClearAuth = async () => {
 		clearAuthState();
 		queryClient.clear();
-		clearAudience();
 	};
 
 	const handleLogout = async () => {

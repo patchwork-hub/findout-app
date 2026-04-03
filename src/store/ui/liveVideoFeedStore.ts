@@ -22,6 +22,10 @@ interface LiveVideoFeedState {
 	// Video Player
 	videoProgressMap: Record<number, number>;
 	setVideoProgress: (postId: number, time: number) => void;
+
+	// Global Video Mute State
+	isGlobalMuted: boolean;
+	setIsGlobalMuted: (isMuted: boolean) => void;
 }
 
 export const useLiveVideoFeedStore = create<LiveVideoFeedState>(set => ({
@@ -51,4 +55,8 @@ export const useLiveVideoFeedStore = create<LiveVideoFeedState>(set => ({
 		set(state => ({
 			videoProgressMap: { ...state.videoProgressMap, [postId]: time },
 		})),
+
+	// Global Video Mute State
+	isGlobalMuted: false,
+	setIsGlobalMuted: isMuted => set({ isGlobalMuted: isMuted }),
 }));

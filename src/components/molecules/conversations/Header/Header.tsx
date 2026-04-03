@@ -8,6 +8,9 @@ import { useNavigation } from '@react-navigation/native';
 import { useActiveDomainAction } from '@/store/feed/activeDomain';
 import { useAuthStore } from '@/store/auth/authStore';
 import Image from '@/components/atoms/common/Image/Image';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { AppIcons } from '@/util/icons/icon.common';
+import { useMemo } from 'react';
 
 type Props = {
 	onPressBackButton: () => void;
@@ -24,6 +27,23 @@ const ConversationsHeader = ({
 	const navigation = useNavigation();
 	const { setDomain } = useActiveDomainAction();
 	const { userOriginInstance } = useAuthStore();
+
+	const platformIcon = useMemo(() => {
+		const domain =
+			chatParticipant?.domain?.toLowerCase() ||
+			chatParticipant?.acct?.toLowerCase();
+		if (
+			domain?.includes('bsky.social') ||
+			domain?.includes('bluesky') ||
+			domain?.includes('bsky.brid.gy')
+		) {
+			return { icon: AppIcons.bluesky, type: 'bluesky' };
+		}
+		if (domain?.includes('threads.net') || domain?.includes('threads')) {
+			return { icon: AppIcons.threads, type: 'threads' };
+		}
+		return null;
+	}, [chatParticipant?.domain, chatParticipant?.acct]);
 
 	const handleAvatarPress = () => {
 		setDomain(userOriginInstance);
@@ -55,6 +75,21 @@ const ConversationsHeader = ({
 						{chatParticipant?.display_name || chatParticipant?.username}
 					</ThemeText>
 					{isAccountVerified && <VerifyIcon colorScheme={colorScheme} />}
+					{platformIcon && (
+						<View className="ml-1.5 justify-center">
+							<FontAwesomeIcon
+								icon={platformIcon.icon}
+								size={13}
+								color={
+									platformIcon.type === 'bluesky'
+										? '#0F73FF'
+										: colorScheme === 'dark'
+										? '#fff'
+										: '#000'
+								}
+							/>
+						</View>
+					)}
 				</View>
 			</Pressable>
 			<View />

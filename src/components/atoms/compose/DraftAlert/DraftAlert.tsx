@@ -25,10 +25,9 @@ import {
 	MO_ME_INSTANCE,
 	NEWSMAST_INSTANCE_V1,
 } from '@/util/constant';
-import { useCreateAudienceStore } from '@/store/compose/audienceStore/createAudienceStore';
-import { useEditAudienceStore } from '@/store/compose/audienceStore/editAudienceStore';
 import { useColorScheme } from 'nativewind';
 import { useTranslation } from 'react-i18next';
+import { useAudienceStore } from '@/store/compose/audienceStore/audienceStore';
 
 type Props = {
 	showDraftAlert: boolean;
@@ -51,9 +50,7 @@ const DraftAlert = ({
 	const { resetAttachmentStore } = useManageAttachmentActions();
 	const [_, setTotalText] = useState(totalText);
 	const { userOriginInstance } = useAuthStore();
-	const { selectedAudience, clearAudience } = useCreateAudienceStore();
-	const { editSelectedAudience, clearEditSelectedAudience } =
-		useEditAudienceStore();
+	const { selectedAudience, clearAudience } = useAudienceStore();
 	const { colorScheme } = useColorScheme();
 
 	useEffect(() => {
@@ -89,7 +86,6 @@ const DraftAlert = ({
 	const { mutate: saveDraft, isPending: isSavingDraft } = useSaveDraftMutation({
 		onSettled(data, error) {
 			setDraftType('create');
-			clearEditSelectedAudience();
 			clearAudience();
 			Toast.show({
 				type: !data && error ? 'errorToast' : 'successToast',
@@ -111,7 +107,6 @@ const DraftAlert = ({
 			onSettled(data, error) {
 				setDraftType('create');
 				setSelectedDraftId(null);
-				clearEditSelectedAudience();
 				clearAudience();
 				Toast.show({
 					type: !data && error ? 'errorToast' : 'successToast',
@@ -131,14 +126,20 @@ const DraftAlert = ({
 
 	const handleDraftPost = () => {
 		const payload: SaveDraftPayload = prepareDraftPayload(composeState, true);
-		const audienceSource =
-			draftType === 'update' ? editSelectedAudience : selectedAudience;
-		if (audienceSource.length > 0) {
-			const audienceTags = audienceSource.map(aud => `#${aud.slug}`).join(' ');
+
+		if (selectedAudience.length > 0) {
+			const audHashtags = selectedAudience
+				?.flat()
+				?.flatMap(
+					audience => audience.hashtags?.map(h => `#${h.hashtag}`) ?? [],
+				)
+				.join(' ');
+
 			payload.status = `${
 				payload.status ? payload.status + ' ' : ''
-			}${audienceTags}`.trim();
+			}${audHashtags}`.trim();
 		}
+
 		draftType === 'update' && selectedDraftId
 			? updateDraft({ id: selectedDraftId, payload })
 			: saveDraft(payload);
@@ -147,7 +148,6 @@ const DraftAlert = ({
 	const onCloseDiscardPostAlert = () => {
 		setDraftType('create');
 		setShowDraftAlert(false);
-		clearEditSelectedAudience();
 		clearAudience();
 		setSelectedDraftId(null);
 		navigation.goBack();
@@ -176,7 +176,6 @@ const DraftAlert = ({
 			return true;
 		} else {
 			setSelectedDraftId(null);
-			clearEditSelectedAudience();
 			clearAudience();
 			navigation.goBack();
 			return false;

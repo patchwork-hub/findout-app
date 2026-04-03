@@ -22,7 +22,7 @@ const NewsmastCollections: React.FC<
 
 	return (
 		<SafeScreen>
-			<Header title={'Global channels'} leftCustomComponent={<BackButton />} />
+			<Header title={'Global Channels'} leftCustomComponent={<BackButton />} />
 			<View className="flex-1">
 				{collectionList && (
 					<FlatList

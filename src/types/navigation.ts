@@ -55,8 +55,8 @@ export type BottomStackParamList = {
 	Compose:
 		| {
 				type: 'create';
-				prefilledHashtags?: Patchwork.PatchworkCommunityHashtag[];
-				prefilledAudience?: Patchwork.ChannelAttributes;
+				prefilledHashtags?: Patchwork.PostHashtag[];
+				prefilledAudience?: Patchwork.PostHashtagDetail;
 				channelType?: 'local' | 'public';
 				channelId?: string;
 		  }
@@ -123,6 +123,7 @@ export type HomeStackParamList = {
 		avatar_image_url: string;
 		banner_image_url: string;
 		channel_name: string;
+		channel_type?: string;
 	};
 	NMChannelAllContributorList: { id: string; adminUsername?: string };
 	NMChannelAllHashtagList: { slug: string };
@@ -191,6 +192,7 @@ export type SearchStackParamList = {
 		avatar_image_url: string;
 		banner_image_url: string;
 		channel_name: string;
+		channel_type?: string;
 	};
 	NMChannelAllContributorList: { id: string; adminUsername?: string };
 	NMChannelAllHashtagList: { slug: string };
@@ -369,6 +371,7 @@ export type SettingStackParamList = {
 		avatar_image_url: string;
 		banner_image_url: string;
 		channel_name: string;
+		channel_type?: string;
 	};
 	NMChannelAllContributorList: { id: string; adminUsername?: string };
 	NMChannelAllHashtagList: { slug: string };

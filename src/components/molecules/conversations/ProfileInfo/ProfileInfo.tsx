@@ -11,6 +11,9 @@ import { getInstanceName } from '@/util/helper/getInstanceName';
 import Image from '@/components/atoms/common/Image/Image';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { AppIcons } from '@/util/icons/icon.common';
+import { useMemo } from 'react';
 
 type Props = {
 	userInfo: Patchwork.Account;
@@ -23,6 +26,22 @@ const ProfileInfo = ({ userInfo, isAccountVerified }: Props) => {
 	const { colorScheme } = useColorScheme();
 	const { userOriginInstance } = useAuthStore();
 	const defaultInstance = getInstanceName(userOriginInstance);
+
+	const platformIcon = useMemo(() => {
+		const domain =
+			userInfo?.domain?.toLowerCase() || userInfo?.acct?.toLowerCase();
+		if (
+			domain?.includes('bsky.social') ||
+			domain?.includes('bluesky') ||
+			domain?.includes('bsky.brid.gy')
+		) {
+			return { icon: AppIcons.bluesky, type: 'bluesky' };
+		}
+		if (domain?.includes('threads.net') || domain?.includes('threads')) {
+			return { icon: AppIcons.threads, type: 'threads' };
+		}
+		return null;
+	}, [userInfo?.domain, userInfo?.acct]);
 
 	const handleAvatarPress = () => {
 		navigation.navigate('ProfileOther', {
@@ -56,6 +75,21 @@ const ProfileInfo = ({ userInfo, isAccountVerified }: Props) => {
 						{userInfo?.display_name || userInfo.username}
 					</ThemeText>
 					{isAccountVerified && <VerifyIcon colorScheme={colorScheme} />}
+					{platformIcon && (
+						<View className="ml-1.5 justify-center">
+							<FontAwesomeIcon
+								icon={platformIcon.icon}
+								size={15}
+								color={
+									platformIcon.type === 'bluesky'
+										? '#0F73FF'
+										: colorScheme === 'dark'
+										? '#fff'
+										: '#000'
+								}
+							/>
+						</View>
+					)}
 				</View>
 				<View className="flex-row items-center mb-1 flex-wrap justify-center">
 					<ThemeText>

@@ -9,6 +9,7 @@ import {
 	NewsmastChannelTimeline,
 	ViewAllChannelScreen,
 	QuotedBy,
+	HowToUseApp,
 } from '@/screens';
 import ProfileOther from '@/screens/ProfileOther/ProfileOther';
 import { HomeStackParamList } from '@/types/navigation';
@@ -79,6 +80,7 @@ const HomeStack = () => {
 			<Stack.Screen name="AuthorDetail" component={AuthorDetail} />
 			<Stack.Screen name="StarterPackDetail" component={StarterPackDetail} />
 			<Stack.Screen name="QuotedBy" component={QuotedBy} />
+			<Stack.Screen name="HowToUseApp" component={HowToUseApp} />
 		</Stack.Navigator>
 	);
 };

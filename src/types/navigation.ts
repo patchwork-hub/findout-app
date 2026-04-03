@@ -147,6 +147,7 @@ export type HomeStackParamList = {
 		id: Patchwork.Attachment['id'];
 	};
 	QuotePost: { statusId: string };
+	HowToUseApp: undefined;
 };
 
 export type SearchStackParamList = {

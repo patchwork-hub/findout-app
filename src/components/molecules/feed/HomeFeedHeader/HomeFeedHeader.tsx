@@ -82,7 +82,8 @@ const HomeFeedHeader = ({ account, showUnderLine = true }: Props) => {
 
 				<Pressable
 					className="w-10 h-10 aspect-square justify-center items-center p-3 border border-patchwork-grey-100 rounded-full active:opacity-80"
-					onPress={() => openGuide('https://wearefindout.com/')}
+					// onPress={() => openGuide('https://wearefindout.com/')}
+					onPress={() => navigation.navigate('HowToUseApp')}
 				>
 					<FontAwesomeIcon
 						icon={AppIcons.info}

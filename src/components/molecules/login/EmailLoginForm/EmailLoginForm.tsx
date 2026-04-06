@@ -41,7 +41,7 @@ const EmailLoginForm = () => {
 	} = useForm({
 		resolver: yupResolver(getLoginSchema(t)),
 	});
-	const { setAuthState, setUserInfo, setSelectedTimeline } =
+	const { setAuthState, setUserInfo, setSelectedTimeline, setHomeLayout } =
 		useAuthStoreAction();
 	const [alertState, setAlert] = useState<{
 		message: string;
@@ -93,6 +93,8 @@ const EmailLoginForm = () => {
 
 				const userSetting = await getUserSetting();
 				if (userSetting) {
+					const layout = userSetting.settings?.user_timeline?.[1] ?? 1;
+					if (layout !== undefined) setHomeLayout(layout);
 					setSelectedTimeline(userSetting.settings?.user_timeline[0]);
 				}
 

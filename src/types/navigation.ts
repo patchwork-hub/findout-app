@@ -412,6 +412,7 @@ export type SettingStackParamList = {
 				statusId: string;
 		  };
 	Timeline: undefined;
+	Layout: undefined;
 	LoginAnotherAccount: undefined;
 	Verification: undefined;
 	MastodonSignInWebView: {

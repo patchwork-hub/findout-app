@@ -47,3 +47,4 @@ export { default as SplashScreen } from './SplashScreen/SplashScreen';
 export { default as LoginAnotherAccount } from './LoginAnotherAccount/LoginAnotherAccount';
 export { default as Verification } from './Verification/Verification';
 export { default as HowToUseApp } from './HowToUseApp/HowToUseApp';
+export { default as Layout } from './Layout/Layout';

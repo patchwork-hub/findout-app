@@ -31,7 +31,11 @@ import {
 import { throttle } from 'lodash';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { useLanguageSelectionActions } from './store/compose/languageSelection/languageSelection';
-import { getUserLocale, getUserSetting } from './services/profile.service';
+import {
+	checkUserThemeSetting,
+	getUserLocale,
+	getUserSetting,
+} from './services/profile.service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SearchServerInstanceQueryKey } from './types/queries/auth.type';
 import {
@@ -44,6 +48,7 @@ import { useAccounts } from './hooks/custom/useAccounts';
 import SplashAnimation from './components/organisms/SplashAnimation/SplashAnimation';
 import { SystemBars } from 'react-native-edge-to-edge';
 import Sound from 'react-native-sound';
+import { useUserThemeSetting } from './hooks/queries/profile.queries';
 
 Sound.setCategory('Ambient', true);
 
@@ -75,6 +80,7 @@ function App() {
 		clearAuthState,
 		setUserTheme,
 		setSelectedTimeline,
+		setHomeLayout,
 	} = useAuthStoreAction();
 	const [isLoading, setLoading] = useState(true);
 	const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>();
@@ -141,9 +147,37 @@ function App() {
 				mastodon: { token: access_token },
 			});
 
-			const userSetting = await getUserSetting();
-			if (userSetting) {
-				setSelectedTimeline(userSetting.settings?.user_timeline[0]);
+			// noted: these below apis will be refactored later
+			try {
+				const userSetting = await checkUserThemeSetting();
+
+				if (userSetting) {
+					const selectedTheme =
+						(userSetting.settings?.theme?.type as ThemeValue) ?? 'light';
+					console.log('User theme setting found:', selectedTheme);
+					if (selectedTheme) {
+						setColorScheme(selectedTheme);
+						setResolvedTheme(selectedTheme);
+					}
+				}
+				console.log('User theme applied:', userSetting);
+			} catch (e) {
+				console.warn('[App] Failed to load user theme:', e);
+			}
+
+			try {
+				const userSetting = await getUserSetting();
+
+				if (userSetting) {
+					const selectedTimeline =
+						userSetting.settings?.user_timeline?.[0] ?? 2; // default is 2 (for you custom timeline)
+					setSelectedTimeline(selectedTimeline);
+
+					const layout = userSetting.settings?.user_timeline?.[1] ?? 1;
+					if (layout !== undefined) setHomeLayout(layout);
+				}
+			} catch (e) {
+				console.warn('[App] Failed to load user settings:', e);
 			}
 
 			const userPrefs = await getUserLocale();

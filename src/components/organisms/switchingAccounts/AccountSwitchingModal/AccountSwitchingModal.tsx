@@ -19,6 +19,7 @@ import {
 	setThemeToStorage,
 	ThemeValue,
 } from '@/util/helper/helper';
+import { getUserSetting } from '@/services/profile.service';
 import { queryClient } from '@/App';
 import { useAuthStore, useAuthStoreAction } from '@/store/auth/authStore';
 import { verifyAuthToken } from '@/services/auth.service';
@@ -73,6 +74,8 @@ const AccountSwitchingModal = ({ isWelcome = false }: Props) => {
 		clearAuthState,
 		setIsHydrating,
 		setUserTheme,
+		setSelectedTimeline,
+		setHomeLayout,
 	} = useAuthStoreAction();
 	const {
 		userInfo: currentUserInfo,
@@ -151,6 +154,17 @@ const AccountSwitchingModal = ({ isWelcome = false }: Props) => {
 				mastodon: { token: userInfo ? access_token : '' },
 			});
 
+			try {
+				const userSetting = await getUserSetting();
+				if (userSetting) {
+					setSelectedTimeline(userSetting.settings?.user_timeline?.[0] ?? 2);
+					const layout = userSetting.settings?.user_timeline?.[1] ?? 1;
+					if (layout !== undefined) setHomeLayout(layout);
+				}
+			} catch (e) {
+				console.warn('[AccountSwitching] Failed to load user settings:', e);
+			}
+
 			setLanguage(newAcc.locale ?? 'fr');
 			i18n.changeLanguage(newAcc.locale ?? 'fr');
 
@@ -210,6 +224,20 @@ const AccountSwitchingModal = ({ isWelcome = false }: Props) => {
 				wordpress: { token: '' },
 				mastodon: { token: currentAccessToken },
 			});
+
+			try {
+				const userSetting = await getUserSetting();
+				if (userSetting) {
+					setSelectedTimeline(userSetting.settings?.user_timeline?.[0] ?? 2);
+					const layout = userSetting.settings?.user_timeline?.[1] ?? 1;
+					if (layout !== undefined) setHomeLayout(layout);
+				}
+			} catch (e) {
+				console.warn(
+					'[AccountSwitching] Failed to load original user settings:',
+					e,
+				);
+			}
 
 			setLanguage((i18n.language as ILanguage) ?? 'fr');
 			i18n.changeLanguage((i18n.language as ILanguage) ?? 'fr');

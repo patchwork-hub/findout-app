@@ -18,6 +18,7 @@ export type AuthState = {
 	userOriginInstance: string;
 	selectedTimeline: number;
 	isHydrating: boolean;
+	homeLayout: number;
 	actions: {
 		setAuthState: (payload: {
 			wordpress?: Partial<AuthSource>;
@@ -26,6 +27,7 @@ export type AuthState = {
 		clearAuthState: () => void;
 		setUserInfo: (user: Patchwork.Account) => void;
 		setUserTheme: (theme: 'light' | 'dark' | undefined) => void;
+		setHomeLayout: (layout: number) => void;
 		setUserOriginInstance: (userOrigin: string) => void;
 		setSelectedTimeline: (timeline: number) => void;
 		setIsHydrating: (status: boolean) => void;
@@ -44,6 +46,7 @@ export const useAuthStore = create<AuthState>()(set => ({
 	userInfo: undefined,
 	userOriginInstance: OriginInstance,
 	userTheme: undefined,
+	homeLayout: 1,
 	selectedTimeline: 2, // default is 2 which is community
 	isHydrating: false,
 	actions: {
@@ -69,6 +72,8 @@ export const useAuthStore = create<AuthState>()(set => ({
 		setSelectedTimeline: (timeline: number) =>
 			set(state => ({ ...state, selectedTimeline: timeline })),
 		setIsHydrating: (status: boolean) => set({ isHydrating: status }),
+		setHomeLayout: (layout: number) =>
+			set(state => ({ ...state, homeLayout: layout })),
 	},
 }));
 

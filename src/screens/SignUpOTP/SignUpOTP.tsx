@@ -39,7 +39,7 @@ const SignUpOTP: React.FC<GuestStackScreenProps<'SignUpOTP'>> = ({
 	const [code, setCode] = useState('');
 	const ref = useBlurOnFulfill({ value: code, cellCount: 4 });
 	const { colorScheme } = useColorScheme();
-	const { setAuthState, setUserInfo, setSelectedTimeline } =
+	const { setAuthState, setUserInfo, setSelectedTimeline, setHomeLayout } =
 		useAuthStoreAction();
 
 	const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -75,7 +75,8 @@ const SignUpOTP: React.FC<GuestStackScreenProps<'SignUpOTP'>> = ({
 			getUserSetting()
 				.then(userSetting => {
 					if (userSetting) {
-						setSelectedTimeline(userSetting.settings.user_timeline[0]);
+						setSelectedTimeline(userSetting.settings?.user_timeline?.[0] ?? 2);
+						setHomeLayout(1);
 					}
 				})
 				.catch(console.error);

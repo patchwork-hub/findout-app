@@ -52,7 +52,7 @@ const AddUserNameScreen = () => {
 	const route = useRoute<RouteProp<GuestStackParamList, 'AddUserNameScreen'>>();
 	const { email, password, firstName, lastName } = route.params;
 
-	const { setAuthState, setUserInfo, setSelectedTimeline } =
+	const { setAuthState, setUserInfo, setSelectedTimeline, setHomeLayout } =
 		useAuthStoreAction();
 	const { setLanguage } = useLanguageStore();
 
@@ -103,6 +103,8 @@ const AddUserNameScreen = () => {
 				const userSetting = await getUserSetting();
 				if (userSetting) {
 					setSelectedTimeline(userSetting.settings?.user_timeline[0]);
+					const layout = userSetting.settings?.user_timeline?.[1] ?? 1;
+					if (layout !== undefined) setHomeLayout(layout);
 				}
 
 				const userPrefs = await getUserLocale();

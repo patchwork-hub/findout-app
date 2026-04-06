@@ -45,6 +45,7 @@ const ChangePassword: React.FC<GuestStackScreenProps<'ChangePassword'>> = ({
 		setUserInfo,
 		setUserOriginInstance,
 		setSelectedTimeline,
+		setHomeLayout,
 	} = useAuthStoreAction();
 
 	const {
@@ -83,6 +84,8 @@ const ChangePassword: React.FC<GuestStackScreenProps<'ChangePassword'>> = ({
 			const userSetting = await getUserSetting();
 			if (userSetting) {
 				setSelectedTimeline(userSetting.settings.user_timeline[0]);
+				const layout = userSetting.settings.user_timeline?.[1] ?? 1;
+				if (layout !== undefined) setHomeLayout(layout);
 			}
 
 			const userPrefs = await getUserLocale();

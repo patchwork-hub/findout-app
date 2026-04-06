@@ -17,6 +17,7 @@ import {
 	LoginAnotherAccount,
 	Verification,
 	MastodonSignInWebView,
+	Layout,
 } from '@/screens';
 import ProfileOther from '@/screens/ProfileOther/ProfileOther';
 import { SettingStackParamList } from '@/types/navigation';
@@ -103,6 +104,7 @@ const SettingStack = () => {
 			<Stack.Screen name="Compose" component={Compose} />
 			<Stack.Screen name="ArticleDetail" component={ArticleDetail} />
 			<Stack.Screen name="Timeline" component={Timeline} />
+			<Stack.Screen name="Layout" component={Layout} />
 			<Stack.Screen
 				name="LoginAnotherAccount"
 				component={LoginAnotherAccount}

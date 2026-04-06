@@ -569,27 +569,6 @@ export const useGetForYouChannelList = () => {
 				};
 			});
 
-			const customOrder = [
-				'findoutpodcast',
-				'AmericanPower',
-				'executivedysfunction',
-				'getangry',
-				'norahaynesisnotaspy',
-				'BradandCory',
-			];
-
-			reorderedChannels.sort((a, b) => {
-				const indexA = customOrder.indexOf(a.attributes?.slug);
-				const indexB = customOrder.indexOf(b.attributes?.slug);
-
-				if (indexA !== -1 && indexB !== -1) {
-					return indexA - indexB;
-				}
-				if (indexA !== -1) return -1;
-				if (indexB !== -1) return 1;
-				return 0;
-			});
-
 			return reorderedChannels;
 		},
 	});

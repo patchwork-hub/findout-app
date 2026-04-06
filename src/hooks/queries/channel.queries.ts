@@ -526,24 +526,15 @@ export const useGetChannelFeedCollections = () => {
 };
 
 export const useGetForYouChannelList = () => {
-	const {
-		data: collections,
-		isLoading: isCollectionLoading,
-		isSuccess: isCollectionSuccess,
-		refetch: refetchCollections,
-	} = useGetChannelFeedCollections();
-
-	const slug = collections?.[1]?.attributes?.slug || 'government';
-
+	const slug = 'government';
 	const queryKey: GetForYouChannelListQueryKey = [
 		'for-you-channel-list',
 		{ slug },
 	];
 
-	const queryResult = useQuery({
+	return useQuery({
 		queryKey,
 		queryFn: getForYouChannelList,
-		enabled: !isCollectionLoading,
 		staleTime: Infinity,
 		gcTime: Infinity,
 		select: channels => {
@@ -572,16 +563,6 @@ export const useGetForYouChannelList = () => {
 			return reorderedChannels;
 		},
 	});
-
-	return {
-		...queryResult,
-		isLoading: isCollectionLoading || queryResult.isLoading,
-		isSuccess: isCollectionSuccess && queryResult.isSuccess,
-		refetch: () => {
-			refetchCollections();
-			queryResult.refetch();
-		},
-	};
 };
 
 export const useGetCatchUpChannelList = () => {

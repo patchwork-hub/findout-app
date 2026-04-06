@@ -25,7 +25,7 @@
 		"no_keyword": "You have not added any keyword to this channel yet.",
 		"populate_channel_text": "Populate your channel with content from across the New Social network. Here you can define rules that specify what content is included in your channel.",
 		"select_content_type_desc": "Select which types of content are included in this channel.",
-		"min_channel_required": "You must keep at least 5 favourite channels."
+		"min_channel_required": "You must keep at least 5 favorite channels."
 	},
 	"common": {
 		"accept": "Accept",
@@ -629,7 +629,7 @@
 		},
 		"messages": {
 			"follow": "followed you.",
-			"favourite": "favourited your post.",
+			"favourite": "favorited your post.",
 			"mention": "mentioned you.",
 			"reblog": "boosted your post.",
 			"poll": "poll has ended.",

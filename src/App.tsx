@@ -154,13 +154,11 @@ function App() {
 				if (userSetting) {
 					const selectedTheme =
 						(userSetting.settings?.theme?.type as ThemeValue) ?? 'light';
-					console.log('User theme setting found:', selectedTheme);
 					if (selectedTheme) {
 						setColorScheme(selectedTheme);
 						setResolvedTheme(selectedTheme);
 					}
 				}
-				console.log('User theme applied:', userSetting);
 			} catch (e) {
 				console.warn('[App] Failed to load user theme:', e);
 			}

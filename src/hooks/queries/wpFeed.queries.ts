@@ -158,11 +158,5 @@ export const useGetWordpressLikesByPostId = (
 		queryKey: ['wordpressLikes', postId],
 		queryFn: () => getWordpressLikesByPostId({ postId }),
 		enabled: enabled,
-		select: data => {
-			return {
-				...data,
-				found: (postId % 100) + 1100,
-			};
-		},
 	});
 };

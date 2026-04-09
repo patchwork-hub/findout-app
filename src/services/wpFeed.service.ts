@@ -144,7 +144,7 @@ export const getWordpressCommentsByPostId = async ({
 	postId: number;
 }) => {
 	try {
-		const url = `comments?post=${postId}`;
+		const url = `comments?post=${postId}&per_page=100`;
 		const resp: AxiosResponse<Patchwork.WPComment[]> = await instance.get(
 			appendWPApiVersion(url, 'v2'),
 			{
@@ -167,17 +167,21 @@ export const getWordpressLikesByPostId = async ({
 	postId: number;
 }) => {
 	try {
-		const rawDomain = process.env.WORDPRESS_API_URL || '';
-		const domain = rawDomain.replace(/^https?:\/\//, '').split('/')[0];
-		const url = `https://public-api.wordpress.com/rest/v1.1/sites/${domain}/posts/${postId}/likes`;
-		const resp: AxiosResponse<Patchwork.WPLike> = await instance.get(url, {
+		const url = `/wp-json/activitypub/1.0/posts/${postId}/reactions`;
+		const resp = await instance.get(url, {
 			params: {
+				isDynamicDomain: true,
+				domain_name: process.env.WORDPRESS_API_URL || '',
 				removeBearerToken: true,
 			},
 		});
-		return resp.data;
+
+		const data = resp.data || {};
+		const likes = data.likes?.items || [];
+
+		return { found: likes.length, data: likes };
 	} catch (error) {
-		return handleError(error);
+		return { found: 0, data: [] };
 	}
 };
 
@@ -322,6 +326,37 @@ export const getWordpressPostByCategoryIdPaginated = async ({
 			totalPosts,
 			totalPages,
 		};
+	} catch (error) {
+		return handleError(error);
+	}
+};
+
+export const postWordpressComment = async ({
+	postId,
+	content,
+	parent = 0,
+}: {
+	postId: number;
+	content: string;
+	parent?: number;
+}) => {
+	try {
+		const url = `comments`;
+		const resp: AxiosResponse<Patchwork.WPComment> = await instance.post(
+			appendWPApiVersion(url, 'v2'),
+			{
+				post: postId,
+				content,
+				parent,
+			},
+			{
+				params: {
+					isDynamicDomain: true,
+					domain_name: process.env.WORDPRESS_API_URL || '',
+				},
+			},
+		);
+		return resp.data;
 	} catch (error) {
 		return handleError(error);
 	}

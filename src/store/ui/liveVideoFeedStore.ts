@@ -4,6 +4,9 @@ interface LiveVideoFeedState {
 	// Comment
 	isCommentSheetOpen: boolean;
 	commentPostId: number | null;
+	optimisticComments: Record<number, Patchwork.WPComment[]>;
+	addOptimisticComment: (postId: number, comment: Patchwork.WPComment) => void;
+	removeOptimisticComment: (postId: number, commentId: number) => void;
 	openComments: (postId: number) => void;
 	closeComments: () => void;
 
@@ -32,6 +35,23 @@ export const useLiveVideoFeedStore = create<LiveVideoFeedState>(set => ({
 	// Comment
 	isCommentSheetOpen: false,
 	commentPostId: null,
+	optimisticComments: {},
+	addOptimisticComment: (postId, comment) =>
+		set(state => ({
+			optimisticComments: {
+				...state.optimisticComments,
+				[postId]: [...(state.optimisticComments[postId] || []), comment],
+			},
+		})),
+	removeOptimisticComment: (postId, commentId) =>
+		set(state => ({
+			optimisticComments: {
+				...state.optimisticComments,
+				[postId]: (state.optimisticComments[postId] || []).filter(
+					c => c.id !== commentId,
+				),
+			},
+		})),
 	openComments: postId =>
 		set({ isCommentSheetOpen: true, commentPostId: postId }),
 	closeComments: () => set({ isCommentSheetOpen: false, commentPostId: null }),

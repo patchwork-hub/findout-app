@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { View } from 'react-native';
+import { View, Pressable } from 'react-native';
 import { useColorScheme } from 'nativewind';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
 import Image from '@/components/atoms/common/Image/Image';
@@ -18,7 +18,12 @@ interface CommentItemProps {
 	item: ProcessedComment;
 }
 
-export const CommentItem = ({ item }: CommentItemProps) => {
+interface CommentItemProps {
+	item: ProcessedComment;
+	onReply?: () => void;
+}
+
+export const CommentItem = ({ item, onReply }: CommentItemProps) => {
 	const { colorScheme } = useColorScheme();
 	const isDark = colorScheme === 'dark';
 

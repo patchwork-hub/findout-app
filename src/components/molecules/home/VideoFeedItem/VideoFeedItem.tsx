@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, {
+	useState,
+	useCallback,
+	useEffect,
+	useRef,
+	useMemo,
+} from 'react';
 import {
 	View,
 	ScrollView,
@@ -53,17 +59,40 @@ const VideoFeedItem = ({
 		openLikeSheet,
 		isGlobalMuted,
 		setIsGlobalMuted,
+		optimisticComments: allOptimisticComments,
 	} = useLiveVideoFeedStore();
 
-	const { data: comments } = useGetWordpressCommentsByPostId(
+	const { data: comments = [] } = useGetWordpressCommentsByPostId(
 		post.id,
 		!!post.id,
 	);
-	const commentCount = comments?.length || 0;
 
-	// const { data: likesData } = useGetWordpressLikesByPostId(post.id, !!post.id);
-	// const likeCount = likesData?.found || 0;
-	const likeCount = 0;
+	const mergedComments = useMemo(() => {
+		const opComments = allOptimisticComments[post.id || 0] || [];
+		const activeOpComments = opComments.filter(
+			(oc: any) =>
+				!comments.some((c: any) => {
+					const cText = c.content.rendered
+						.replace(/<[^>]*>?/gm, '')
+						.replace(/\s+/g, ' ')
+						.trim();
+					const ocText = oc.content.rendered
+						.replace(/<[^>]*>?/gm, '')
+						.replace(/\s+/g, ' ')
+						.trim();
+					return (
+						(c.author === oc.author || c.author_name === oc.author_name) &&
+						cText === ocText
+					);
+				}),
+		);
+		return [...comments, ...activeOpComments];
+	}, [comments, allOptimisticComments, post.id]);
+
+	const commentCount = mergedComments.filter(c => c.type === 'comment' || !c.type).length;
+
+	const { data: likesData } = useGetWordpressLikesByPostId(post.id, !!post.id);
+	const likeCount = likesData?.found || 0;
 
 	const playerRef = useRef<YoutubeIframeRef>(null);
 	const { setVideoProgress, videoProgressMap } = useLiveVideoFeedStore();

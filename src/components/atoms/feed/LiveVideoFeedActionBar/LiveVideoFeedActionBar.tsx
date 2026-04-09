@@ -35,10 +35,13 @@ export const LiveVideoFeedActionBar: React.FC<ActionButtonsProps> = ({
 	return (
 		<View className="flex-row justify-between px-4 py-3 items-center mb-2">
 			<View className="flex-row gap-4">
-				<View className="items-center flex-row">
-					<Pressable onPress={onLike} className="p-1 active:opacity-80">
+				<Pressable
+					onPress={onLike}
+					className="items-center flex-row active:opacity-80"
+				>
+					<View className="p-1">
 						<FontAwesomeIcon icon={faHeartRegular} size={24} color={color} />
-					</Pressable>
+					</View>
 					{likeCount > 0 && (
 						<ThemeText
 							style={{ color }}
@@ -47,11 +50,14 @@ export const LiveVideoFeedActionBar: React.FC<ActionButtonsProps> = ({
 							{formatNumber(likeCount)}
 						</ThemeText>
 					)}
-				</View>
-				<View className="items-center flex-row">
-					<Pressable onPress={onComment} className="p-1 active:opacity-80">
+				</Pressable>
+				<Pressable
+					onPress={onComment}
+					className="items-center flex-row active:opacity-80"
+				>
+					<View className="p-1">
 						<FontAwesomeIcon icon={faCommentRegular} size={24} color={color} />
-					</Pressable>
+					</View>
 					{commentCount > 0 && (
 						<ThemeText
 							style={{ color }}
@@ -60,7 +66,7 @@ export const LiveVideoFeedActionBar: React.FC<ActionButtonsProps> = ({
 							{formatNumber(commentCount)}
 						</ThemeText>
 					)}
-				</View>
+				</Pressable>
 			</View>
 			<View className="flex-row gap-4">
 				<Pressable onPress={onShare} className="p-1 active:opacity-80">

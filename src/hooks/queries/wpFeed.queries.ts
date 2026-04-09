@@ -147,17 +147,6 @@ export const useGetWordpressCommentsByPostId = (
 		queryKey: ['wordpressComments', postId],
 		queryFn: () => getWordpressCommentsByPostId({ postId }),
 		enabled: enabled,
-		select: data => {
-			if (
-				postId === 560 ||
-				postId === 554 ||
-				postId === 537 ||
-				postId === 548
-			) {
-				return MOCK_WP_COMMENTS.filter(comment => comment.post === postId);
-			}
-			return data;
-		},
 	});
 };
 

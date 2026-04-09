@@ -5,43 +5,45 @@ import React, {
 	useRef,
 	useState,
 } from 'react';
-import { View, Keyboard, Pressable } from 'react-native';
+import { View, Keyboard } from 'react-native';
 import {
 	BottomSheetModal,
 	BottomSheetFlatList,
-	BottomSheetTextInput,
 	BottomSheetFooter,
 	BottomSheetBackdrop,
 } from '@gorhom/bottom-sheet';
 import { useLiveVideoFeedStore } from '@/store/ui/liveVideoFeedStore';
 import { useColorScheme } from 'nativewind';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import moment from 'moment';
-import he from 'he';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
 import { useGetWordpressCommentsByPostId } from '@/hooks/queries/wpFeed.queries';
 import customColor from '@/util/constant/color';
 import ListEmptyComponent from '@/components/atoms/common/ListEmptyComponent/ListEmptyComponent';
+import { CommentItem, ProcessedComment } from './CommentItem';
+import { CommentFooter } from './CommentFooter';
+import { useThreadedComments } from './hooks/useThreadedComments';
 
 export const CommentsSheet = () => {
+	const { colorScheme } = useColorScheme();
 	const bottomSheetRef = useRef<BottomSheetModal>(null);
+
 	const {
 		isCommentSheetOpen: isOpen,
 		closeComments,
 		commentPostId: postId,
 	} = useLiveVideoFeedStore();
-	const { colorScheme } = useColorScheme();
-	const isDark = colorScheme === 'dark';
+
 	const insets = useSafeAreaInsets();
+	const isDark = colorScheme === 'dark';
 	const [currentSnapIndex, setCurrentSnapIndex] = useState(-1);
-	const snapPoints = useMemo(() => ['65%', '100%'], []);
+	const snapPoints = useMemo(() => ['65%', '95%'], []);
 
 	const { data: comments = [] } = useGetWordpressCommentsByPostId(
 		postId || 0,
 		isOpen && !!postId,
 	);
+
+	const processedComments = useThreadedComments(comments);
 
 	useEffect(() => {
 		if (isOpen) {
@@ -78,65 +80,18 @@ export const CommentsSheet = () => {
 	const renderFooter = useCallback(
 		(props: any) => (
 			<BottomSheetFooter {...props} bottomInset={0}>
-				<View
-					className="px-4 pt-2.5 border-t border-gray-100/10 bg-[#fff] dark:bg-[#1a1a1a]"
-					style={{
-						paddingBottom: insets.bottom,
-					}}
-				>
-					<View className="flex-row items-center rounded-full px-1 py-1 h-11 bg-[#f0f0f0] dark:bg-[#333333]">
-						<BottomSheetTextInput
-							placeholder="Add comment..."
-							placeholderTextColor={isDark ? '#999' : '#666'}
-							style={{
-								color: isDark ? 'white' : 'black',
-								flex: 1,
-								height: 40,
-								marginLeft: 12,
-							}}
-							onFocus={() => bottomSheetRef.current?.snapToIndex(1)}
-						/>
-						<Pressable className="w-8 h-8 rounded-full bg-black dark:bg-white items-center justify-center mr-1">
-							<FontAwesomeIcon
-								icon={faChevronRight}
-								color={colorScheme === 'dark' ? 'black' : 'white'}
-								size={16}
-							/>
-						</Pressable>
-					</View>
-				</View>
+				<CommentFooter
+					onFocusInput={() => bottomSheetRef.current?.snapToIndex(1)}
+					bottomInset={insets.bottom}
+				/>
 			</BottomSheetFooter>
 		),
-		[isDark, insets.bottom],
+		[insets.bottom],
 	);
 
 	const renderItem = useCallback(
-		({ item }: { item: Patchwork.WPComment }) => (
-			<View className="flex-row mb-4 mt-2">
-				<View className="w-8 h-8 rounded-full items-center justify-center mr-3 bg-[#eee] dark:bg-[#444]">
-					<ThemeText className="text-sm font-semibold text-[#333] dark:text-white">
-						{item.author_name.charAt(0).toUpperCase()}
-					</ThemeText>
-				</View>
-				<View className="flex-1">
-					<ThemeText className="font-semibold text-[13px] mb-0.5 text-[#333] dark:text-white">
-						{item.author_name}
-					</ThemeText>
-					<ThemeText
-						className="text-sm leading-[18px] mb-1"
-						style={{ color: isDark ? 'white' : 'black' }}
-					>
-						{he.decode(item.content.rendered.replace(/<[^>]*>?/gm, ''))}
-					</ThemeText>
-					<View className="flex-row gap-4">
-						<ThemeText className="text-xs text-[#888]">
-							{moment(item.date).fromNow()}
-						</ThemeText>
-					</View>
-				</View>
-			</View>
-		),
-		[isDark],
+		({ item }: { item: ProcessedComment }) => <CommentItem item={item} />,
+		[],
 	);
 
 	return (
@@ -174,9 +129,9 @@ export const CommentsSheet = () => {
 			</View>
 
 			<BottomSheetFlatList
-				data={comments}
+				data={processedComments}
 				showsVerticalScrollIndicator={false}
-				keyExtractor={(item: Patchwork.WPComment) => item.id.toString()}
+				keyExtractor={(item: ProcessedComment) => item.id.toString()}
 				renderItem={renderItem}
 				contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 80 }}
 				ListEmptyComponent={

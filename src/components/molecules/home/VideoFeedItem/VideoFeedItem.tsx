@@ -63,6 +63,7 @@ const VideoFeedItem = ({
 
 	// const { data: likesData } = useGetWordpressLikesByPostId(post.id, !!post.id);
 	// const likeCount = likesData?.found || 0;
+	const likeCount = 0;
 
 	const playerRef = useRef<YoutubeIframeRef>(null);
 	const { setVideoProgress, videoProgressMap } = useLiveVideoFeedStore();
@@ -220,7 +221,7 @@ const VideoFeedItem = ({
 						isLandscape={true}
 						onNavigateToDetail={() => openContent(post)}
 					/>
-					{/* <View className="px-0">
+					<View className="px-0">
 						<LiveVideoFeedActionBar
 							onLike={() => openLikeSheet(post.id)}
 							onComment={() => openComments(post.id)}
@@ -230,7 +231,7 @@ const VideoFeedItem = ({
 							commentCount={commentCount}
 							likeCount={likeCount}
 						/>
-					</View> */}
+					</View>
 				</ScrollView>
 			</View>
 		);
@@ -253,14 +254,14 @@ const VideoFeedItem = ({
 							/>
 						</View>
 
-						{/* <View style={styles.actionSection}>
+						<View style={styles.actionSection}>
 							<LiveVideoFeedActionBar
 								onLike={() => openLikeSheet(post.id)}
 								onComment={() => openComments(post.id)}
 								onShare={() => openLikeSheet(post.id)}
 								onMore={() => openLikeSheet(post.id)}
 							/>
-						</View> */}
+						</View>
 					</LinearGradient>,
 				)}
 			</View>

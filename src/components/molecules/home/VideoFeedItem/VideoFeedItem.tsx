@@ -156,12 +156,11 @@ const VideoFeedItem = ({
 					key={post.id}
 					style={{
 						flex: 1,
-						justifyContent: 'center',
-						backgroundColor: 'black',
 					}}
 				>
 					<YoutubePlayer
 						ref={playerRef}
+						width={Dimensions.get('window').width}
 						height={Dimensions.get('window').width / (16 / 9)}
 						play={isActive}
 						videoId={youtubeId}

@@ -101,7 +101,8 @@ export const WpstoryCard = ({
 					<FastImage
 						source={{ uri: displayImageUrl }}
 						className={cn(
-							'w-full bg-black',
+							'w-full',
+							variant !== 'video-grid' && 'bg-black',
 							isFullWidth ? 'rounded-tl-lg rounded-tr-lg' : 'rounded-lg',
 							variant === 'video-grid'
 								? 'aspect-video h-auto'
@@ -111,7 +112,11 @@ export const WpstoryCard = ({
 									: 'h-52'
 								: 'h-40',
 						)}
-						resizeMode={FastImage.resizeMode.contain}
+						resizeMode={
+							variant === 'video-grid'
+								? FastImage.resizeMode.cover
+								: FastImage.resizeMode.contain
+						}
 					/>
 				) : (
 					<View

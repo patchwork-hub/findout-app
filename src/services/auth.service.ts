@@ -465,8 +465,7 @@ export const getShowMastodonLoginForm = async () => {
 				params: {
 					domain_name: DEFAULT_DASHBOARD_API_URL,
 					isDynamicDomain: true,
-					app_name: 'bristol-cable',
-					platform: 'android',
+					app_name: 'findout',
 				},
 			},
 		);

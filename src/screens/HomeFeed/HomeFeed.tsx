@@ -24,12 +24,14 @@ import { usePushNoticationStore } from '@/store/pushNoti/pushNotiStore';
 import { usePushNotiTokenMutation } from '@/hooks/mutations/pushNoti.mutation';
 import { useColorScheme } from 'nativewind';
 import { useTabBarTheme } from '@/hooks/custom/useTabBarTheme';
+import { useShowMastodonInstance } from '@/hooks/queries/auth.queries';
 
 const { width: windowWidth } = Dimensions.get('window');
 
 const HomeFeed = ({ navigation }: HomeStackScreenProps<'HomeFeed'>) => {
 	const { t, i18n } = useTranslation();
 	const { colorScheme } = useColorScheme();
+	const { data: showMastodonInstance } = useShowMastodonInstance();
 	const { userInfo, userOriginInstance, selectedTimeline, homeLayout } =
 		useAuthStore();
 	const { barColor, tabBarTextColor, indicatorColor } = useTabBarTheme({
@@ -66,6 +68,8 @@ const HomeFeed = ({ navigation }: HomeStackScreenProps<'HomeFeed'>) => {
 
 	const insets = useSafeAreaInsets();
 
+	const showFindOutTab = showMastodonInstance?.data?.display;
+
 	return (
 		<View
 			style={{
@@ -82,9 +86,11 @@ const HomeFeed = ({ navigation }: HomeStackScreenProps<'HomeFeed'>) => {
 			/>
 			<View style={{ flex: 1, width: '100%' }}>
 				<Tabs.Container
-					key={homeLayout}
+					key={`${homeLayout}-${showFindOutTab}`}
 					minHeaderHeight={insets.top}
-					initialTabName={homeLayout === 2 ? 'Following' : 'Home'}
+					initialTabName={
+						homeLayout === 2 || !showFindOutTab ? 'Following' : 'Home'
+					}
 					renderHeader={() => (
 						<View style={{ paddingTop: insets.top, backgroundColor: barColor }}>
 							<HomeFeedHeader account={userInfo!} showUnderLine={false} />
@@ -121,7 +127,7 @@ const HomeFeed = ({ navigation }: HomeStackScreenProps<'HomeFeed'>) => {
 												marginLeft: windowWidth * 0.0625,
 										  }
 										: {
-												maxWidth: 110,
+												maxWidth: showFindOutTab ? 110 : windowWidth * 0.4,
 												marginHorizontal: 12,
 										  }),
 								}}
@@ -152,39 +158,45 @@ const HomeFeed = ({ navigation }: HomeStackScreenProps<'HomeFeed'>) => {
 						);
 					}}
 				>
-					<Tabs.Tab
-						name={homeLayout === 2 ? 'Following' : 'Home'}
-						label={homeLayout === 2 ? timelineLabel : t('timeline.for_you')}
-					>
-						{homeLayout === 2 ? (
-							selectedTimeline === 1 ? (
+					{[
+						homeLayout !== 2 && showFindOutTab ? (
+							<Tabs.Tab
+								key="HomeTabFirst"
+								name="Home"
+								label={t('timeline.for_you')}
+							>
+								<HomeDefaultTab />
+							</Tabs.Tab>
+						) : null,
+
+						<Tabs.Tab key="FollowingTab" name="Following" label={timelineLabel}>
+							{selectedTimeline === 1 ? (
 								<HomeFollowingTab />
 							) : selectedTimeline === 2 ? (
 								<HomeForYouTab />
 							) : (
 								<HomeCommunityTab />
-							)
-						) : (
-							<HomeDefaultTab />
-						)}
-					</Tabs.Tab>
-					<Tabs.Tab
-						name={homeLayout === 2 ? 'Home' : 'Following'}
-						label={homeLayout === 2 ? t('timeline.for_you') : timelineLabel}
-					>
-						{homeLayout === 2 ? (
-							<HomeDefaultTab />
-						) : selectedTimeline === 1 ? (
-							<HomeFollowingTab />
-						) : selectedTimeline === 2 ? (
-							<HomeForYouTab />
-						) : (
-							<HomeCommunityTab />
-						)}
-					</Tabs.Tab>
-					<Tabs.Tab name="Channels" label={t('timeline.channels')}>
-						<HomeChannelTab />
-					</Tabs.Tab>
+							)}
+						</Tabs.Tab>,
+
+						homeLayout === 2 && showFindOutTab ? (
+							<Tabs.Tab
+								key="HomeTabSecond"
+								name="Home"
+								label={t('timeline.for_you')}
+							>
+								<HomeDefaultTab />
+							</Tabs.Tab>
+						) : null,
+
+						<Tabs.Tab
+							key="ChannelsTab"
+							name="Channels"
+							label={t('timeline.channels')}
+						>
+							<HomeChannelTab />
+						</Tabs.Tab>,
+					].filter(Boolean)}
 				</Tabs.Container>
 			</View>
 		</View>

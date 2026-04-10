@@ -22,11 +22,15 @@ import {
 	useGetWordpressPostLikesFromMastodon,
 } from '@/hooks/queries/wpFeed.queries';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useAuthStore } from '@/store/auth/authStore';
+import navigationRef from '@/util/navigation/navigationRef';
+import { CommonActions } from '@react-navigation/native';
 
 export const LikeSheet = () => {
 	const { colorScheme } = useColorScheme();
 	const insets = useSafeAreaInsets();
 	const bottomSheetRef = useRef<BottomSheetModal>(null);
+	const userInfo = useAuthStore(state => state.userInfo);
 	const {
 		isLikeSheetOpen: isOpen,
 		closeLikeSheet,
@@ -82,7 +86,28 @@ export const LikeSheet = () => {
 		({ item }: { item: Patchwork.Account }) => (
 			<Pressable
 				className="flex-row items-center py-3 px-4 border-b border-gray-100 dark:border-patchwork-dark-200"
-				onPress={() => item.url && Linking.openURL(item.url)}
+				onPress={() => {
+					if (!item.id || !navigationRef.isReady()) {
+						if (item.url) Linking.openURL(item.url);
+						return;
+					}
+					closeLikeSheet();
+					if (userInfo?.id === item.id) {
+						navigationRef.dispatch(
+							CommonActions.navigate({
+								name: 'Profile',
+								params: { id: item.id },
+							}),
+						);
+					} else {
+						navigationRef.dispatch(
+							CommonActions.navigate({
+								name: 'ProfileOther',
+								params: { id: item.id },
+							}),
+						);
+					}
+				}}
 			>
 				<Image
 					source={{ uri: item.avatar || 'https://via.placeholder.com/150' }}
@@ -103,7 +128,7 @@ export const LikeSheet = () => {
 				</View>
 			</Pressable>
 		),
-		[],
+		[closeLikeSheet, userInfo?.id],
 	);
 
 	const ListEmptyComponent = useCallback(() => {

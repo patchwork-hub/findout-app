@@ -19,6 +19,8 @@ import { useAuthStore } from '@/store/auth/authStore';
 import { statusDeleteFn } from '@/services/statusActions.service';
 import { useLiveVideoFeedStore } from '@/store/ui/liveVideoFeedStore';
 import { queryClient } from '@/App';
+import navigationRef from '@/util/navigation/navigationRef';
+import { CommonActions } from '@react-navigation/native';
 
 export type ProcessedComment = Patchwork.Status & { depth?: number };
 
@@ -36,14 +38,69 @@ export const CommentItem = ({
 	const { colorScheme } = useColorScheme();
 	const isDark = colorScheme === 'dark';
 
+	const userInfo = useAuthStore(state => state.userInfo);
+
 	const baseTextColor = isDark ? '#fff' : '#000';
 	const primaryColor = isDark
 		? customColor['patchwork-soft-primary']
 		: customColor['patchwork-primary'];
 
-	const handleLinkPress = useCallback((evt: any, href: string) => {
-		console.log('Link pressed:', href);
-	}, []);
+	const handleProfileNavigate = useCallback(
+		(targetId?: string) => {
+			useLiveVideoFeedStore.getState().closeComments();
+			if (!targetId || !navigationRef.isReady()) return;
+
+			if (targetId === userInfo?.id) {
+				navigationRef.dispatch(
+					CommonActions.navigate({ name: 'Profile', params: { id: targetId } }),
+				);
+			} else {
+				navigationRef.dispatch(
+					CommonActions.navigate({
+						name: 'ProfileOther',
+						params: { id: targetId },
+					}),
+				);
+			}
+		},
+		[userInfo?.id],
+	);
+
+	const handleLinkPress = useCallback(
+		(evt: any, href: string) => {
+			useLiveVideoFeedStore.getState().closeComments();
+			if (!navigationRef.isReady()) return;
+
+			// Check if the link matches a Mention tag
+			const mention = item.mentions?.find(
+				m => m.url.toLowerCase() === href.toLowerCase(),
+			);
+			if (mention) {
+				handleProfileNavigate(mention.id);
+				return;
+			}
+
+			// Check if the link matches a Hashtag
+			const tag = item.tags?.find(
+				t => t.url.toLowerCase() === href.toLowerCase(),
+			);
+			if (tag) {
+				navigationRef.dispatch(
+					CommonActions.navigate({
+						name: 'HashTagDetail',
+						params: { hashtag: tag.name },
+					}),
+				);
+				return;
+			}
+
+			// Fallback to WebViewer for normal links
+			navigationRef.dispatch(
+				CommonActions.navigate({ name: 'WebViewer', params: { url: href } }),
+			);
+		},
+		[item.mentions, item.tags, handleProfileNavigate],
+	);
 
 	const tagsStyles = useMemo<Record<string, MixedStyleDeclaration>>(
 		() => ({
@@ -105,7 +162,6 @@ export const CommentItem = ({
 	const depth = item.depth || 0;
 	const isReply = depth > 0;
 
-	const userInfo = useAuthStore(state => state.userInfo);
 	const [isDeleting, setIsDeleting] = useState(false);
 
 	const isOwnComment = item.account?.id && item.account.id === userInfo?.id;
@@ -192,14 +248,20 @@ export const CommentItem = ({
 					/>
 				)}
 
-				<View style={{ zIndex: 1, elevation: 1 }}>
+				<Pressable
+					style={{ zIndex: 1, elevation: 1 }}
+					onPress={() => handleProfileNavigate(item.account?.id)}
+				>
 					<Image
 						source={{ uri: item.account?.avatar || '' }}
 						className="w-8 h-8 rounded-full mr-3 bg-[#eee] dark:bg-[#444]"
 					/>
-				</View>
+				</Pressable>
 				<View className="flex-1">
-					<View className="flex-row items-baseline mb-1">
+					<Pressable
+						className="flex-row items-baseline mb-1"
+						onPress={() => handleProfileNavigate(item.account?.id)}
+					>
 						<ThemeText className="font-semibold font-NewsCycle_Bold text-[13px] text-[#333] dark:text-white mr-2">
 							{item.account?.display_name ||
 								item.account?.username ||
@@ -208,7 +270,7 @@ export const CommentItem = ({
 						<ThemeText className="text-[11px] text-[#888]">
 							{formatShortDate(item.created_at)}
 						</ThemeText>
-					</View>
+					</Pressable>
 					<RenderHTML
 						source={{ html: processedHtml }}
 						renderersProps={renderersProps}

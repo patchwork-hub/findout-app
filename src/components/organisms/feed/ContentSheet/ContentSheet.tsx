@@ -11,8 +11,11 @@ import { useColorScheme } from 'nativewind';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
 import { stripTags, cleanHtmlContent } from '@/util/helper/helper';
 import customColor from '@/util/constant/color';
+import he from 'he';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const ContentSheet = () => {
+	const insets = useSafeAreaInsets();
 	const bottomSheetRef = useRef<BottomSheetModal>(null);
 	const {
 		isContentSheetOpen: isOpen,
@@ -67,7 +70,7 @@ export const ContentSheet = () => {
 	if (!post) return null;
 
 	const htmlContent = cleanHtmlContent(post.content.rendered);
-	const title = stripTags(post.title.rendered);
+	const title = he.decode(stripTags(post.title.rendered));
 
 	return (
 		<BottomSheetModal
@@ -84,7 +87,12 @@ export const ContentSheet = () => {
 				backgroundColor: colorScheme === 'dark' ? '#555' : '#ccc',
 			}}
 		>
-			<BottomSheetScrollView contentContainerStyle={{ padding: 16 }}>
+			<BottomSheetScrollView
+				contentContainerStyle={{
+					padding: 16,
+					paddingBottom: insets.bottom + 16,
+				}}
+			>
 				<ThemeText className="text-xl font-bold mb-4">{title}</ThemeText>
 				<RenderHTML
 					contentWidth={width - 32}

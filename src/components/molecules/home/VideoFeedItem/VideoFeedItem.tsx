@@ -89,7 +89,7 @@ const VideoFeedItem = ({
 		return [...comments, ...activeOpComments];
 	}, [comments, allOptimisticComments, post.id]);
 
-	const commentCount = mergedComments.filter(c => c.type === 'comment' || !c.type).length;
+	const commentCount = mergedComments.length;
 
 	const { data: likesData } = useGetWordpressLikesByPostId(post.id, !!post.id);
 	const likeCount = likesData?.found || 0;

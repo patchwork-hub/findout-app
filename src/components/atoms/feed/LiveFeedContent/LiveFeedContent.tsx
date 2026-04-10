@@ -4,6 +4,7 @@ import RenderHTML, { MixedStyleDeclaration } from 'react-native-render-html';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
 import { useColorScheme } from 'nativewind';
 import { cleanHtmlContent, stripTags } from '@/util/helper/helper';
+import he from 'he';
 
 interface FeedContentProps {
 	post: Patchwork.WPStory;
@@ -23,9 +24,9 @@ export const LiveFeedContent: React.FC<FeedContentProps> = ({
 	const { colorScheme } = useColorScheme();
 	const contentWidth = width - 32;
 
-	const landscapeLines = height < 750 ? 5 : 11;
+	const landscapeLines = height < 750 ? 4 : 11;
 
-	const title = stripTags(post.title.rendered);
+	const title = he.decode(post.title.rendered);
 	const htmlContent = useMemo(
 		() => cleanHtmlContent(post.content.rendered),
 		[post.content.rendered],

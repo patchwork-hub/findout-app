@@ -11,6 +11,7 @@ import { useColorScheme } from 'nativewind';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
 import { stripTags, cleanHtmlContent } from '@/util/helper/helper';
 import customColor from '@/util/constant/color';
+import he from 'he';
 
 export const ContentSheet = () => {
 	const bottomSheetRef = useRef<BottomSheetModal>(null);
@@ -67,7 +68,7 @@ export const ContentSheet = () => {
 	if (!post) return null;
 
 	const htmlContent = cleanHtmlContent(post.content.rendered);
-	const title = stripTags(post.title.rendered);
+	const title = he.decode(post.title.rendered);
 
 	return (
 		<BottomSheetModal

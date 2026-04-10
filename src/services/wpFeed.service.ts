@@ -16,7 +16,7 @@ export const getWordpressPostByCategoryId = async ({
 	limit?: number;
 }) => {
 	try {
-		let url = `posts?_embed&per_page=${limit}`;
+		let url = `posts?_embed=author,wp:term,wp:featuredmedia&per_page=${limit}`;
 		if (categoryId) {
 			url += `&categories=${categoryId}`;
 		}
@@ -38,7 +38,7 @@ export const getWordpressPostByCategoryId = async ({
 
 export const getWordpressPostById = async ({ postId }: { postId: number }) => {
 	try {
-		const url = `posts/${postId}?_embed`;
+		const url = `posts/${postId}?_embed=author,wp:term,wp:featuredmedia`;
 		const resp: AxiosResponse<Patchwork.WPStory> = await instance.get(
 			appendWPApiVersion(url, 'v2'),
 			{
@@ -161,6 +161,38 @@ export const getWordpressCommentsByPostId = async ({
 	}
 };
 
+export const getWordpressCommentsByPostIdPaginated = async ({
+	postId,
+	page = 1,
+	per_page = 100,
+}: {
+	postId: number;
+	page?: number;
+	per_page?: number;
+}) => {
+	try {
+		const url = `comments?post=${postId}&page=${page}&per_page=${per_page}&order=asc`;
+		const resp = await instance.get(appendWPApiVersion(url, 'v2'), {
+			params: {
+				isDynamicDomain: true,
+				domain_name: process.env.WORDPRESS_API_URL || '',
+				removeBearerToken: true,
+			},
+		});
+
+		const totalComments = parseInt(resp.headers['x-wp-total'] || '0', 10);
+		const totalPages = parseInt(resp.headers['x-wp-totalpages'] || '0', 10);
+
+		return {
+			comments: resp.data,
+			totalComments,
+			totalPages,
+		};
+	} catch (error) {
+		return handleError(error);
+	}
+};
+
 export const getWordpressLikesByPostId = async ({
 	postId,
 }: {
@@ -268,7 +300,7 @@ export const getWordpressPostsByAuthorIdPaginated = async ({
 	per_page?: number;
 }) => {
 	try {
-		const url = `posts?_embed&coauthors=${authorId}&page=${page}&per_page=${per_page}`;
+		const url = `posts?_embed=author,wp:term,wp:featuredmedia&coauthors=${authorId}&page=${page}&per_page=${per_page}`;
 		const resp: AxiosResponse<Patchwork.WPStory[]> = await instance.get(
 			appendWPApiVersion(url, 'v2'),
 			{
@@ -303,7 +335,7 @@ export const getWordpressPostByCategoryIdPaginated = async ({
 	per_page?: number;
 }) => {
 	try {
-		let url = `posts?_embed&page=${page}&per_page=${per_page}`;
+		let url = `posts?_embed=author,wp:term,wp:featuredmedia&page=${page}&per_page=${per_page}`;
 		if (categoryId) {
 			url += `&categories=${categoryId}`;
 		}

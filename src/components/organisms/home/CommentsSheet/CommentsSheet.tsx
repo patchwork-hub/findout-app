@@ -20,7 +20,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
 import { useAuthStore } from '@/store/auth/authStore';
 import {
-	useGetWordpressCommentsByPostId,
+	useGetWordpressCommentsByPostIdPaginated,
 	useGetWordpressPostById,
 } from '@/hooks/queries/wpFeed.queries';
 import { useComposeMutation } from '@/hooks/mutations/feed.mutation';
@@ -36,6 +36,7 @@ import { CommentItem, ProcessedComment } from './CommentItem';
 import { CommentFooter } from './CommentFooter';
 import { useThreadedComments } from './hooks/useThreadedComments';
 import { queryClient } from '@/App';
+import { Flow } from 'react-native-animated-spinkit';
 
 export const CommentsSheet = () => {
 	const { colorScheme } = useColorScheme();
@@ -57,20 +58,23 @@ export const CommentsSheet = () => {
 	const snapPoints = useMemo(() => ['65%', '90%'], []);
 
 	const [replyToCommentId, setReplyToCommentId] = useState<number | null>(null);
+	const [replyToName, setReplyToName] = useState<string | null>(null);
 	const [statusSubmitLoading, setStatusSubmitLoading] = useState(false);
 	const [isPullRefreshing, setIsPullRefreshing] = useState(false);
 
 	const {
-		data: comments = [],
+		data: commentsData,
 		isFetching,
+		isLoading,
 		refetch,
-	} = useGetWordpressCommentsByPostId(postId || 0, isOpen && !!postId);
+		fetchNextPage,
+		hasNextPage,
+	} = useGetWordpressCommentsByPostIdPaginated(postId || 0, isOpen && !!postId);
 
-	const onPullToRefresh = useCallback(async () => {
-		setIsPullRefreshing(true);
-		await refetch();
-		setIsPullRefreshing(false);
-	}, [refetch]);
+	const comments = useMemo(() => {
+		if (!commentsData) return [];
+		return commentsData.pages.flatMap(page => page.comments);
+	}, [commentsData]);
 
 	const { data: wpPost } = useGetWordpressPostById(
 		postId || 0,
@@ -107,6 +111,13 @@ export const CommentsSheet = () => {
 		return [...comments, ...activeOpComments];
 	}, [comments, allOptimisticComments, postId]);
 
+	const baseTotalCount = commentsData?.pages?.[0]?.totalComments || 0;
+	const activeOpCommentsCount = mergedComments.length - comments.length;
+	const displayCommentCount = Math.max(
+		mergedComments.length,
+		baseTotalCount + activeOpCommentsCount,
+	);
+
 	const processedComments = useThreadedComments(mergedComments);
 
 	useEffect(() => {
@@ -137,6 +148,7 @@ export const CommentsSheet = () => {
 			if (index === -1) {
 				closeComments();
 				setReplyToCommentId(null);
+				setReplyToName(null);
 			}
 		},
 		[closeComments],
@@ -163,13 +175,16 @@ export const CommentsSheet = () => {
 			return (
 				<BottomSheetFooter {...props} bottomInset={0}>
 					{replyTargetComment && (
-						<View className="px-4 pt-2 -mb-2 bg-[#fff] dark:bg-[#121212] flex-row justify-between items-center">
+						<View className="px-4 pt-2 pb-2 border-t-[0.5px] border-[#ccc] bg-[#fff] dark:bg-[#121212] flex-row justify-between items-center">
 							<ThemeText className="text-xs text-patchwork-primary font-bold">
-								Replying to {replyTargetComment.author_name}
+								Replying to {replyToName || replyTargetComment.author_name}
 							</ThemeText>
 							<ThemeText
 								className="text-xs text-gray-500 px-2 py-1"
-								onPress={() => setReplyToCommentId(null)}
+								onPress={() => {
+									setReplyToCommentId(null);
+									setReplyToName(null);
+								}}
 							>
 								Cancel
 							</ThemeText>
@@ -179,6 +194,10 @@ export const CommentsSheet = () => {
 						onFocusInput={() => bottomSheetRef.current?.snapToIndex(1)}
 						bottomInset={insets.bottom}
 						isLoading={isSubmitting || isSearchingPost}
+						replyingToName={
+							replyToName ||
+							(replyTargetComment ? replyTargetComment.author_name : null)
+						}
 						onSubmit={async text => {
 							setStatusSubmitLoading(true);
 							try {
@@ -232,22 +251,30 @@ export const CommentsSheet = () => {
 			isSearchingPost,
 			wpPost?.link,
 			replyToCommentId,
+			replyToName,
 			comments,
 			statusSubmitLoading,
 		],
 	);
 
 	const renderItem = useCallback(
-		({ item }: { item: ProcessedComment }) => (
-			<CommentItem
-				item={item}
-				onReply={() => {
-					setReplyToCommentId(item.id);
-					bottomSheetRef.current?.snapToIndex(1);
-				}}
-			/>
-		),
-		[],
+		({ item, index }: { item: ProcessedComment; index: number }) => {
+			const nextDepth = processedComments[index + 1]?.depth || 0;
+			const isLastInThread = nextDepth === 0;
+
+			return (
+				<CommentItem
+					item={item}
+					isLastInThread={isLastInThread}
+					onReply={mentionName => {
+						setReplyToCommentId(item.id);
+						setReplyToName(mentionName);
+						bottomSheetRef.current?.snapToIndex(1);
+					}}
+				/>
+			);
+		},
+		[processedComments],
 	);
 
 	return (
@@ -281,8 +308,14 @@ export const CommentsSheet = () => {
 					className="font-bold text-sm text-center"
 					style={{ color: isDark ? 'white' : 'black' }}
 				>
-					{mergedComments.length} comment
-					{mergedComments.length !== 1 ? 's' : ''}
+					{isLoading ? (
+						'Loading...'
+					) : (
+						<>
+							{displayCommentCount} comment
+							{displayCommentCount !== 1 ? 's' : ''}
+						</>
+					)}
 				</ThemeText>
 				<Pressable
 					onPress={() => refetch()}
@@ -306,13 +339,21 @@ export const CommentsSheet = () => {
 				keyExtractor={(item: ProcessedComment) => item.id.toString()}
 				renderItem={renderItem}
 				keyboardShouldPersistTaps="handled"
+				onEndReached={() => {
+					if (hasNextPage) fetchNextPage();
+				}}
+				onEndReachedThreshold={0.5}
 				contentContainerStyle={{
 					paddingHorizontal: 16,
 					paddingBottom: Math.max(120, insets.bottom + 150),
 				}}
 				ListEmptyComponent={
 					<View className="h-[500] w-full items-center justify-center">
-						<ListEmptyComponent title="No comments found" />
+						{isLoading ? (
+							<Flow size={30} color={customColor['patchwork-primary']} />
+						) : (
+							<ListEmptyComponent title="No comments found" />
+						)}
 					</View>
 				}
 			/>

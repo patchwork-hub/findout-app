@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Pressable, Platform, ActivityIndicator } from 'react-native';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { useColorScheme } from 'nativewind';
@@ -12,6 +12,7 @@ interface CommentFooterProps {
 	bottomInset: number;
 	onSubmit?: (text: string) => void;
 	isLoading?: boolean;
+	replyingToName?: string | null;
 }
 
 export const CommentFooter = ({
@@ -19,11 +20,20 @@ export const CommentFooter = ({
 	bottomInset,
 	onSubmit,
 	isLoading,
+	replyingToName,
 }: CommentFooterProps) => {
 	const { colorScheme } = useColorScheme();
 	const isDark = colorScheme === 'dark';
 	const { userInfo } = useAuthStore();
 	const [text, setText] = useState('');
+
+	useEffect(() => {
+		if (replyingToName) {
+			setText(`@${replyingToName} `);
+		} else {
+			setText('');
+		}
+	}, [replyingToName]);
 
 	const handleSend = () => {
 		if (text.trim().length > 0 && onSubmit && !isLoading) {

@@ -6,6 +6,7 @@ import {
 	getWordpressPostByCategoryId,
 	getWordpressPostByCategoryIdPaginated,
 	getWordpressCommentsByPostId,
+	getWordpressCommentsByPostIdPaginated,
 	getWordpressLikesByPostId,
 	getWordpressPostById,
 	getWordpressPostsByAuthorIdPaginated,
@@ -157,6 +158,27 @@ export const useGetWordpressLikesByPostId = (
 	return useQuery({
 		queryKey: ['wordpressLikes', postId],
 		queryFn: () => getWordpressLikesByPostId({ postId }),
+		enabled: enabled,
+	});
+};
+
+export const useGetWordpressCommentsByPostIdPaginated = (
+	postId: number,
+	enabled: boolean,
+) => {
+	return useInfiniteQuery({
+		queryKey: ['wordpressCommentsPaginated', postId],
+		queryFn: ({ pageParam = 1 }) =>
+			getWordpressCommentsByPostIdPaginated({
+				postId,
+				page: pageParam,
+				per_page: 100,
+			}),
+		getNextPageParam: (lastPage, allPages) => {
+			const nextPage = allPages.length + 1;
+			return nextPage > lastPage.totalPages ? undefined : nextPage;
+		},
+		initialPageParam: 1,
 		enabled: enabled,
 	});
 };

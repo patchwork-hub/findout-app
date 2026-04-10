@@ -18,63 +18,41 @@ import { useLiveVideoFeedStore } from '@/store/ui/liveVideoFeedStore';
 import { useColorScheme } from 'nativewind';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
-import {
-	useGetWordpressCommentsByPostIdPaginated,
-	useGetWordpressPostById,
-} from '@/hooks/queries/wpFeed.queries';
+import { useGetWordpressPostById } from '@/hooks/queries/wpFeed.queries';
 import { useComposeMutation } from '@/hooks/mutations/feed.mutation';
+import { useFeedRepliesQuery } from '@/hooks/queries/feed.queries';
 import { useQuery } from '@tanstack/react-query';
 import { searchAllFn } from '@/services/hashtag.service';
-import {
-	handleOptimisticWPCommentAdd,
-	handleOptimisticWPCommentError,
-} from '@/util/cache/wpFeed/wpCommentCache';
 import customColor from '@/util/constant/color';
 import ListEmptyComponent from '@/components/atoms/common/ListEmptyComponent/ListEmptyComponent';
 import { CommentItem, ProcessedComment } from './CommentItem';
 import { CommentFooter } from './CommentFooter';
 import { useThreadedComments } from './hooks/useThreadedComments';
 import { Flow } from 'react-native-animated-spinkit';
+import { queryClient } from '@/App';
+import { useAuthStore } from '@/store/auth/authStore';
 
 export const CommentsSheet = () => {
 	const { colorScheme } = useColorScheme();
 	const bottomSheetRef = useRef<BottomSheetModal>(null);
 
+	const userInfo = useAuthStore(state => state.userInfo);
 	const insets = useSafeAreaInsets();
 	const isDark = colorScheme === 'dark';
 	const [currentSnapIndex, setCurrentSnapIndex] = useState(-1);
 	const snapPoints = useMemo(() => ['65%', '90%'], []);
 
-	const [replyToCommentId, setReplyToCommentId] = useState<number | null>(null);
+	const [replyToCommentId, setReplyToCommentId] = useState<string | null>(null);
 	const [replyToName, setReplyToName] = useState<string | null>(null);
 	const [statusSubmitLoading, setStatusSubmitLoading] = useState(false);
-
-	const submitContextRef = useRef<{ replyToId: number | null }>({
-		replyToId: null,
-	});
 
 	const {
 		isCommentSheetOpen: isOpen,
 		closeComments,
 		commentPostId: postId,
-		optimisticComments: allOptimisticComments,
 	} = useLiveVideoFeedStore();
 
-	const {
-		data: commentsData,
-		isFetching,
-		isLoading,
-		refetch,
-		fetchNextPage,
-		hasNextPage,
-	} = useGetWordpressCommentsByPostIdPaginated(postId || 0, isOpen && !!postId);
-
-	const comments = useMemo(() => {
-		if (!commentsData) return [];
-		return commentsData.pages.flatMap(page => page.comments);
-	}, [commentsData]);
-
-	const { data: wpPost } = useGetWordpressPostById(
+	const { data: wpPost, isLoading: isWpPostLoading } = useGetWordpressPostById(
 		postId || 0,
 		isOpen && !!postId,
 	);
@@ -85,56 +63,43 @@ export const CommentsSheet = () => {
 		enabled: !!wpPost?.link,
 	});
 
-	const mastodonStatusId = mastodonSearchResult?.statuses?.[0]?.id;
+	const mastodonStatus = mastodonSearchResult?.statuses?.[0];
+	const mastodonStatusId = mastodonStatus?.id;
 
-	// for recently made comment cache,
-	const mergedComments = useMemo(() => {
-		const opComments = allOptimisticComments[postId || 0] || [];
+	const {
+		data: commentsData,
+		isFetching,
+		isLoading: isRepliesLoading,
+		refetch,
+	} = useFeedRepliesQuery({
+		id: mastodonStatusId || '',
+		domain_name: process.env.API_URL || '',
+		options: { enabled: !!mastodonStatusId },
+	});
 
-		// filter out recently made comments (cache) to avaoid duplicates
-		const activeOpComments = opComments.filter(
-			oc =>
-				!comments.some(c => {
-					const cText = c.content.rendered
-						.replace(/<[^>]*>?/gm, '')
-						.replace(/\s+/g, ' ')
-						.trim();
-					const ocText = oc.content.rendered
-						.replace(/<[^>]*>?/gm, '')
-						.replace(/\s+/g, ' ')
-						.trim();
-					return (
-						(c.author === oc.author || c.author_name === oc.author_name) &&
-						cText === ocText
-					);
-				}),
-		);
-		return [...comments, ...activeOpComments];
-	}, [comments, allOptimisticComments, postId]);
+	const comments = useMemo(() => {
+		if (!commentsData?.descendants) return [];
+		return commentsData.descendants;
+	}, [commentsData]);
 
 	const replyTargetComment = useMemo(
-		() => mergedComments.find(c => c.id === replyToCommentId),
-		[mergedComments, replyToCommentId],
+		() => comments.find(c => c.id === replyToCommentId),
+		[comments, replyToCommentId],
 	);
 
-	const { data: replyTargetMastodonSearchResult, isLoading: isSearchingReply } =
-		useQuery({
-			queryKey: [
-				'search-all',
-				{ q: replyTargetComment?.link || '', resolve: true },
-			] as any,
-			queryFn: searchAllFn,
-			enabled: !!replyTargetComment?.link,
-		});
+	// Optimistic cache comments tracking replaced by direct cache update.
+	const displayCommentCount = comments.length;
 
-	const baseTotalCount = commentsData?.pages?.[0]?.totalComments || 0;
-	const activeOpCommentsCount = mergedComments.length - comments.length;
-	const displayCommentCount = Math.max(
-		mergedComments.length,
-		baseTotalCount + activeOpCommentsCount,
+	const processedComments = useThreadedComments(comments);
+	const isLoading = Boolean(
+		isOpen &&
+			(isWpPostLoading ||
+				isSearchingPost ||
+				isRepliesLoading ||
+				(!wpPost && postId !== null) ||
+				(!!wpPost?.link && !mastodonSearchResult) ||
+				(!!mastodonStatusId && !commentsData)),
 	);
-
-	const processedComments = useThreadedComments(mergedComments);
 
 	useEffect(() => {
 		if (isOpen) {
@@ -147,14 +112,48 @@ export const CommentsSheet = () => {
 
 	const { mutate: postComment, isPending } = useComposeMutation({
 		onMutate: async newCommentInput => {
-			return await handleOptimisticWPCommentAdd(
-				newCommentInput,
-				postId,
-				submitContextRef.current.replyToId,
-			);
+			if (!mastodonStatusId) return;
+			const queryKey = [
+				'feed-replies',
+				{ domain_name: process.env.API_URL || '', id: mastodonStatusId },
+			];
+			await queryClient.cancelQueries({ queryKey });
+			const previousData = queryClient.getQueryData<{
+				descendants: Patchwork.Status[];
+				ancestors: Patchwork.Status[];
+			}>(queryKey);
+
+			const optimisticComment: Patchwork.Status = {
+				id: `optimistic-${Date.now()}`,
+				content: newCommentInput.status,
+				created_at: new Date().toISOString(),
+				account: userInfo as any,
+				in_reply_to_id: replyToCommentId || mastodonStatusId,
+				favourited: false,
+				favourites_count: 0,
+				reblogs_count: 0,
+				replies_count: 0,
+				// populate minimal fields
+			} as any;
+
+			if (previousData) {
+				queryClient.setQueryData(queryKey, {
+					...previousData,
+					descendants: [...(previousData.descendants || []), optimisticComment],
+				});
+			}
+
+			return { previousData, queryKey };
 		},
 		onError: (err, newCommentInput, context: any) => {
-			handleOptimisticWPCommentError(postId, context);
+			if (context?.previousData) {
+				queryClient.setQueryData(context.queryKey, context.previousData);
+			}
+		},
+		onSettled: (data, error, variables, context: any) => {
+			if (context?.queryKey) {
+				queryClient.invalidateQueries({ queryKey: context.queryKey });
+			}
 		},
 	});
 
@@ -186,17 +185,9 @@ export const CommentsSheet = () => {
 
 	const handleSubmitComment = useCallback(
 		async (text: string) => {
-			submitContextRef.current.replyToId = replyTargetComment?.id || null;
 			setStatusSubmitLoading(true);
 			try {
-				let targetMastodonId = mastodonStatusId;
-
-				// for sub-comments
-				if (replyTargetComment?.link) {
-					if (replyTargetMastodonSearchResult?.statuses?.[0]?.id) {
-						targetMastodonId = replyTargetMastodonSearchResult.statuses[0].id;
-					}
-				}
+				let targetMastodonId = replyToCommentId || mastodonStatusId;
 
 				if (targetMastodonId) {
 					postComment({
@@ -218,12 +209,7 @@ export const CommentsSheet = () => {
 				setStatusSubmitLoading(false);
 			}
 		},
-		[
-			replyTargetComment,
-			replyTargetMastodonSearchResult,
-			mastodonStatusId,
-			postComment,
-		],
+		[replyToCommentId, mastodonStatusId, postComment],
 	);
 
 	const renderFooter = useCallback(
@@ -235,7 +221,10 @@ export const CommentsSheet = () => {
 					{replyTargetComment && (
 						<View className="px-4 pt-2 pb-2 border-t-[0.5px] border-[#ccc] bg-[#fff] dark:bg-[#121212] flex-row justify-between items-center">
 							<ThemeText className="text-xs text-patchwork-primary font-bold">
-								Replying to {replyToName || replyTargetComment.author_name}
+								Replying to{' '}
+								{replyToName ||
+									replyTargetComment.account?.display_name ||
+									replyTargetComment.account?.username}
 							</ThemeText>
 							<ThemeText
 								className="text-xs text-gray-500 px-2 py-1"
@@ -251,10 +240,13 @@ export const CommentsSheet = () => {
 					<CommentFooter
 						onFocusInput={() => bottomSheetRef.current?.snapToIndex(1)}
 						bottomInset={insets.bottom}
-						isLoading={isSubmitting || isSearchingPost || isSearchingReply}
+						isLoading={isSubmitting || isSearchingPost}
 						replyingToName={
 							replyToName ||
-							(replyTargetComment ? replyTargetComment.author_name : null)
+							(replyTargetComment
+								? replyTargetComment.account?.display_name ||
+								  replyTargetComment.account?.username
+								: null)
 						}
 						onSubmit={handleSubmitComment}
 					/>
@@ -265,7 +257,6 @@ export const CommentsSheet = () => {
 			insets.bottom,
 			isPending,
 			isSearchingPost,
-			isSearchingReply,
 			replyToCommentId,
 			replyToName,
 			replyTargetComment,
@@ -330,8 +321,10 @@ export const CommentsSheet = () => {
 						'Loading...'
 					) : (
 						<>
-							{displayCommentCount} comment
-							{displayCommentCount !== 1 ? 's' : ''}
+							{mastodonStatus?.replies_count ?? comments.length} comment
+							{(mastodonStatus?.replies_count ?? comments.length) !== 1
+								? 's'
+								: ''}
 						</>
 					)}
 				</ThemeText>
@@ -360,10 +353,6 @@ export const CommentsSheet = () => {
 				initialNumToRender={10}
 				maxToRenderPerBatch={10}
 				windowSize={5}
-				onEndReached={() => {
-					if (hasNextPage) fetchNextPage();
-				}}
-				onEndReachedThreshold={0.5}
 				contentContainerStyle={{
 					paddingHorizontal: 16,
 					paddingBottom: Math.max(120, insets.bottom + 150),

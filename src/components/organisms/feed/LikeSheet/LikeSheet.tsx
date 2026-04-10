@@ -79,7 +79,7 @@ export const LikeSheet = () => {
 	);
 
 	const renderItem = useCallback(
-		({ item }: { item: any }) => (
+		({ item }: { item: Patchwork.Account }) => (
 			<Pressable
 				className="flex-row items-center py-3 px-4 border-b border-gray-100 dark:border-patchwork-dark-200"
 				onPress={() => item.url && Linking.openURL(item.url)}
@@ -89,18 +89,15 @@ export const LikeSheet = () => {
 					className="w-10 h-10 rounded-full bg-gray-200"
 				/>
 				<View className="ml-3 flex-1">
-					<ThemeText className="text-base font-Inter_SemiBold">
-						{item.display_name ||
-							item.name ||
-							item.username ||
-							'Anonymous User'}
+					<ThemeText className="font-NewsCycle_Bold">
+						{item.display_name || item.username || 'Anonymous User'}
 					</ThemeText>
 					{item.url && (
 						<ThemeText
 							className="text-xs text-gray-500 mt-0.5"
 							numberOfLines={1}
 						>
-							{item.url.replace(/^https?:\/\//, '')}
+							{item.acct || item.url.replace(/^https?:\/\//, '')}
 						</ThemeText>
 					)}
 				</View>

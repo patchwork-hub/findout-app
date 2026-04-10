@@ -4,32 +4,32 @@ import { ProcessedComment } from '../CommentItem';
 /**
  * used to resolve WP comments into mastodon thread comments by nesting replies under their parents
  */
-export const useThreadedComments = (comments: Patchwork.WPComment[]) => {
+export const useThreadedComments = (comments: Patchwork.Status[]) => {
 	return useMemo(() => {
 		if (!comments || !comments.length) return [];
 
 		const sortedComments = [...comments].sort((a, b) => {
 			const timeA = new Date(
-				a.date_gmt.endsWith('Z') ? a.date_gmt : `${a.date_gmt}Z`,
+				a.created_at.endsWith('Z') ? a.created_at : `${a.created_at}Z`,
 			).getTime();
 			const timeB = new Date(
-				b.date_gmt.endsWith('Z') ? b.date_gmt : `${b.date_gmt}Z`,
+				b.created_at.endsWith('Z') ? b.created_at : `${b.created_at}Z`,
 			).getTime();
 			return timeA - timeB;
 		});
 
-		const commentMap = new Map<number, any>();
+		const commentMap = new Map<string, any>();
 		const rootComments: any[] = [];
 
 		sortedComments.forEach(c => {
-			commentMap.set(Number(c.id), { ...c, children: [], depth: 0 });
+			commentMap.set(c.id, { ...c, children: [], depth: 0 });
 		});
 
 		sortedComments.forEach(c => {
-			const node = commentMap.get(Number(c.id));
-			const parentId = Number(c.parent) || 0;
+			const node = commentMap.get(c.id);
+			const parentId = c.in_reply_to_id;
 
-			if (parentId !== 0 && commentMap.has(parentId)) {
+			if (parentId && commentMap.has(parentId)) {
 				commentMap.get(parentId).children.push(node);
 			} else {
 				rootComments.push(node);

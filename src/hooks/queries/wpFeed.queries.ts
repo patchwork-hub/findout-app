@@ -159,6 +159,7 @@ export const useGetWordpressLikesByPostId = (
 		queryKey: ['wordpressLikes', postId],
 		queryFn: () => getWordpressLikesByPostId({ postId }),
 		enabled: enabled,
+		staleTime: 1000 * 60 * 5,
 	});
 };
 

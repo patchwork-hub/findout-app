@@ -14,9 +14,9 @@ import { formatShortDate } from '@/util/helper/helper';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
-import { queryClient } from '@/App';
 import { searchAllFn } from '@/services/hashtag.service';
 import { favouriteStatus } from '@/services/feed.service';
+import { useSearchAllQueries } from '@/hooks/queries/hashtag.queries';
 
 export type ProcessedComment = Patchwork.WPComment & { depth?: number };
 
@@ -104,32 +104,18 @@ export const CommentItem = ({
 	const depth = item.depth || 0;
 	const isReply = depth > 0;
 
-	const [mastodonStatus, setMastodonStatus] = useState<any>(null);
+	const { data: mastodonSearchResult, refetch: refetchMastodonStatus } =
+		useSearchAllQueries({
+			q: item.link,
+			resolve: true,
+			options: {
+				enabled: !!item.link,
+				staleTime: Infinity,
+				retry: false,
+			},
+		});
 
-	useEffect(() => {
-		if (!item.link) return;
-		let isMounted = true;
-
-		const fetchStatus = async () => {
-			try {
-				const result = await queryClient.fetchQuery({
-					queryKey: ['search-all', { q: item.link, resolve: true }] as any,
-					queryFn: searchAllFn,
-					staleTime: Infinity,
-				});
-				if (isMounted && result?.statuses?.[0]) {
-					setMastodonStatus(result.statuses[0]);
-				}
-			} catch (e) {
-				// Ignore Silent failure for non-federated comments
-			}
-		};
-		fetchStatus();
-
-		return () => {
-			isMounted = false;
-		};
-	}, [item.link]);
+	const mastodonStatus = mastodonSearchResult?.statuses?.[0] || null;
 
 	// Local state to track like UI immediately
 	const [optimisticLiked, setOptimisticLiked] = useState<boolean | null>(null);
@@ -164,10 +150,7 @@ export const CommentItem = ({
 			// Resolve status if not done yet
 			let targetMastodonId = mastodonStatus?.id;
 			if (!targetMastodonId) {
-				const result = await queryClient.fetchQuery({
-					queryKey: ['search-all', { q: item.link, resolve: true }] as any,
-					queryFn: searchAllFn,
-				});
+				const { data: result } = await refetchMastodonStatus();
 				targetMastodonId = result?.statuses?.[0]?.id;
 			}
 
@@ -232,7 +215,7 @@ export const CommentItem = ({
 						<View className="flex-row items-center">
 							<Pressable
 								onPress={() => {
-									const mentionName = mastodonStatus?.account?.acct;
+									const mentionName = mastodonStatus?.account?.acct || '';
 									onReply?.(mentionName);
 								}}
 								className="active:opacity-60 py-1 mr-4"

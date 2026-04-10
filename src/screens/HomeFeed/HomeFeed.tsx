@@ -30,7 +30,8 @@ const { width: windowWidth } = Dimensions.get('window');
 const HomeFeed = ({ navigation }: HomeStackScreenProps<'HomeFeed'>) => {
 	const { t, i18n } = useTranslation();
 	const { colorScheme } = useColorScheme();
-	const { userInfo, userOriginInstance, selectedTimeline } = useAuthStore();
+	const { userInfo, userOriginInstance, selectedTimeline, homeLayout } =
+		useAuthStore();
 	const { barColor, tabBarTextColor, indicatorColor } = useTabBarTheme({
 		indicatorStyle: 'primary',
 	});
@@ -81,8 +82,9 @@ const HomeFeed = ({ navigation }: HomeStackScreenProps<'HomeFeed'>) => {
 			/>
 			<View style={{ flex: 1, width: '100%' }}>
 				<Tabs.Container
+					key={homeLayout}
 					minHeaderHeight={insets.top}
-					initialTabName="Home"
+					initialTabName={homeLayout === 2 ? 'Following' : 'Home'}
 					renderHeader={() => (
 						<View style={{ paddingTop: insets.top, backgroundColor: barColor }}>
 							<HomeFeedHeader account={userInfo!} showUnderLine={false} />
@@ -150,11 +152,29 @@ const HomeFeed = ({ navigation }: HomeStackScreenProps<'HomeFeed'>) => {
 						);
 					}}
 				>
-					<Tabs.Tab name="Home" label={t('timeline.for_you')}>
-						<HomeDefaultTab />
+					<Tabs.Tab
+						name={homeLayout === 2 ? 'Following' : 'Home'}
+						label={homeLayout === 2 ? timelineLabel : t('timeline.for_you')}
+					>
+						{homeLayout === 2 ? (
+							selectedTimeline === 1 ? (
+								<HomeFollowingTab />
+							) : selectedTimeline === 2 ? (
+								<HomeForYouTab />
+							) : (
+								<HomeCommunityTab />
+							)
+						) : (
+							<HomeDefaultTab />
+						)}
 					</Tabs.Tab>
-					<Tabs.Tab name="Following" label={timelineLabel}>
-						{selectedTimeline === 1 ? (
+					<Tabs.Tab
+						name={homeLayout === 2 ? 'Home' : 'Following'}
+						label={homeLayout === 2 ? t('timeline.for_you') : timelineLabel}
+					>
+						{homeLayout === 2 ? (
+							<HomeDefaultTab />
+						) : selectedTimeline === 1 ? (
 							<HomeFollowingTab />
 						) : selectedTimeline === 2 ? (
 							<HomeForYouTab />

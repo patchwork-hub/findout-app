@@ -16,7 +16,7 @@ export const getWordpressPostByCategoryId = async ({
 	limit?: number;
 }) => {
 	try {
-		let url = `posts?_embed&per_page=${limit}`;
+		let url = `posts?_embed=author,wp:term,wp:featuredmedia&per_page=${limit}`;
 		if (categoryId) {
 			url += `&categories=${categoryId}`;
 		}
@@ -38,7 +38,7 @@ export const getWordpressPostByCategoryId = async ({
 
 export const getWordpressPostById = async ({ postId }: { postId: number }) => {
 	try {
-		const url = `posts/${postId}?_embed`;
+		const url = `posts/${postId}?_embed=author,wp:term,wp:featuredmedia`;
 		const resp: AxiosResponse<Patchwork.WPStory> = await instance.get(
 			appendWPApiVersion(url, 'v2'),
 			{
@@ -144,7 +144,7 @@ export const getWordpressCommentsByPostId = async ({
 	postId: number;
 }) => {
 	try {
-		const url = `comments?post=${postId}`;
+		const url = `comments?post=${postId}&per_page=100`;
 		const resp: AxiosResponse<Patchwork.WPComment[]> = await instance.get(
 			appendWPApiVersion(url, 'v2'),
 			{
@@ -161,20 +161,103 @@ export const getWordpressCommentsByPostId = async ({
 	}
 };
 
+export const getWordpressCommentsByPostIdPaginated = async ({
+	postId,
+	page = 1,
+	per_page = 100,
+}: {
+	postId: number;
+	page?: number;
+	per_page?: number;
+}) => {
+	try {
+		const url = `comments?post=${postId}&page=${page}&per_page=${per_page}&order=asc`;
+		const resp = await instance.get(appendWPApiVersion(url, 'v2'), {
+			params: {
+				isDynamicDomain: true,
+				domain_name: process.env.WORDPRESS_API_URL || '',
+				removeBearerToken: true,
+			},
+		});
+
+		const totalComments = parseInt(resp.headers['x-wp-total'] || '0', 10);
+		const totalPages = parseInt(resp.headers['x-wp-totalpages'] || '0', 10);
+
+		return {
+			comments: resp.data,
+			totalComments,
+			totalPages,
+		};
+	} catch (error) {
+		return handleError(error);
+	}
+};
+
 export const getWordpressLikesByPostId = async ({
 	postId,
 }: {
 	postId: number;
 }) => {
 	try {
-		const rawDomain = process.env.WORDPRESS_API_URL || '';
-		const domain = rawDomain.replace(/^https?:\/\//, '').split('/')[0];
-		const url = `https://public-api.wordpress.com/rest/v1.1/sites/${domain}/posts/${postId}/likes`;
-		const resp: AxiosResponse<Patchwork.WPLike> = await instance.get(url, {
+		const url = `/wp-json/activitypub/1.0/posts/${postId}/reactions`;
+		const resp = await instance.get(url, {
 			params: {
+				isDynamicDomain: true,
+				domain_name: process.env.WORDPRESS_API_URL || '',
 				removeBearerToken: true,
 			},
 		});
+
+		const data = resp.data || {};
+		const likes = data.likes?.items || [];
+
+		return { found: likes.length, data: likes };
+	} catch (error) {
+		return { found: 0, data: [] };
+	}
+};
+
+export const getWordpressPostStatusFromMastodon = async (url: string) => {
+	try {
+		const searchResp = await instance.get(appendApiVersion('search', 'v2'), {
+			params: {
+				q: url,
+				resolve: true,
+				limit: 1,
+			},
+		});
+		return searchResp.data?.statuses?.[0] as Patchwork.Status | undefined;
+	} catch (error) {
+		return undefined;
+	}
+};
+
+export const likeWordpressPostThruMastodon = async (
+	url: string,
+	isLiked: boolean,
+) => {
+	try {
+		// 1. Search for the post in the Mastodon instance to resolve it to a Mastodon status ID.
+		const searchResp = await instance.get(appendApiVersion('search', 'v2'), {
+			params: {
+				q: url,
+				resolve: true,
+				limit: 1,
+			},
+		});
+
+		const status = searchResp.data?.statuses?.[0];
+
+		if (!status) {
+			throw new Error('Post could not be resolved on the Mastodon instance.');
+		}
+
+		// 2. Like or unlike it using the resolved status ID
+		const toggleFavourite = isLiked ? 'unfavourite' : 'favourite';
+		const resp: AxiosResponse<Patchwork.Status> = await instance.post(
+			appendApiVersion(`statuses/${status.id}/${toggleFavourite}`, 'v1'),
+		);
+
 		return resp.data;
 	} catch (error) {
 		return handleError(error);
@@ -264,7 +347,7 @@ export const getWordpressPostsByAuthorIdPaginated = async ({
 	per_page?: number;
 }) => {
 	try {
-		const url = `posts?_embed&coauthors=${authorId}&page=${page}&per_page=${per_page}`;
+		const url = `posts?_embed=author,wp:term,wp:featuredmedia&coauthors=${authorId}&page=${page}&per_page=${per_page}`;
 		const resp: AxiosResponse<Patchwork.WPStory[]> = await instance.get(
 			appendWPApiVersion(url, 'v2'),
 			{
@@ -299,7 +382,7 @@ export const getWordpressPostByCategoryIdPaginated = async ({
 	per_page?: number;
 }) => {
 	try {
-		let url = `posts?_embed&page=${page}&per_page=${per_page}`;
+		let url = `posts?_embed=author,wp:term,wp:featuredmedia&page=${page}&per_page=${per_page}`;
 		if (categoryId) {
 			url += `&categories=${categoryId}`;
 		}
@@ -324,5 +407,47 @@ export const getWordpressPostByCategoryIdPaginated = async ({
 		};
 	} catch (error) {
 		return handleError(error);
+	}
+};
+
+export const postWordpressComment = async ({
+	postId,
+	content,
+	parent = 0,
+}: {
+	postId: number;
+	content: string;
+	parent?: number;
+}) => {
+	try {
+		const url = `comments`;
+		const resp: AxiosResponse<Patchwork.WPComment> = await instance.post(
+			appendWPApiVersion(url, 'v2'),
+			{
+				post: postId,
+				content,
+				parent,
+			},
+			{
+				params: {
+					isDynamicDomain: true,
+					domain_name: process.env.WORDPRESS_API_URL || '',
+				},
+			},
+		);
+		return resp.data;
+	} catch (error) {
+		return handleError(error);
+	}
+};
+
+export const getWordpressPostLikesFromMastodon = async (statusId: string) => {
+	try {
+		const resp = await instance.get(
+			appendApiVersion(`statuses/${statusId}/favourited_by`, 'v1'),
+		);
+		return resp.data as Patchwork.Account[];
+	} catch (error) {
+		return [];
 	}
 };

@@ -25,7 +25,7 @@
 		"no_keyword": "You have not added any keyword to this channel yet.",
 		"populate_channel_text": "Populate your channel with content from across the New Social network. Here you can define rules that specify what content is included in your channel.",
 		"select_content_type_desc": "Select which types of content are included in this channel.",
-		"min_channel_required": "You must keep at least 5 favourite channels."
+		"min_channel_required": "You must keep at least 5 favorite channels."
 	},
 	"common": {
 		"accept": "Accept",
@@ -279,17 +279,17 @@
 		"member_login": "Member log in",
 		"mastodon_login": "Sign in with Mastodon",
 		"continue_as_guest": "Continue as a guest",
-		"mastodon_login_instruction": "Login with the server where you created your account",
+		"mastodon_login_instruction": "Sign in with the server where you created your account",
 		"monthly_user": "Monthly user",
 		"new_email_address": "New email address",
 		"new_password": "New password",
 		"no_server_found": "No server instance found.",
-		"otp_not_receive_advice": "Didn't receive the code? resend in {{time}} sec..",
+		"otp_not_receive_advice": "Didn't receive the code? Resend in {{time}} seconds...",
 		"password": "Password",
 		"phone_number": "Phone number",
-		"please_check_mail": "Please check your mail",
+		"please_check_mail": "Please check your email",
 		"repeat_password": "Repeat password",
-		"resend_code_prompt": "Didn't receive the code? <resend>resend code.</resend>",
+		"resend_code_prompt": "Didn't receive the code? <resend>Resend code.</resend>",
 		"send_otp": "We sent a code to your email",
 		"sign_in": "Sign in",
 		"sign_up": "Sign up",
@@ -297,7 +297,7 @@
 		"verification_otp_explanation": "We've sent a 4-digit verification code to your email.",
 		"verify_your_email": "Verify your email",
 		"visit": "Visit",
-		"welcome_page_agreement": "By continuing, you agree to our <terms>Terms & Conditions</terms>, <privacy>Privacy Policy</privacy>.",
+		"welcome_page_agreement": "By continuing, you agree to our <terms>Terms & Conditions</terms> and <privacy>Privacy Policy</privacy>.",
 		"two_factor_auth_error_message": "Invalid login credentials. If you have enabled two-factor authentication, please try logging in from",
 		"two_factor_auth_error_link": "here"
 	},
@@ -446,7 +446,8 @@
 		"privacy_safety": "Privacy & safety",
 		"personalization": "Personalization",
 		"account_management": "Account management",
-		"timeline": "Timeline"
+		"timeline": "Timeline",
+		"layout": "Layout"
 	},
 	"show_boosts": "Show shares",
 	"show_quotes": "Show quotes",
@@ -460,6 +461,11 @@
 		"mastodon_user_validation_message": "Mastodon users can only have up to 4 field attributes.",
 		"username": "Username",
 		"website_placeholder": "Enter website URL"
+	},
+	"layout": {
+		"select_layout_message": "Select the layout you want to use for your Home screen.",
+		"option_default": "Default",
+		"option_main_feed_first": "Main Feed first"
 	},
 	"timeline": {
 		"request_follow": "Request to follow",
@@ -498,7 +504,7 @@
 		"reply_to": "Reply to",
 		"report": "Report",
 		"requested": "Requested",
-		"share_via": "Share via..",
+		"share_via": "Share via...",
 		"status": {
 			"boost": "{{count}} share",
 			"boost_plural": "{{count}} shares",
@@ -574,7 +580,7 @@
 		"boosted_by": "Shared by",
 		"channels": "Channels",
 		"change_email": "Change email",
-		"change_email_verification": "Email Verification",
+		"change_email_verification": "Email verification",
 		"change_password": "Change password",
 		"communities": "Communities",
 		"community_hashtags": "Community hashtags",
@@ -592,7 +598,7 @@
 		"forgot_password": "Forgot password",
 		"hashtags": "Hashtags",
 		"lists": "Lists",
-		"log_in": "Sign-in",
+		"log_in": "Sign in",
 		"manage_list_members": "Manage list members",
 		"message_requests": "Message requests",
 		"mute_and_block": "Mutes and blocks",
@@ -629,7 +635,7 @@
 		},
 		"messages": {
 			"follow": "followed you.",
-			"favourite": "favourited your post.",
+			"favourite": "favorited your post.",
 			"mention": "mentioned you.",
 			"reblog": "boosted your post.",
 			"poll": "poll has ended.",
@@ -678,11 +684,11 @@
 		"success": "Created successfully",
 		"update_success": "Updated successfully",
 		"image_incorrect_format_error": "The data could not be read because it is not in the correct format.",
-		"message_own_account_error": "Can't send message to own account",
-		"media_deleted": "Your {{media}} is deleted successfully!",
-		"email_update_success": "Email is updated successfully. Please log in with your new email.",
+		"message_own_account_error": "Cannot send message to your own account",
+		"media_deleted": "Your {{media}} was deleted successfully!",
+		"email_update_success": "Email updated successfully. Please sign in with your new email.",
 		"resend_otp": "Resend request for OTP",
-		"send_verifcation_code": "Verification code is sent to your email.",
+		"send_verifcation_code": "Verification code sent to your email.",
 		"clear_cookie": "Cookies have been cleared.",
 		"cookie_clear_failed": "Failed to clear cookies",
 		"cant_send_to_own_account": "Cannot send a message to your own account.",

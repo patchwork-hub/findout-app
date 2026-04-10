@@ -69,6 +69,7 @@ import {
 	faLocationDot,
 	faCheckDouble,
 	faUserClock,
+	faTableColumns,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const AppIcons = {
@@ -141,4 +142,5 @@ export const AppIcons = {
 	userClock: faUserClock as IconProp,
 	bluesky: faBluesky as IconProp,
 	threads: faThreads as IconProp,
+	layout: faTableColumns,
 };

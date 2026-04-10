@@ -45,6 +45,7 @@ const ChangePassword: React.FC<GuestStackScreenProps<'ChangePassword'>> = ({
 		setUserInfo,
 		setUserOriginInstance,
 		setSelectedTimeline,
+		setHomeLayout,
 	} = useAuthStoreAction();
 
 	const {
@@ -56,22 +57,10 @@ const ChangePassword: React.FC<GuestStackScreenProps<'ChangePassword'>> = ({
 	});
 	const { mutate, isPending } = useResetPWMutation({
 		onSuccess: async resp => {
-			const userSetting = await getUserSetting();
-			if (userSetting) {
-				setSelectedTimeline(userSetting.settings.user_timeline[0]);
-			}
-
-			const userPrefs = await getUserLocale();
-			if (userPrefs?.['posting:default:language']) {
-				setLanguage(userPrefs['posting:default:language'] as ILanguage);
-			}
-
 			const userInfo = await verifyAuthToken(
 				access_token,
 				process.env.API_URL ?? '',
 			);
-			setUserInfo(userInfo);
-			setUserOriginInstance(process.env.API_URL ?? '');
 
 			setUserInfo(userInfo);
 			setUserOriginInstance(process.env.API_URL ?? '');
@@ -91,6 +80,18 @@ const ChangePassword: React.FC<GuestStackScreenProps<'ChangePassword'>> = ({
 				},
 			};
 			await addOrUpdateAccount(newAuthState);
+
+			const userSetting = await getUserSetting();
+			if (userSetting) {
+				setSelectedTimeline(userSetting.settings.user_timeline[0]);
+				const layout = userSetting.settings.user_timeline?.[1] ?? 1;
+				if (layout !== undefined) setHomeLayout(layout);
+			}
+
+			const userPrefs = await getUserLocale();
+			if (userPrefs?.['posting:default:language']) {
+				setLanguage(userPrefs['posting:default:language'] as ILanguage);
+			}
 		},
 		onError: error => {
 			setAlert({
@@ -119,7 +120,7 @@ const ChangePassword: React.FC<GuestStackScreenProps<'ChangePassword'>> = ({
 				leftCustomComponent={<BackButton />}
 			/>
 			<KeyboardAwareScrollView
-				className="mx-8"
+				className="mx-8 pt-5"
 				keyboardShouldPersistTaps={'handled'}
 			>
 				<Controller
@@ -216,7 +217,7 @@ const ChangePassword: React.FC<GuestStackScreenProps<'ChangePassword'>> = ({
 						</View>
 					)}
 				/>
-				<Button onPress={handleSubmit(onSubmit)} className="h-[48]">
+				<Button onPress={handleSubmit(onSubmit)} className="h-[48] mt-3">
 					{isPending ? (
 						<Flow size={25} color={'#fff'} />
 					) : (

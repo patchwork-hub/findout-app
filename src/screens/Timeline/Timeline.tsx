@@ -64,7 +64,8 @@ const Timeline = () => {
 	const handleOnSelect = (key: number) => {
 		if (selectedTimeline !== key) {
 			setSelectedTimeline(key);
-			changeSetting({ user_timeline: [key] });
+			const currentLayout = userSetting?.settings?.user_timeline?.[1] ?? 1;
+			changeSetting({ user_timeline: [key, currentLayout] });
 		}
 	};
 

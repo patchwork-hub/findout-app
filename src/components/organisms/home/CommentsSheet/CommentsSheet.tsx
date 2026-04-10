@@ -5,58 +5,166 @@ import React, {
 	useRef,
 	useState,
 } from 'react';
-import { View, Keyboard, Pressable } from 'react-native';
+import { View, Keyboard, Pressable, ActivityIndicator } from 'react-native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import {
 	BottomSheetModal,
 	BottomSheetFlatList,
-	BottomSheetTextInput,
 	BottomSheetFooter,
 	BottomSheetBackdrop,
 } from '@gorhom/bottom-sheet';
 import { useLiveVideoFeedStore } from '@/store/ui/liveVideoFeedStore';
 import { useColorScheme } from 'nativewind';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import moment from 'moment';
-import he from 'he';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
-import { useGetWordpressCommentsByPostId } from '@/hooks/queries/wpFeed.queries';
+import { useGetWordpressPostById } from '@/hooks/queries/wpFeed.queries';
+import { useComposeMutation } from '@/hooks/mutations/feed.mutation';
+import { useFeedRepliesQuery } from '@/hooks/queries/feed.queries';
+import { useQuery } from '@tanstack/react-query';
+import { searchAllFn } from '@/services/hashtag.service';
 import customColor from '@/util/constant/color';
 import ListEmptyComponent from '@/components/atoms/common/ListEmptyComponent/ListEmptyComponent';
+import { CommentItem, ProcessedComment } from './CommentItem';
+import { CommentFooter } from './CommentFooter';
+import { useThreadedComments } from './hooks/useThreadedComments';
+import { Flow } from 'react-native-animated-spinkit';
+import { queryClient } from '@/App';
+import { useAuthStore } from '@/store/auth/authStore';
 
 export const CommentsSheet = () => {
+	const { colorScheme } = useColorScheme();
 	const bottomSheetRef = useRef<BottomSheetModal>(null);
+
+	const userInfo = useAuthStore(state => state.userInfo);
+	const insets = useSafeAreaInsets();
+	const isDark = colorScheme === 'dark';
+	const [currentSnapIndex, setCurrentSnapIndex] = useState(-1);
+	const snapPoints = useMemo(() => ['65%', '90%'], []);
+
+	const [replyToCommentId, setReplyToCommentId] = useState<string | null>(null);
+	const [replyToName, setReplyToName] = useState<string | null>(null);
+	const [statusSubmitLoading, setStatusSubmitLoading] = useState(false);
+
 	const {
 		isCommentSheetOpen: isOpen,
 		closeComments,
 		commentPostId: postId,
 	} = useLiveVideoFeedStore();
-	const { colorScheme } = useColorScheme();
-	const isDark = colorScheme === 'dark';
-	const insets = useSafeAreaInsets();
-	const [currentSnapIndex, setCurrentSnapIndex] = useState(-1);
-	const snapPoints = useMemo(() => ['65%', '100%'], []);
 
-	const { data: comments = [] } = useGetWordpressCommentsByPostId(
+	const { data: wpPost, isLoading: isWpPostLoading } = useGetWordpressPostById(
 		postId || 0,
 		isOpen && !!postId,
 	);
 
+	const { data: mastodonSearchResult, isLoading: isSearchingPost } = useQuery({
+		queryKey: ['search-all', { q: wpPost?.link || '', resolve: true }] as any,
+		queryFn: searchAllFn,
+		enabled: !!wpPost?.link,
+	});
+
+	const mastodonStatus = mastodonSearchResult?.statuses?.[0];
+	const mastodonStatusId = mastodonStatus?.id;
+
+	const {
+		data: commentsData,
+		isFetching,
+		isLoading: isRepliesLoading,
+		refetch,
+	} = useFeedRepliesQuery({
+		id: mastodonStatusId || '',
+		domain_name: process.env.API_URL || '',
+		options: { enabled: !!mastodonStatusId },
+	});
+
+	const comments = useMemo(() => {
+		if (!commentsData?.descendants) return [];
+		return commentsData.descendants;
+	}, [commentsData]);
+
+	const replyTargetComment = useMemo(
+		() => comments.find(c => c.id === replyToCommentId),
+		[comments, replyToCommentId],
+	);
+
+	// Optimistic cache comments tracking replaced by direct cache update.
+	const displayCommentCount = comments.length;
+
+	const processedComments = useThreadedComments(comments);
+	const isLoading = Boolean(
+		isOpen &&
+			(isWpPostLoading ||
+				isSearchingPost ||
+				isRepliesLoading ||
+				(!wpPost && postId !== null) ||
+				(!!wpPost?.link && !mastodonSearchResult) ||
+				(!!mastodonStatusId && !commentsData)),
+	);
+
 	useEffect(() => {
 		if (isOpen) {
-			bottomSheetRef.current?.present();
+			requestAnimationFrame(() => bottomSheetRef.current?.present());
 		} else {
-			bottomSheetRef.current?.dismiss();
+			requestAnimationFrame(() => bottomSheetRef.current?.dismiss());
 			Keyboard.dismiss();
 		}
 	}, [isOpen]);
+
+	const { mutate: postComment, isPending } = useComposeMutation({
+		onMutate: async newCommentInput => {
+			if (!mastodonStatusId) return;
+			const queryKey = [
+				'feed-replies',
+				{ domain_name: process.env.API_URL || '', id: mastodonStatusId },
+			];
+			await queryClient.cancelQueries({ queryKey });
+			const previousData = queryClient.getQueryData<{
+				descendants: Patchwork.Status[];
+				ancestors: Patchwork.Status[];
+			}>(queryKey);
+
+			const optimisticComment: Patchwork.Status = {
+				id: `optimistic-${Date.now()}`,
+				content: newCommentInput.status,
+				created_at: new Date().toISOString(),
+				account: userInfo as any,
+				in_reply_to_id: replyToCommentId || mastodonStatusId,
+				favourited: false,
+				favourites_count: 0,
+				reblogs_count: 0,
+				replies_count: 0,
+				// populate minimal fields
+			} as any;
+
+			if (previousData) {
+				queryClient.setQueryData(queryKey, {
+					...previousData,
+					descendants: [...(previousData.descendants || []), optimisticComment],
+				});
+			}
+
+			return { previousData, queryKey };
+		},
+		onError: (err, newCommentInput, context: any) => {
+			if (context?.previousData) {
+				queryClient.setQueryData(context.queryKey, context.previousData);
+			}
+		},
+		onSettled: (data, error, variables, context: any) => {
+			if (context?.queryKey) {
+				queryClient.invalidateQueries({ queryKey: context.queryKey });
+			}
+		},
+	});
 
 	const handleSheetChanges = useCallback(
 		(index: number) => {
 			setCurrentSnapIndex(index);
 			if (index === -1) {
 				closeComments();
+				setReplyToCommentId(null);
+				setReplyToName(null);
+				Keyboard.dismiss();
 			}
 		},
 		[closeComments],
@@ -75,68 +183,106 @@ export const CommentsSheet = () => {
 		[],
 	);
 
+	const handleSubmitComment = useCallback(
+		async (text: string) => {
+			setStatusSubmitLoading(true);
+			try {
+				let targetMastodonId = replyToCommentId || mastodonStatusId;
+
+				if (targetMastodonId) {
+					postComment({
+						status: text,
+						in_reply_to_id: targetMastodonId,
+						visibility: 'public' as const,
+						language: 'en',
+						poll: null,
+						media_ids: [],
+					});
+					setReplyToCommentId(null);
+					setReplyToName(null);
+				} else {
+					console.log('Could not resolve Mastodon status ID to comment on.');
+				}
+			} catch (err) {
+				console.error('Error finding parent comment to reply', err);
+			} finally {
+				setStatusSubmitLoading(false);
+			}
+		},
+		[replyToCommentId, mastodonStatusId, postComment],
+	);
+
 	const renderFooter = useCallback(
-		(props: any) => (
-			<BottomSheetFooter {...props} bottomInset={0}>
-				<View
-					className="px-4 pt-2.5 border-t border-gray-100/10 bg-[#fff] dark:bg-[#1a1a1a]"
-					style={{
-						paddingBottom: insets.bottom,
-					}}
-				>
-					<View className="flex-row items-center rounded-full px-1 py-1 h-11 bg-[#f0f0f0] dark:bg-[#333333]">
-						<BottomSheetTextInput
-							placeholder="Add comment..."
-							placeholderTextColor={isDark ? '#999' : '#666'}
-							style={{
-								color: isDark ? 'white' : 'black',
-								flex: 1,
-								height: 40,
-								marginLeft: 12,
-							}}
-							onFocus={() => bottomSheetRef.current?.snapToIndex(1)}
-						/>
-						<Pressable className="w-8 h-8 rounded-full bg-black dark:bg-white items-center justify-center mr-1">
-							<FontAwesomeIcon
-								icon={faChevronRight}
-								color={colorScheme === 'dark' ? 'black' : 'white'}
-								size={16}
-							/>
-						</Pressable>
-					</View>
-				</View>
-			</BottomSheetFooter>
-		),
-		[isDark, insets.bottom],
+		(props: any) => {
+			const isSubmitting = isPending || statusSubmitLoading;
+
+			return (
+				<BottomSheetFooter {...props} bottomInset={0}>
+					{replyTargetComment && (
+						<View className="px-4 pt-2 pb-2 border-t-[0.5px] border-[#ccc] bg-[#fff] dark:bg-[#121212] flex-row justify-between items-center">
+							<ThemeText className="text-xs text-patchwork-primary font-bold">
+								Replying to{' '}
+								{replyToName ||
+									replyTargetComment.account?.display_name ||
+									replyTargetComment.account?.username}
+							</ThemeText>
+							<ThemeText
+								className="text-xs text-gray-500 px-2 py-1"
+								onPress={() => {
+									setReplyToCommentId(null);
+									setReplyToName(null);
+								}}
+							>
+								Cancel
+							</ThemeText>
+						</View>
+					)}
+					<CommentFooter
+						onFocusInput={() => bottomSheetRef.current?.snapToIndex(1)}
+						bottomInset={insets.bottom}
+						isLoading={isSubmitting || isSearchingPost}
+						replyingToName={
+							replyToName ||
+							(replyTargetComment
+								? replyTargetComment.account?.display_name ||
+								  replyTargetComment.account?.username
+								: null)
+						}
+						onSubmit={handleSubmitComment}
+					/>
+				</BottomSheetFooter>
+			);
+		},
+		[
+			insets.bottom,
+			isPending,
+			isSearchingPost,
+			replyToCommentId,
+			replyToName,
+			replyTargetComment,
+			statusSubmitLoading,
+			handleSubmitComment,
+		],
 	);
 
 	const renderItem = useCallback(
-		({ item }: { item: Patchwork.WPComment }) => (
-			<View className="flex-row mb-4 mt-2">
-				<View className="w-8 h-8 rounded-full items-center justify-center mr-3 bg-[#eee] dark:bg-[#444]">
-					<ThemeText className="text-sm font-semibold text-[#333] dark:text-white">
-						{item.author_name.charAt(0).toUpperCase()}
-					</ThemeText>
-				</View>
-				<View className="flex-1">
-					<ThemeText className="font-semibold text-[13px] mb-0.5 text-[#333] dark:text-white">
-						{item.author_name}
-					</ThemeText>
-					<ThemeText
-						className="text-sm leading-[18px] mb-1"
-						style={{ color: isDark ? 'white' : 'black' }}
-					>
-						{he.decode(item.content.rendered.replace(/<[^>]*>?/gm, ''))}
-					</ThemeText>
-					<View className="flex-row gap-4">
-						<ThemeText className="text-xs text-[#888]">
-							{moment(item.date).fromNow()}
-						</ThemeText>
-					</View>
-				</View>
-			</View>
-		),
-		[isDark],
+		({ item, index }: { item: ProcessedComment; index: number }) => {
+			const nextDepth = processedComments[index + 1]?.depth || 0;
+			const isLastInThread = nextDepth === 0;
+
+			return (
+				<CommentItem
+					item={item}
+					isLastInThread={isLastInThread}
+					onReply={mentionName => {
+						setReplyToCommentId(item.id);
+						setReplyToName(mentionName);
+						bottomSheetRef.current?.snapToIndex(1);
+					}}
+				/>
+			);
+		},
+		[processedComments],
 	);
 
 	return (
@@ -159,29 +305,65 @@ export const CommentsSheet = () => {
 						? '#555'
 						: '#ccc',
 			}}
-			keyboardBehavior="interactive"
+			keyboardBehavior="extend"
 			android_keyboardInputMode="adjustResize"
+			keyboardBlurBehavior="restore"
 			footerComponent={renderFooter}
 			backdropComponent={renderBackdrop}
 		>
-			<View className="flex-row justify-center items-center py-1.5 relative">
+			<View className="flex-row justify-between items-center px-4 py-3 relative">
+				<View className="w-8" />
 				<ThemeText
-					className="font-bold text-sm"
+					className="font-bold text-sm text-center"
 					style={{ color: isDark ? 'white' : 'black' }}
 				>
-					{comments.length} comments
+					{isLoading ? (
+						'Loading...'
+					) : (
+						<>
+							{mastodonStatus?.replies_count ?? comments.length} comment
+							{(mastodonStatus?.replies_count ?? comments.length) !== 1
+								? 's'
+								: ''}
+						</>
+					)}
 				</ThemeText>
+				<Pressable
+					onPress={() => refetch()}
+					className="w-8 h-8 items-end justify-center active:opacity-50"
+				>
+					{isFetching ? (
+						<ActivityIndicator size="small" color={isDark ? '#aaa' : '#555'} />
+					) : (
+						<FontAwesomeIcon
+							icon={faRotateRight}
+							color={isDark ? '#aaa' : '#555'}
+							size={16}
+						/>
+					)}
+				</Pressable>
 			</View>
 
 			<BottomSheetFlatList
-				data={comments}
+				data={processedComments}
 				showsVerticalScrollIndicator={false}
-				keyExtractor={(item: Patchwork.WPComment) => item.id.toString()}
+				keyExtractor={(item: ProcessedComment) => item.id.toString()}
 				renderItem={renderItem}
-				contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 80 }}
+				keyboardShouldPersistTaps="handled"
+				initialNumToRender={10}
+				maxToRenderPerBatch={10}
+				windowSize={5}
+				contentContainerStyle={{
+					paddingHorizontal: 16,
+					paddingBottom: Math.max(120, insets.bottom + 150),
+				}}
 				ListEmptyComponent={
 					<View className="h-[500] w-full items-center justify-center">
-						<ListEmptyComponent title="No comments found" />
+						{isLoading ? (
+							<Flow size={30} color={customColor['patchwork-primary']} />
+						) : (
+							<ListEmptyComponent title="No comments found" />
+						)}
 					</View>
 				}
 			/>

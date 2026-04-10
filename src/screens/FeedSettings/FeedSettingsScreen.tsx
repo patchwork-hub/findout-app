@@ -49,6 +49,13 @@ const FeedSettingsScreen: React.FC<SettingStackScreenProps<'FeedSettings'>> = ({
 					title={t('setting.timeline', 'Timeline')}
 					onPress={() => navigation.navigate('Timeline')}
 				/>
+				<SettingSection
+					sectionKey="layout"
+					colorScheme={colorScheme!}
+					icon={AppIcons.layout}
+					title={t('setting.layout', 'Layout')}
+					onPress={() => navigation.navigate('Layout')}
+				/>
 			</View>
 		</SafeScreen>
 	);

@@ -792,3 +792,24 @@ export const getQuotePolicy = (status: Patchwork.Status): QuotePolicy => {
 export function extractPlainText(html: string): string {
 	return html ? html.replace(/<[^>]+>/g, '') : '';
 }
+
+export const formatShortDate = (dateGmt: string) => {
+	const m = moment.utc(dateGmt).local();
+	const now = moment();
+	const diffMs = now.diff(m);
+	const duration = moment.duration(diffMs);
+
+	// if under 24 hours, show relative social media format
+	if (duration.asHours() < 24) {
+		if (duration.asSeconds() < 60) return 'now';
+		if (duration.asMinutes() < 60)
+			return `${Math.floor(duration.asMinutes())}m`;
+		return `${Math.floor(duration.asHours())}h`;
+	}
+
+	// if older, show the date and time
+	if (!m.isSame(now, 'year')) {
+		return m.format('MMM D, YYYY [at] h:mm A');
+	}
+	return m.format('MMM D [at] h:mm A');
+};

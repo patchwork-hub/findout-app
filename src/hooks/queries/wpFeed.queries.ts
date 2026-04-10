@@ -6,11 +6,14 @@ import {
 	getWordpressPostByCategoryId,
 	getWordpressPostByCategoryIdPaginated,
 	getWordpressCommentsByPostId,
+	getWordpressCommentsByPostIdPaginated,
 	getWordpressLikesByPostId,
 	getWordpressPostById,
 	getWordpressPostsByAuthorIdPaginated,
 	getWordpressFeed,
 	getWordpressCategories,
+	getWordpressPostStatusFromMastodon,
+	getWordpressPostLikesFromMastodon,
 } from '@/services/wpFeed.service';
 import { SearchUsersQueryKey } from '@/types/queries/conversations.type';
 import { WordpressPostsByCategoryIdQueryKey } from '@/types/queries/wordpressFeed.type';
@@ -147,17 +150,6 @@ export const useGetWordpressCommentsByPostId = (
 		queryKey: ['wordpressComments', postId],
 		queryFn: () => getWordpressCommentsByPostId({ postId }),
 		enabled: enabled,
-		select: data => {
-			if (
-				postId === 560 ||
-				postId === 554 ||
-				postId === 537 ||
-				postId === 548
-			) {
-				return MOCK_WP_COMMENTS.filter(comment => comment.post === postId);
-			}
-			return data;
-		},
 	});
 };
 
@@ -169,11 +161,43 @@ export const useGetWordpressLikesByPostId = (
 		queryKey: ['wordpressLikes', postId],
 		queryFn: () => getWordpressLikesByPostId({ postId }),
 		enabled: enabled,
-		select: data => {
-			return {
-				...data,
-				found: (postId % 100) + 1100,
-			};
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const useGetWordpressCommentsByPostIdPaginated = (
+	postId: number,
+	enabled: boolean,
+) => {
+	return useInfiniteQuery({
+		queryKey: ['wordpressCommentsPaginated', postId],
+		queryFn: ({ pageParam = 1 }) =>
+			getWordpressCommentsByPostIdPaginated({
+				postId,
+				page: pageParam,
+				per_page: 100,
+			}),
+		getNextPageParam: (lastPage, allPages) => {
+			const nextPage = allPages.length + 1;
+			return nextPage > lastPage.totalPages ? undefined : nextPage;
 		},
+		initialPageParam: 1,
+		enabled: enabled,
+	});
+};
+
+export const useGetWordpressPostStatusFromMastodon = (url: string) => {
+	return useQuery({
+		queryKey: ['wordpressPostStatusFromMastodon', url],
+		queryFn: () => getWordpressPostStatusFromMastodon(url),
+		enabled: !!url,
+	});
+};
+
+export const useGetWordpressPostLikesFromMastodon = (statusId?: string) => {
+	return useQuery({
+		queryKey: ['wordpressPostLikesFromMastodon', statusId],
+		queryFn: () => getWordpressPostLikesFromMastodon(statusId as string),
+		enabled: !!statusId,
 	});
 };

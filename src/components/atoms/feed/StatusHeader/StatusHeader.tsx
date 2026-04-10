@@ -156,7 +156,7 @@ const StatusHeader = ({
 							iconSize={28}
 						/>
 					)}
-					<View className="flex-1">
+					<View className="flex-shrink">
 						<View className="flex-row items-center flex-wrap">
 							<ThemeText
 								emojis={status.account.emojis}
@@ -235,10 +235,10 @@ const StatusHeader = ({
 						</View>
 					</View>
 				</Pressable>
+				<View className="flex-1" />
 				{!isFromQuoteCompose &&
 					!isQuoteView &&
 					(!isFromNoti || isMyStatusQuoted) && <StatusMenu status={status} />}
-				<View className="flex-1" />
 				{showFollowIcon && (
 					<Button
 						variant="outline"

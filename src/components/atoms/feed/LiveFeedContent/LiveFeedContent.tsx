@@ -1,14 +1,16 @@
 import React, { useMemo } from 'react';
-import { View, useWindowDimensions, Pressable } from 'react-native';
+import { View, useWindowDimensions, Pressable, Platform } from 'react-native';
 import RenderHTML, { MixedStyleDeclaration } from 'react-native-render-html';
 import { ThemeText } from '@/components/atoms/common/ThemeText/ThemeText';
 import { useColorScheme } from 'nativewind';
 import { cleanHtmlContent, stripTags } from '@/util/helper/helper';
+import he from 'he';
 
 interface FeedContentProps {
 	post: Patchwork.WPStory;
 	isLandscape?: boolean;
 	onNavigateToDetail?: () => void;
+	index?: number;
 }
 
 const LINE_HEIGHT = 22;
@@ -18,14 +20,24 @@ export const LiveFeedContent: React.FC<FeedContentProps> = ({
 	post,
 	isLandscape = false,
 	onNavigateToDetail,
+	index = 0,
 }) => {
 	const { width, height } = useWindowDimensions();
 	const { colorScheme } = useColorScheme();
 	const contentWidth = width - 32;
 
-	const landscapeLines = height < 750 ? 5 : 11;
+	// Dynamically calculate lines based on screen height
 
-	const title = stripTags(post.title.rendered);
+	const androidMultiplier = index === 0 ? 0.128 : 0.25;
+	const landscapeLines = Math.max(
+		2,
+		Math.floor(
+			(height * (Platform.OS === 'android' ? androidMultiplier : 0.25)) /
+				LINE_HEIGHT,
+		),
+	);
+
+	const title = he.decode(stripTags(post.title.rendered));
 	const htmlContent = useMemo(
 		() => cleanHtmlContent(post.content.rendered),
 		[post.content.rendered],

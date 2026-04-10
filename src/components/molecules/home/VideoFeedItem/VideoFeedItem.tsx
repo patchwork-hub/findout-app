@@ -434,6 +434,7 @@ const VideoFeedItem = ({
 						post={post}
 						isLandscape={true}
 						onNavigateToDetail={() => openContent(post)}
+						index={index}
 					/>
 					<View className="px-0">
 						<LiveVideoFeedActionBar
@@ -467,6 +468,7 @@ const VideoFeedItem = ({
 								post={post}
 								isLandscape={false}
 								onNavigateToDetail={() => openContent(post)}
+								index={index}
 							/>
 						</View>
 

@@ -500,7 +500,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = FindOutMedia/FindOutMedia.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = VA45Q6RWV3;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = FindOutMedia/Info.plist;
@@ -533,7 +533,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = FindOutMedia/FindOutMedia.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = VA45Q6RWV3;
 				INFOPLIST_FILE = FindOutMedia/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Find Out Media";

@@ -50,7 +50,7 @@ export const LiveFeedContent: React.FC<FeedContentProps> = ({
 
 	// noted: calculates if the text length overflow the est char the parent view
 	const maxChars =
-		(contentWidth / 7.5) * (isLandscape ? landscapeLines : PORTRAIT_LINES);
+		(contentWidth / 7) * (isLandscape ? landscapeLines : PORTRAIT_LINES);
 	const shouldShowSeeMore = plainTextLength > maxChars;
 
 	const textColor = !isLandscape

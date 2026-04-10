@@ -29,8 +29,12 @@ import {
 import {
 	useGetWordpressCommentsByPostId,
 	useGetWordpressLikesByPostId,
+	useGetWordpressPostStatusFromMastodon,
+	useGetWordpressPostLikesFromMastodon,
 } from '@/hooks/queries/wpFeed.queries';
-import { useToggleWordpressLike } from '@/hooks/mutations/wpFeed.mutation';
+import { useQueryClient } from '@tanstack/react-query';
+import { useFavouriteMutation } from '@/hooks/mutations/feed.mutation';
+// import { useToggleWordpressLike } from '@/hooks/mutations/wpFeed.mutation';
 import customColor from '@/util/constant/color';
 import Toast from 'react-native-toast-message';
 
@@ -65,67 +69,169 @@ const VideoFeedItem = ({
 		optimisticComments: allOptimisticComments,
 	} = useLiveVideoFeedStore();
 
-	const { data: comments = [] } = useGetWordpressCommentsByPostId(
-		post.id,
-		!!post.id,
-	);
+	// const { data: comments = [] } = useGetWordpressCommentsByPostId(
+	// 	post.id,
+	// 	!!post.id,
+	// );
 
-	const mergedComments = useMemo(() => {
-		const opComments = allOptimisticComments[post.id || 0] || [];
-		const activeOpComments = opComments.filter(
-			(oc: any) =>
-				!comments.some((c: any) => {
-					const cText = c.content.rendered
-						.replace(/<[^>]*>?/gm, '')
-						.replace(/\s+/g, ' ')
-						.trim();
-					const ocText = oc.content.rendered
-						.replace(/<[^>]*>?/gm, '')
-						.replace(/\s+/g, ' ')
-						.trim();
-					return (
-						(c.author === oc.author || c.author_name === oc.author_name) &&
-						cText === ocText
-					);
-				}),
-		);
-		return [...comments, ...activeOpComments];
-	}, [comments, allOptimisticComments, post.id]);
+	// const mergedComments = useMemo(() => {
+	// 	const opComments = allOptimisticComments[post.id || 0] || [];
+	// 	const activeOpComments = opComments.filter(
+	// 		(oc: any) =>
+	// 			!comments.some((c: any) => {
+	// 				const cText = c.content.rendered
+	// 					.replace(/<[^>]*>?/gm, '')
+	// 					.replace(/\s+/g, ' ')
+	// 					.trim();
+	// 				const ocText = oc.content.rendered
+	// 					.replace(/<[^>]*>?/gm, '')
+	// 					.replace(/\s+/g, ' ')
+	// 					.trim();
+	// 				return (
+	// 					(c.author === oc.author || c.author_name === oc.author_name) &&
+	// 					cText === ocText
+	// 				);
+	// 			}),
+	// 	);
+	// 	return [...comments, ...activeOpComments];
+	// }, [comments, allOptimisticComments, post.id]);
 
-	const commentCount = mergedComments.length;
+	// const commentCount = mergedComments.length;
 
 	const userInfo = useAuthStore(state => state.userInfo);
 
-	const { data: likesData } = useGetWordpressLikesByPostId(post.id, !!post.id);
+	// const { data: likesData } = useGetWordpressLikesByPostId(post.id, !!post.id);
 
-	const initialLikedStatus = useMemo(() => {
-		if (!likesData?.data || !userInfo?.url) return false;
-		return likesData.data.some((like: any) => like.url === userInfo.url);
-	}, [likesData?.data, userInfo?.url]);
+	// const initialLikedStatus = useMemo(() => {
+	// 	if (!likesData?.data || !userInfo?.url) return false;
+	// 	return likesData.data.some((like: any) => like.url === userInfo.url);
+	// }, [likesData?.data, userInfo?.url]);
 
-	const { mutate: toggleLike } = useToggleWordpressLike();
+	// const { mutate: toggleLike } = useToggleWordpressLike();
 
-	const isLiked = initialLikedStatus;
-	const displayedLikeCount = likesData?.found || 0;
+	// const isLiked = initialLikedStatus;
+	// const displayedLikeCount = likesData?.found || 0;
+
+	const queryClient = useQueryClient();
+	const { mutate: toggleMastodonLike } = useFavouriteMutation({});
+
+	const { data: mastodonStatus } = useGetWordpressPostStatusFromMastodon(
+		post.link,
+	);
+
+	const { data: mastodonLikesData } = useGetWordpressPostLikesFromMastodon(
+		mastodonStatus?.id,
+	);
+
+	const isLiked = useMemo(() => {
+		if (mastodonStatus?.favourited) return true;
+		if (mastodonLikesData && userInfo?.url) {
+			return mastodonLikesData.some(acc => acc.url === userInfo.url);
+		}
+		return false;
+	}, [mastodonStatus?.favourited, mastodonLikesData, userInfo?.url]);
+
+	const displayedLikeCount =
+		mastodonLikesData?.length ?? mastodonStatus?.favourites_count ?? 0;
+	const commentCount = mastodonStatus?.replies_count || 0;
 
 	const handleLikeToggle = () => {
-		if (!userInfo) return;
-		const newStatus = !isLiked;
+		if (!userInfo || !mastodonStatus) return;
 
-		toggleLike(
+		queryClient.cancelQueries({
+			queryKey: ['wordpressPostStatusFromMastodon', post.link],
+		});
+		if (mastodonStatus?.id) {
+			queryClient.cancelQueries({
+				queryKey: ['wordpressPostLikesFromMastodon', mastodonStatus.id],
+			});
+		}
+
+		const previousStatus = queryClient.getQueryData<Patchwork.Status>([
+			'wordpressPostStatusFromMastodon',
+			post.link,
+		]);
+		const previousLikes = mastodonStatus?.id
+			? queryClient.getQueryData<Patchwork.Account[]>([
+					'wordpressPostLikesFromMastodon',
+					mastodonStatus.id,
+			  ])
+			: undefined;
+
+		let currentIsLiked = false;
+		if (previousStatus?.favourited) {
+			currentIsLiked = true;
+		} else if (previousLikes && userInfo?.url) {
+			currentIsLiked = previousLikes.some(acc => acc.url === userInfo.url);
+		}
+
+		const newIsLiked = !currentIsLiked;
+		const activeStatus = previousStatus || mastodonStatus;
+
+		if (activeStatus) {
+			queryClient.setQueryData(['wordpressPostStatusFromMastodon', post.link], {
+				...activeStatus,
+				favourited: newIsLiked,
+				favourites_count: newIsLiked
+					? (activeStatus.favourites_count || 0) + 1
+					: Math.max((activeStatus.favourites_count || 0) - 1, 0),
+			});
+		}
+
+		const activeLikes = previousLikes || mastodonLikesData;
+		if (mastodonStatus?.id) {
+			queryClient.setQueryData(
+				['wordpressPostLikesFromMastodon', mastodonStatus.id],
+				(old: any) => {
+					const oldArray = Array.isArray(old) ? old : activeLikes || [];
+					if (newIsLiked) {
+						if (!oldArray.some(acc => acc.url === userInfo.url)) {
+							return [...oldArray, { ...userInfo, url: userInfo.url }];
+						}
+						return oldArray;
+					} else {
+						return oldArray.filter(acc => acc.url !== userInfo.url);
+					}
+				},
+			);
+		}
+
+		toggleMastodonLike(
 			{
-				postId: post.id,
-				postLink: post.link,
-				newStatus,
-				userInfo,
+				status: {
+					...mastodonStatus,
+					favourited: currentIsLiked,
+				} as Patchwork.Status,
 			},
 			{
 				onError: () => {
+					if (previousStatus) {
+						queryClient.setQueryData(
+							['wordpressPostStatusFromMastodon', post.link],
+							previousStatus,
+						);
+					}
+					if (previousLikes && mastodonStatus?.id) {
+						queryClient.setQueryData(
+							['wordpressPostLikesFromMastodon', mastodonStatus.id],
+							previousLikes,
+						);
+					}
 					Toast.show({
 						type: 'error',
 						text1: 'Error',
 						text2: 'Failed to like the post. Please try again.',
 					});
+				},
+				onSettled: () => {
+					queryClient.invalidateQueries({
+						queryKey: ['wordpressPostStatusFromMastodon', post.link],
+					});
+					if (mastodonStatus?.id) {
+						queryClient.invalidateQueries({
+							queryKey: ['wordpressPostLikesFromMastodon', mastodonStatus.id],
+						});
+					}
 				},
 			},
 		);

@@ -15,7 +15,12 @@ import {
 	Linking,
 } from 'react-native';
 import customColor from '@/util/constant/color';
-import { useGetWordpressLikesByPostId } from '@/hooks/queries/wpFeed.queries';
+import {
+	// useGetWordpressLikesByPostId,
+	useGetWordpressPostById,
+	useGetWordpressPostStatusFromMastodon,
+	useGetWordpressPostLikesFromMastodon,
+} from '@/hooks/queries/wpFeed.queries';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const LikeSheet = () => {
@@ -29,10 +34,28 @@ export const LikeSheet = () => {
 	} = useLiveVideoFeedStore();
 	const snapPoints = useMemo(() => ['50%', '85%'], []);
 
-	const { data: likesData, isLoading } = useGetWordpressLikesByPostId(
+	// const { data: likesData, isLoading } = useGetWordpressLikesByPostId(
+	// 	likeSheetPostId!,
+	// 	!!likeSheetPostId && isOpen,
+	// );
+
+	const { data: post, isFetching: isPostFetching } = useGetWordpressPostById(
 		likeSheetPostId!,
 		!!likeSheetPostId && isOpen,
 	);
+
+	const { data: mastodonStatus, isFetching: isStatusFetching } =
+		useGetWordpressPostStatusFromMastodon(post?.link || '');
+
+	const { data: mastodonLikesData, isFetching: isLikesFetching } =
+		useGetWordpressPostLikesFromMastodon(mastodonStatus?.id);
+
+	const isLoading =
+		isOpen &&
+		(isPostFetching ||
+			isStatusFetching ||
+			isLikesFetching ||
+			(!!mastodonStatus?.id && mastodonLikesData === undefined));
 
 	useEffect(() => {
 		if (isOpen) {
@@ -67,7 +90,10 @@ export const LikeSheet = () => {
 				/>
 				<View className="ml-3 flex-1">
 					<ThemeText className="text-base font-Inter_SemiBold">
-						{item.name || 'Anonymous User'}
+						{item.display_name ||
+							item.name ||
+							item.username ||
+							'Anonymous User'}
 					</ThemeText>
 					{item.url && (
 						<ThemeText
@@ -124,10 +150,11 @@ export const LikeSheet = () => {
 				</ThemeText>
 			</View>
 			<BottomSheetFlatList
-				data={likesData?.data || []}
-				keyExtractor={(item: { url: any }, index: { toString: () => any }) =>
-					item.url || index.toString()
-				}
+				data={mastodonLikesData || []}
+				keyExtractor={(
+					item: { url: any; id?: string },
+					index: { toString: () => any },
+				) => item.id?.toString() || item.url || index.toString()}
 				renderItem={renderItem}
 				ListEmptyComponent={ListEmptyComponent}
 				contentContainerStyle={{ paddingBottom: insets.bottom + 150 }}

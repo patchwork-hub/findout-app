@@ -217,6 +217,21 @@ export const getWordpressLikesByPostId = async ({
 	}
 };
 
+export const getWordpressPostStatusFromMastodon = async (url: string) => {
+	try {
+		const searchResp = await instance.get(appendApiVersion('search', 'v2'), {
+			params: {
+				q: url,
+				resolve: true,
+				limit: 1,
+			},
+		});
+		return searchResp.data?.statuses?.[0] as Patchwork.Status | undefined;
+	} catch (error) {
+		return undefined;
+	}
+};
+
 export const likeWordpressPostThruMastodon = async (
 	url: string,
 	isLiked: boolean,
@@ -423,5 +438,16 @@ export const postWordpressComment = async ({
 		return resp.data;
 	} catch (error) {
 		return handleError(error);
+	}
+};
+
+export const getWordpressPostLikesFromMastodon = async (statusId: string) => {
+	try {
+		const resp = await instance.get(
+			appendApiVersion(`statuses/${statusId}/favourited_by`, 'v1'),
+		);
+		return resp.data as Patchwork.Account[];
+	} catch (error) {
+		return [];
 	}
 };

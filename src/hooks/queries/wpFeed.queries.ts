@@ -12,6 +12,8 @@ import {
 	getWordpressPostsByAuthorIdPaginated,
 	getWordpressFeed,
 	getWordpressCategories,
+	getWordpressPostStatusFromMastodon,
+	getWordpressPostLikesFromMastodon,
 } from '@/services/wpFeed.service';
 import { SearchUsersQueryKey } from '@/types/queries/conversations.type';
 import { WordpressPostsByCategoryIdQueryKey } from '@/types/queries/wordpressFeed.type';
@@ -181,5 +183,21 @@ export const useGetWordpressCommentsByPostIdPaginated = (
 		},
 		initialPageParam: 1,
 		enabled: enabled,
+	});
+};
+
+export const useGetWordpressPostStatusFromMastodon = (url: string) => {
+	return useQuery({
+		queryKey: ['wordpressPostStatusFromMastodon', url],
+		queryFn: () => getWordpressPostStatusFromMastodon(url),
+		enabled: !!url,
+	});
+};
+
+export const useGetWordpressPostLikesFromMastodon = (statusId?: string) => {
+	return useQuery({
+		queryKey: ['wordpressPostLikesFromMastodon', statusId],
+		queryFn: () => getWordpressPostLikesFromMastodon(statusId as string),
+		enabled: !!statusId,
 	});
 };

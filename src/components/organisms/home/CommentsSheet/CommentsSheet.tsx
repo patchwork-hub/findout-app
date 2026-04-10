@@ -49,6 +49,10 @@ export const CommentsSheet = () => {
 	const [replyToName, setReplyToName] = useState<string | null>(null);
 	const [statusSubmitLoading, setStatusSubmitLoading] = useState(false);
 
+	const submitContextRef = useRef<{ replyToId: number | null }>({
+		replyToId: null,
+	});
+
 	const {
 		isCommentSheetOpen: isOpen,
 		closeComments,
@@ -83,21 +87,6 @@ export const CommentsSheet = () => {
 
 	const mastodonStatusId = mastodonSearchResult?.statuses?.[0]?.id;
 
-	const replyTargetComment = useMemo(
-		() => comments.find(c => c.id === replyToCommentId),
-		[comments, replyToCommentId],
-	);
-
-	const { data: replyTargetMastodonSearchResult, isLoading: isSearchingReply } =
-		useQuery({
-			queryKey: [
-				'search-all',
-				{ q: replyTargetComment?.link || '', resolve: true },
-			] as any,
-			queryFn: searchAllFn,
-			enabled: !!replyTargetComment?.link,
-		});
-
 	// for recently made comment cache,
 	const mergedComments = useMemo(() => {
 		const opComments = allOptimisticComments[postId || 0] || [];
@@ -123,6 +112,21 @@ export const CommentsSheet = () => {
 		return [...comments, ...activeOpComments];
 	}, [comments, allOptimisticComments, postId]);
 
+	const replyTargetComment = useMemo(
+		() => mergedComments.find(c => c.id === replyToCommentId),
+		[mergedComments, replyToCommentId],
+	);
+
+	const { data: replyTargetMastodonSearchResult, isLoading: isSearchingReply } =
+		useQuery({
+			queryKey: [
+				'search-all',
+				{ q: replyTargetComment?.link || '', resolve: true },
+			] as any,
+			queryFn: searchAllFn,
+			enabled: !!replyTargetComment?.link,
+		});
+
 	const baseTotalCount = commentsData?.pages?.[0]?.totalComments || 0;
 	const activeOpCommentsCount = mergedComments.length - comments.length;
 	const displayCommentCount = Math.max(
@@ -134,9 +138,9 @@ export const CommentsSheet = () => {
 
 	useEffect(() => {
 		if (isOpen) {
-			bottomSheetRef.current?.present();
+			requestAnimationFrame(() => bottomSheetRef.current?.present());
 		} else {
-			bottomSheetRef.current?.dismiss();
+			requestAnimationFrame(() => bottomSheetRef.current?.dismiss());
 			Keyboard.dismiss();
 		}
 	}, [isOpen]);
@@ -146,7 +150,7 @@ export const CommentsSheet = () => {
 			return await handleOptimisticWPCommentAdd(
 				newCommentInput,
 				postId,
-				replyToCommentId,
+				submitContextRef.current.replyToId,
 			);
 		},
 		onError: (err, newCommentInput, context: any) => {
@@ -161,6 +165,7 @@ export const CommentsSheet = () => {
 				closeComments();
 				setReplyToCommentId(null);
 				setReplyToName(null);
+				Keyboard.dismiss();
 			}
 		},
 		[closeComments],
@@ -181,6 +186,7 @@ export const CommentsSheet = () => {
 
 	const handleSubmitComment = useCallback(
 		async (text: string) => {
+			submitContextRef.current.replyToId = replyTargetComment?.id || null;
 			setStatusSubmitLoading(true);
 			try {
 				let targetMastodonId = mastodonStatusId;
@@ -310,6 +316,7 @@ export const CommentsSheet = () => {
 			}}
 			keyboardBehavior="extend"
 			android_keyboardInputMode="adjustResize"
+			keyboardBlurBehavior="restore"
 			footerComponent={renderFooter}
 			backdropComponent={renderBackdrop}
 		>
@@ -350,6 +357,9 @@ export const CommentsSheet = () => {
 				keyExtractor={(item: ProcessedComment) => item.id.toString()}
 				renderItem={renderItem}
 				keyboardShouldPersistTaps="handled"
+				initialNumToRender={10}
+				maxToRenderPerBatch={10}
+				windowSize={5}
 				onEndReached={() => {
 					if (hasNextPage) fetchNextPage();
 				}}

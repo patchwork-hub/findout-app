@@ -17,6 +17,10 @@ import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
 import { searchAllFn } from '@/services/hashtag.service';
 import { favouriteStatus } from '@/services/feed.service';
 import { useSearchAllQueries } from '@/hooks/queries/hashtag.queries';
+import { useAuthStore } from '@/store/auth/authStore';
+import { statusDeleteFn } from '@/services/statusActions.service';
+import { useLiveVideoFeedStore } from '@/store/ui/liveVideoFeedStore';
+import { queryClient } from '@/App';
 
 export type ProcessedComment = Patchwork.WPComment & { depth?: number };
 
@@ -117,6 +121,15 @@ export const CommentItem = ({
 
 	const mastodonStatus = mastodonSearchResult?.statuses?.[0] || null;
 
+	const userInfo = useAuthStore(state => state.userInfo);
+	const [isDeleting, setIsDeleting] = useState(false);
+
+	const isOwnComment =
+		(mastodonStatus?.account?.id &&
+			mastodonStatus.account.id === userInfo?.id) ||
+		item.author_name === userInfo?.display_name ||
+		item.author_name === userInfo?.username;
+
 	// Local state to track like UI immediately
 	const [optimisticLiked, setOptimisticLiked] = useState<boolean | null>(null);
 	const [isLiking, setIsLiking] = useState(false);
@@ -169,6 +182,46 @@ export const CommentItem = ({
 		}
 	};
 
+	const handleDelete = async () => {
+		if (isDeleting) return;
+		setIsDeleting(true);
+
+		try {
+			let targetMastodonId = mastodonStatus?.id;
+			if (!targetMastodonId && item.link) {
+				const { data: result } = await refetchMastodonStatus();
+				targetMastodonId = result?.statuses?.[0]?.id;
+			}
+
+			if (targetMastodonId) {
+				await statusDeleteFn({ status_id: targetMastodonId });
+			}
+
+			useLiveVideoFeedStore
+				.getState()
+				.removeOptimisticComment(item.post || 0, item.id);
+
+			queryClient.setQueryData(
+				['wordpressCommentsPaginated', item.post],
+				(oldData: any) => {
+					if (!oldData) return oldData;
+					return {
+						...oldData,
+						pages: oldData.pages.map((page: any) => ({
+							...page,
+							comments: page.comments.filter((c: any) => c.id !== item.id),
+							totalComments: Math.max(0, (page.totalComments || 0) - 1),
+						})),
+					};
+				},
+			);
+		} catch (err) {
+			console.error('Error deleting comment:', err);
+		} finally {
+			setIsDeleting(false);
+		}
+	};
+
 	return (
 		<>
 			<View className={`flex-row relative ${isReply ? 'mt-2 mb-3' : 'my-3'}`}>
@@ -177,7 +230,7 @@ export const CommentItem = ({
 						className="absolute w-[2px] bg-gray-300 dark:bg-[#444]"
 						style={{
 							left: 15,
-							top: -50,
+							top: -65,
 							bottom: 0,
 							zIndex: 0,
 						}}
@@ -224,6 +277,24 @@ export const CommentItem = ({
 									Reply
 								</ThemeText>
 							</Pressable>
+
+							{isOwnComment && (
+								<Pressable
+									onPress={handleDelete}
+									className="active:opacity-60 py-1 mr-4"
+								>
+									{isDeleting ? (
+										<ActivityIndicator
+											size="small"
+											color={isDark ? '#aaa' : '#555'}
+										/>
+									) : (
+										<ThemeText className="text-[13px] text-red-500 font-Inter_SemiBold">
+											Delete
+										</ThemeText>
+									)}
+								</Pressable>
+							)}
 
 							{displayedLikeCount > 0 && (
 								<View className="flex-row items-center pointer-events-none">

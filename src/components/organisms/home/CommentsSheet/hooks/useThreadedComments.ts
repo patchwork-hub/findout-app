@@ -8,23 +8,29 @@ export const useThreadedComments = (comments: Patchwork.WPComment[]) => {
 	return useMemo(() => {
 		if (!comments || !comments.length) return [];
 
-		const sortedComments = [...comments].sort(
-			(a, b) =>
-				new Date(a.date_gmt + 'Z').getTime() -
-				new Date(b.date_gmt + 'Z').getTime(),
-		);
+		const sortedComments = [...comments].sort((a, b) => {
+			const timeA = new Date(
+				a.date_gmt.endsWith('Z') ? a.date_gmt : `${a.date_gmt}Z`,
+			).getTime();
+			const timeB = new Date(
+				b.date_gmt.endsWith('Z') ? b.date_gmt : `${b.date_gmt}Z`,
+			).getTime();
+			return timeA - timeB;
+		});
 
 		const commentMap = new Map<number, any>();
 		const rootComments: any[] = [];
 
 		sortedComments.forEach(c => {
-			commentMap.set(c.id, { ...c, children: [], depth: 0 });
+			commentMap.set(Number(c.id), { ...c, children: [], depth: 0 });
 		});
 
 		sortedComments.forEach(c => {
-			const node = commentMap.get(c.id);
-			if (c.parent && c.parent !== 0 && commentMap.has(c.parent)) {
-				commentMap.get(c.parent).children.push(node);
+			const node = commentMap.get(Number(c.id));
+			const parentId = Number(c.parent) || 0;
+
+			if (parentId !== 0 && commentMap.has(parentId)) {
+				commentMap.get(parentId).children.push(node);
 			} else {
 				rootComments.push(node);
 			}

@@ -443,6 +443,23 @@ export const StatusCopyIcon = ({
 	</Svg>
 );
 
+export const WPShareIcon = ({
+	colorScheme,
+	...props
+}: SvgProps & ColorSchemeType) => (
+	<Svg viewBox="0 0 512 512" width={24} height={24} {...props}>
+		<Path
+			d="M448 256L272 88v96C103.57 184 64 304.77 64 424c48.61-62.24 91.6-96 208-96v96z"
+			fill="none"
+			stroke={
+				props?.stroke || (colorScheme == 'dark' ? '#fff' : colors.gray[500])
+			}
+			strokeLinejoin="round"
+			strokeWidth="38"
+		/>
+	</Svg>
+);
+
 export const StatusDeleteOutlineIcon = ({
 	colorScheme,
 	...props

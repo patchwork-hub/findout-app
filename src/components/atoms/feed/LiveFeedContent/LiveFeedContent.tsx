@@ -24,7 +24,7 @@ export const LiveFeedContent: React.FC<FeedContentProps> = ({
 	const { colorScheme } = useColorScheme();
 	const contentWidth = width - 32;
 
-	const landscapeLines = height < 750 ? 4 : 11;
+	const landscapeLines = height < 750 ? 5 : 11;
 
 	const title = he.decode(post.title.rendered);
 	const htmlContent = useMemo(

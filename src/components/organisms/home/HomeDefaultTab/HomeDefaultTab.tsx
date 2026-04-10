@@ -43,7 +43,7 @@ const HomeDefaultTab = () => {
 	const insets = useSafeAreaInsets();
 	const bottomTabBarHeight = useBottomTabBarHeight();
 	const tabBarHeight =
-		bottomTabBarHeight || (Platform.OS === 'ios' ? 60 + insets.bottom : 90);
+		bottomTabBarHeight || (Platform.OS === 'ios' ? 60 + insets.bottom : 75);
 	const VISIBLE_HEIGHT = screenHeight - tabBarHeight - insets.top - 58;
 
 	const order = filter === 'Oldest' ? 'asc' : 'desc';

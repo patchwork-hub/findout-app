@@ -85,7 +85,7 @@ export const LikeSheet = () => {
 	const renderItem = useCallback(
 		({ item }: { item: Patchwork.Account }) => (
 			<Pressable
-				className="flex-row items-center py-3 px-4 border-b border-gray-100 dark:border-patchwork-dark-200"
+				className="flex-row items-center py-3 px-4 border-b border-gray-100 dark:border-patchwork-dark-50"
 				onPress={() => {
 					if (!item.id || !navigationRef.isReady()) {
 						if (item.url) Linking.openURL(item.url);

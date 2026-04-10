@@ -217,6 +217,38 @@ export const getWordpressLikesByPostId = async ({
 	}
 };
 
+export const likeWordpressPostThruMastodon = async (
+	url: string,
+	isLiked: boolean,
+) => {
+	try {
+		// 1. Search for the post in the Mastodon instance to resolve it to a Mastodon status ID.
+		const searchResp = await instance.get(appendApiVersion('search', 'v2'), {
+			params: {
+				q: url,
+				resolve: true,
+				limit: 1,
+			},
+		});
+
+		const status = searchResp.data?.statuses?.[0];
+
+		if (!status) {
+			throw new Error('Post could not be resolved on the Mastodon instance.');
+		}
+
+		// 2. Like or unlike it using the resolved status ID
+		const toggleFavourite = isLiked ? 'unfavourite' : 'favourite';
+		const resp: AxiosResponse<Patchwork.Status> = await instance.post(
+			appendApiVersion(`statuses/${status.id}/${toggleFavourite}`, 'v1'),
+		);
+
+		return resp.data;
+	} catch (error) {
+		return handleError(error);
+	}
+};
+
 const extractAuthorExtras = (html: string) => {
 	let imageUrl: string | null = null;
 	let description: string | null = null;

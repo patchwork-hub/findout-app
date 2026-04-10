@@ -240,18 +240,18 @@ function App() {
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
 			<SystemBars style={colorScheme === 'dark' ? 'light' : 'dark'} />
-			<BottomSheetModalProvider>
-				<View className="flex-1 bg-white dark:bg-patchwork-dark-100">
-					<QueryClientProvider client={queryClient}>
+			<QueryClientProvider client={queryClient}>
+				<BottomSheetModalProvider>
+					<View className="flex-1 bg-white dark:bg-patchwork-dark-100">
 						<KeyboardProvider>
 							<MenuProvider>
 								<ApplicationNavigator />
 								<Toast config={toastConfig} />
 							</MenuProvider>
 						</KeyboardProvider>
-					</QueryClientProvider>
-				</View>
-			</BottomSheetModalProvider>
+					</View>
+				</BottomSheetModalProvider>
+			</QueryClientProvider>
 		</GestureHandlerRootView>
 	);
 }

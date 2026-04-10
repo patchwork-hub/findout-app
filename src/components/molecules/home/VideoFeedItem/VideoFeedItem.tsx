@@ -21,6 +21,7 @@ import { useLiveVideoFeedStore } from '@/store/ui/liveVideoFeedStore';
 import { LiveVideoFeedActionBar } from '@/components/atoms/feed/LiveVideoFeedActionBar/LiveVideoFeedActionBar';
 import { LiveFeedContent } from '@/components/atoms/feed/LiveFeedContent/LiveFeedContent';
 import { LiveVideoFeedPlayer } from '@/components/atoms/feed/LiveVideoFeedPlayer/LiveVideoFeedPlayer';
+import { useAuthStore } from '@/store/auth/authStore';
 import {
 	getInitialVideoOrientation,
 	extractYoutubeId,
@@ -29,7 +30,9 @@ import {
 	useGetWordpressCommentsByPostId,
 	useGetWordpressLikesByPostId,
 } from '@/hooks/queries/wpFeed.queries';
+import { useToggleWordpressLike } from '@/hooks/mutations/wpFeed.mutation';
 import customColor from '@/util/constant/color';
+import Toast from 'react-native-toast-message';
 
 const VideoFeedItem = ({
 	post,
@@ -91,8 +94,42 @@ const VideoFeedItem = ({
 
 	const commentCount = mergedComments.length;
 
+	const userInfo = useAuthStore(state => state.userInfo);
+
 	const { data: likesData } = useGetWordpressLikesByPostId(post.id, !!post.id);
-	const likeCount = likesData?.found || 0;
+
+	const initialLikedStatus = useMemo(() => {
+		if (!likesData?.data || !userInfo?.url) return false;
+		return likesData.data.some((like: any) => like.url === userInfo.url);
+	}, [likesData?.data, userInfo?.url]);
+
+	const { mutate: toggleLike } = useToggleWordpressLike();
+
+	const isLiked = initialLikedStatus;
+	const displayedLikeCount = likesData?.found || 0;
+
+	const handleLikeToggle = () => {
+		if (!userInfo) return;
+		const newStatus = !isLiked;
+
+		toggleLike(
+			{
+				postId: post.id,
+				postLink: post.link,
+				newStatus,
+				userInfo,
+			},
+			{
+				onError: () => {
+					Toast.show({
+						type: 'error',
+						text1: 'Error',
+						text2: 'Failed to like the post. Please try again.',
+					});
+				},
+			},
+		);
+	};
 
 	const playerRef = useRef<YoutubeIframeRef>(null);
 	const { setVideoProgress, videoProgressMap } = useLiveVideoFeedStore();
@@ -252,13 +289,15 @@ const VideoFeedItem = ({
 					/>
 					<View className="px-0">
 						<LiveVideoFeedActionBar
-							onLike={() => openLikeSheet(post.id)}
+							onLike={handleLikeToggle}
+							onLikeCountPress={() => openLikeSheet(post.id)}
 							onComment={() => openComments(post.id)}
 							onShare={() => openLikeSheet(post.id)}
 							onMore={() => openLikeSheet(post.id)}
 							color={propsColor}
 							commentCount={commentCount}
-							likeCount={likeCount}
+							likeCount={displayedLikeCount}
+							isLiked={isLiked}
 						/>
 					</View>
 				</ScrollView>
@@ -285,10 +324,14 @@ const VideoFeedItem = ({
 
 						<View style={styles.actionSection}>
 							<LiveVideoFeedActionBar
-								onLike={() => openLikeSheet(post.id)}
+								onLike={handleLikeToggle}
+								onLikeCountPress={() => openLikeSheet(post.id)}
 								onComment={() => openComments(post.id)}
 								onShare={() => openLikeSheet(post.id)}
 								onMore={() => openLikeSheet(post.id)}
+								likeCount={displayedLikeCount}
+								commentCount={commentCount}
+								isLiked={isLiked}
 							/>
 						</View>
 					</LinearGradient>,

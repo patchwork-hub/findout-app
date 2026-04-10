@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { View, Keyboard, Pressable, ActivityIndicator } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faRotateRight } from '@fortawesome/free-solid-svg-icons';
+import { faRotateRight, faXmark } from '@fortawesome/free-solid-svg-icons';
 import {
 	BottomSheetModal,
 	BottomSheetFlatList,
@@ -40,7 +40,7 @@ export const CommentsSheet = () => {
 	const insets = useSafeAreaInsets();
 	const isDark = colorScheme === 'dark';
 	const [currentSnapIndex, setCurrentSnapIndex] = useState(-1);
-	const snapPoints = useMemo(() => ['65%', '90%'], []);
+	const snapPoints = useMemo(() => ['65%', '85%'], []);
 
 	const [replyToCommentId, setReplyToCommentId] = useState<string | null>(null);
 	const [replyToName, setReplyToName] = useState<string | null>(null);
@@ -290,6 +290,7 @@ export const CommentsSheet = () => {
 			ref={bottomSheetRef}
 			snapPoints={snapPoints}
 			enablePanDownToClose
+			enableOverDrag={false}
 			onChange={handleSheetChanges}
 			onDismiss={closeComments}
 			backgroundStyle={{
@@ -312,7 +313,17 @@ export const CommentsSheet = () => {
 			backdropComponent={renderBackdrop}
 		>
 			<View className="flex-row justify-between items-center px-4 py-3 relative">
-				<View className="w-8" />
+				<Pressable
+					onPress={closeComments}
+					className="w-8 h-8 items-start justify-center active:opacity-50"
+					hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
+				>
+					<FontAwesomeIcon
+						icon={faXmark}
+						color={isDark ? '#aaa' : '#555'}
+						size={20}
+					/>
+				</Pressable>
 				<ThemeText
 					className="font-bold text-sm text-center"
 					style={{ color: isDark ? 'white' : 'black' }}

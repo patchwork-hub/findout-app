@@ -258,19 +258,18 @@ export const CommentItem = ({
 					/>
 				</Pressable>
 				<View className="flex-1">
-					<Pressable
-						className="flex-row items-baseline mb-1"
-						onPress={() => handleProfileNavigate(item.account?.id)}
-					>
-						<ThemeText className="font-semibold font-NewsCycle_Bold text-[13px] text-[#333] dark:text-white mr-2">
-							{item.account?.display_name ||
-								item.account?.username ||
-								'Unknown'}
-						</ThemeText>
+					<View className="flex-row items-baseline mb-1">
+						<Pressable onPress={() => handleProfileNavigate(item.account?.id)}>
+							<ThemeText className="font-semibold font-NewsCycle_Bold text-[13px] text-[#333] dark:text-white mr-2">
+								{item.account?.display_name ||
+									item.account?.username ||
+									'Unknown'}
+							</ThemeText>
+						</Pressable>
 						<ThemeText className="text-[11px] text-[#888]">
 							{formatShortDate(item.created_at)}
 						</ThemeText>
-					</Pressable>
+					</View>
 					<RenderHTML
 						source={{ html: processedHtml }}
 						renderersProps={renderersProps}

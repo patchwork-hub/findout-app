@@ -1,19 +1,16 @@
 import React from 'react';
-import { View, TouchableOpacity, Pressable } from 'react-native';
+import { View, Pressable } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
 	faHeart as faHeartRegular,
 	faComment as faCommentRegular,
 } from '@fortawesome/free-regular-svg-icons';
-import {
-	faShare,
-	faEllipsisVertical,
-	faArrowUpFromBracket,
-	faHeart as faHeartSolid,
-} from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
 import { ThemeText } from '../../common/ThemeText/ThemeText';
 import { formatNumber } from '@/util/helper/helper';
 import customColor from '@/util/constant/color';
+import { cn } from '@/util/helper/twutil';
+import { WPShareIcon } from '@/util/svg/icon.status_actions';
 
 interface ActionButtonsProps {
 	onLike?: () => void;
@@ -65,7 +62,7 @@ export const LiveVideoFeedActionBar: React.FC<ActionButtonsProps> = ({
 				</View>
 				<Pressable
 					onPress={onComment}
-					className="items-center flex-row active:opacity-80"
+					className="items-center flex-row active:opacity-80 mr-2"
 				>
 					<View className="p-1">
 						<FontAwesomeIcon icon={faCommentRegular} size={24} color={color} />
@@ -79,17 +76,13 @@ export const LiveVideoFeedActionBar: React.FC<ActionButtonsProps> = ({
 						</ThemeText>
 					)}
 				</Pressable>
-			</View>
-			<View className="flex-row gap-4">
-				<Pressable onPress={onShare} className="p-1 active:opacity-80">
-					<FontAwesomeIcon
-						icon={faArrowUpFromBracket}
-						size={20}
-						color={color}
-					/>
-				</Pressable>
-				<Pressable onPress={onMore} className="p-1 active:opacity-80">
-					<FontAwesomeIcon icon={faEllipsisVertical} size={20} color={color} />
+
+				<Pressable
+					className={cn('flex flex-row items-center active:opacity-80 mb-1 ')}
+					hitSlop={{ top: 10, bottom: 10, left: 3, right: 10 }}
+					onPress={onShare}
+				>
+					<WPShareIcon stroke={color} width={26} height={26} strokeWidth={35} />
 				</Pressable>
 			</View>
 		</View>

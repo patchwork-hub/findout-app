@@ -1,12 +1,23 @@
 import React, { useMemo, useState } from 'react';
-import { View, useWindowDimensions, ScrollView } from 'react-native';
+import { View, useWindowDimensions, ScrollView, Platform } from 'react-native';
 import RenderHTML from 'react-native-render-html';
 import { useColorScheme } from 'nativewind';
 import he from 'he';
 import moment from 'moment';
 import FastImage from '@d11/react-native-fast-image';
 
-import { useGetWordpressPostById } from '@/hooks/queries/wpFeed.queries';
+import {
+	useGetWordpressPostById,
+	useGetWordpressPostStatusFromMastodon,
+	useGetWordpressPostLikesFromMastodon,
+} from '@/hooks/queries/wpFeed.queries';
+import { useFavouriteMutation } from '@/hooks/mutations/feed.mutation';
+import { useQueryClient } from '@tanstack/react-query';
+import { useAuthStore } from '@/store/auth/authStore';
+import { useLiveVideoFeedStore } from '@/store/ui/liveVideoFeedStore';
+import Share from 'react-native-share';
+import Toast from 'react-native-toast-message';
+
 import customColor from '@/util/constant/color';
 import { HomeStackScreenProps } from '@/types/navigation';
 import WpStoryDetailSkeleton from '@/components/atoms/loading/WpStoryDetailLoading';
@@ -18,6 +29,7 @@ import {
 	extractYoutubeId,
 	getAuthorList,
 	cleanHtmlContent,
+	handleError,
 } from '@/util/helper/helper';
 import { isTablet } from '@/util/helper/isTablet';
 import { WpPlayer } from '@/components/atoms/feed/WpPlayer/WpPlayer';
@@ -26,6 +38,9 @@ import WpPodcastRenderer from '@/components/molecules/blog/WpPodcastRenderer/WpP
 // Refactored imports
 import WpStoryHeader from '@/components/molecules/blog/WpStoryHeader/WpStoryHeader';
 import WpStoryAuthorList from '@/components/molecules/blog/WpStoryAuthorList/WpStoryAuthorList';
+import { LiveVideoFeedActionBar } from '@/components/atoms/feed/LiveVideoFeedActionBar/LiveVideoFeedActionBar';
+import { appIcon } from '@/util/constant/appIcon';
+import { FALLBACK_PREVIEW_IMAGE_URL } from '@/util/constant';
 import { useSharePost } from '@/hooks/useSharePost';
 import {
 	getBaseStyle,
@@ -55,6 +70,172 @@ const WpStoryDetail: React.FC<HomeStackScreenProps<'WpStoryDetail'>> = ({
 	} = useGetWordpressPostById(postId, !!postId && !isPostAvailableInStore);
 
 	const post = isPostAvailableInStore ? selectedPost : postFromApi;
+
+	const userInfo = useAuthStore(state => state.userInfo);
+	const { openComments, openLikeSheet } = useLiveVideoFeedStore();
+	const queryClient = useQueryClient();
+	const { mutate: toggleMastodonLike } = useFavouriteMutation({});
+
+	const { data: mastodonStatus } = useGetWordpressPostStatusFromMastodon(
+		post?.link || '',
+	);
+
+	const { data: mastodonLikesData } = useGetWordpressPostLikesFromMastodon(
+		mastodonStatus?.id,
+	);
+
+	const isLiked = useMemo(() => {
+		if (mastodonStatus?.favourited) return true;
+		if (mastodonLikesData && userInfo?.url) {
+			return mastodonLikesData.some(acc => acc.url === userInfo.url);
+		}
+		return false;
+	}, [mastodonStatus?.favourited, mastodonLikesData, userInfo?.url]);
+
+	const displayedLikeCount =
+		mastodonLikesData?.length ?? mastodonStatus?.favourites_count ?? 0;
+	const commentCount = mastodonStatus?.replies_count || 0;
+
+	const handleShare = async () => {
+		if (!post?.link) return;
+		const SHARE_LINK_URL = post.link;
+
+		const options: any = Platform.select({
+			ios: {
+				activityItemSources: [
+					{
+						placeholderItem: {
+							type: 'url',
+							content: appIcon,
+						},
+						item: {
+							default: {
+								type: 'url',
+								content: SHARE_LINK_URL,
+							},
+						},
+						linkMetadata: {
+							title: 'Find Out Media',
+							icon: FALLBACK_PREVIEW_IMAGE_URL,
+						},
+					},
+				],
+			},
+			default: {
+				title: 'Find Out Media',
+				subject: 'Find Out Media',
+				message: SHARE_LINK_URL,
+			},
+		});
+
+		try {
+			await Share.open(options);
+		} catch (error) {
+			handleError(error);
+		}
+	};
+
+	const handleLikeToggle = () => {
+		if (!userInfo || !mastodonStatus || !post) return;
+
+		queryClient.cancelQueries({
+			queryKey: ['wordpressPostStatusFromMastodon', post.link],
+		});
+		if (mastodonStatus?.id) {
+			queryClient.cancelQueries({
+				queryKey: ['wordpressPostLikesFromMastodon', mastodonStatus.id],
+			});
+		}
+
+		const previousStatus = queryClient.getQueryData<Patchwork.Status>([
+			'wordpressPostStatusFromMastodon',
+			post.link,
+		]);
+		const previousLikes = mastodonStatus?.id
+			? queryClient.getQueryData<Patchwork.Account[]>([
+					'wordpressPostLikesFromMastodon',
+					mastodonStatus.id,
+			  ])
+			: undefined;
+
+		let currentIsLiked = false;
+		if (previousStatus?.favourited) {
+			currentIsLiked = true;
+		} else if (previousLikes && userInfo?.url) {
+			currentIsLiked = previousLikes.some(acc => acc.url === userInfo.url);
+		}
+
+		const newIsLiked = !currentIsLiked;
+		const activeStatus = previousStatus || mastodonStatus;
+
+		if (activeStatus) {
+			queryClient.setQueryData(['wordpressPostStatusFromMastodon', post.link], {
+				...activeStatus,
+				favourited: newIsLiked,
+				favourites_count: newIsLiked
+					? (activeStatus.favourites_count || 0) + 1
+					: Math.max((activeStatus.favourites_count || 0) - 1, 0),
+			});
+		}
+
+		const activeLikes = previousLikes || mastodonLikesData;
+		if (mastodonStatus?.id) {
+			queryClient.setQueryData(
+				['wordpressPostLikesFromMastodon', mastodonStatus.id],
+				(old: any) => {
+					const oldArray = Array.isArray(old) ? old : activeLikes || [];
+					if (newIsLiked) {
+						if (!oldArray.some(acc => acc.url === userInfo.url)) {
+							return [...oldArray, { ...userInfo, url: userInfo.url }];
+						}
+						return oldArray;
+					} else {
+						return oldArray.filter(acc => acc.url !== userInfo.url);
+					}
+				},
+			);
+		}
+
+		toggleMastodonLike(
+			{
+				status: {
+					...mastodonStatus,
+					favourited: currentIsLiked,
+				} as Patchwork.Status,
+			},
+			{
+				onError: () => {
+					if (previousStatus) {
+						queryClient.setQueryData(
+							['wordpressPostStatusFromMastodon', post.link],
+							previousStatus,
+						);
+					}
+					if (previousLikes && mastodonStatus?.id) {
+						queryClient.setQueryData(
+							['wordpressPostLikesFromMastodon', mastodonStatus.id],
+							previousLikes,
+						);
+					}
+					Toast.show({
+						type: 'error',
+						text1: 'Error',
+						text2: 'Failed to like the post. Please try again.',
+					});
+				},
+				onSettled: () => {
+					queryClient.invalidateQueries({
+						queryKey: ['wordpressPostStatusFromMastodon', post.link],
+					});
+					if (mastodonStatus?.id) {
+						queryClient.invalidateQueries({
+							queryKey: ['wordpressPostLikesFromMastodon', mastodonStatus.id],
+						});
+					}
+				},
+			},
+		);
+	};
 
 	// Use useMemo for renderers to avoid re-creation on every render
 	const renderers = useMemo(
@@ -158,6 +339,19 @@ const WpStoryDetail: React.FC<HomeStackScreenProps<'WpStoryDetail'>> = ({
 						ignoredStyles={['backgroundColor', 'color']}
 						systemFonts={['Inter-Regular', 'Inter-Bold', 'NewsCycle-Bold']}
 					/>
+					<View className="-mx-4 mb-2">
+						<LiveVideoFeedActionBar
+							onLike={handleLikeToggle}
+							onLikeCountPress={() => post && openLikeSheet(post.id)}
+							onComment={() => post && openComments(post.id)}
+							onShare={handleShare}
+							onMore={() => post && openLikeSheet(post.id)}
+							color={textColor}
+							commentCount={commentCount}
+							likeCount={displayedLikeCount}
+							isLiked={isLiked}
+						/>
+					</View>
 				</View>
 			</ScrollView>
 		</View>

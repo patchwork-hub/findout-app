@@ -14,6 +14,7 @@ import {
 	AppStateStatus,
 	Platform,
 } from 'react-native';
+import Share from 'react-native-share';
 import LinearGradient from 'react-native-linear-gradient';
 import YoutubePlayer, { YoutubeIframeRef } from 'react-native-youtube-iframe';
 import { useColorScheme } from 'nativewind';
@@ -25,7 +26,10 @@ import { useAuthStore } from '@/store/auth/authStore';
 import {
 	getInitialVideoOrientation,
 	extractYoutubeId,
+	handleError,
 } from '@/util/helper/helper';
+import { appIcon } from '@/util/constant/appIcon';
+import { FALLBACK_PREVIEW_IMAGE_URL } from '@/util/constant';
 import {
 	useGetWordpressCommentsByPostId,
 	useGetWordpressLikesByPostId,
@@ -134,6 +138,44 @@ const VideoFeedItem = ({
 	const displayedLikeCount =
 		mastodonLikesData?.length ?? mastodonStatus?.favourites_count ?? 0;
 	const commentCount = mastodonStatus?.replies_count || 0;
+
+	const handleShare = async () => {
+		const SHARE_LINK_URL = post.link;
+
+		const options: any = Platform.select({
+			ios: {
+				activityItemSources: [
+					{
+						placeholderItem: {
+							type: 'url',
+							content: appIcon,
+						},
+						item: {
+							default: {
+								type: 'url',
+								content: SHARE_LINK_URL,
+							},
+						},
+						linkMetadata: {
+							title: 'Find Out Media',
+							icon: FALLBACK_PREVIEW_IMAGE_URL,
+						},
+					},
+				],
+			},
+			default: {
+				title: 'Find Out Media',
+				subject: 'Find Out Media',
+				message: SHARE_LINK_URL,
+			},
+		});
+
+		try {
+			await Share.open(options);
+		} catch (error) {
+			handleError(error);
+		}
+	};
 
 	const handleLikeToggle = () => {
 		if (!userInfo || !mastodonStatus) return;
@@ -398,8 +440,8 @@ const VideoFeedItem = ({
 							onLike={handleLikeToggle}
 							onLikeCountPress={() => openLikeSheet(post.id)}
 							onComment={() => openComments(post.id)}
-							onShare={() => openLikeSheet(post.id)}
-							onMore={() => openLikeSheet(post.id)}
+							onShare={handleShare}
+							onMore={() => {}}
 							color={propsColor}
 							commentCount={commentCount}
 							likeCount={displayedLikeCount}
@@ -433,7 +475,7 @@ const VideoFeedItem = ({
 								onLike={handleLikeToggle}
 								onLikeCountPress={() => openLikeSheet(post.id)}
 								onComment={() => openComments(post.id)}
-								onShare={() => openLikeSheet(post.id)}
+								onShare={handleShare}
 								onMore={() => openLikeSheet(post.id)}
 								likeCount={displayedLikeCount}
 								commentCount={commentCount}
